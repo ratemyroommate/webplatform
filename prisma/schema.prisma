@@ -15,15 +15,15 @@ datasource db {
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id             Int      @id @default(autoincrement())
+    description    String
+    maxPersonCount Int
+    featuredUsers  User[]   @relation("UserPost")
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
 
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
-
-    @@index([name])
 }
 
 // Necessary for Next auth
@@ -63,6 +63,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    featuredPosts Post[]    @relation("UserPost")
 }
 
 model VerificationToken {

@@ -7,35 +7,40 @@ import {
 } from "~/server/api/trpc";
 
 export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
-
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1) }))
+    .input(
+      z.object({
+        description: z.string().min(1).max(200),
+        maxPersonCount: z.number().min(2).max(6),
+        isResident: z.boolean(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       return ctx.db.post.create({
         data: {
-          name: input.name,
+          description: input.description,
+          maxPersonCount: input.maxPersonCount,
           createdBy: { connect: { id: ctx.session.user.id } },
+          featuredUsers: {
+            connect: input.isResident ? [{ id: ctx.session.user.id }] : [],
+          },
         },
       });
     }),
 
-  getLatest: protectedProcedure.query(async ({ ctx }) => {
-    const post = await ctx.db.post.findFirst({
+  getLatest: publicProcedure.query(async ({ ctx }) => {
+    const posts = await ctx.db.post.findMany({
       orderBy: { createdAt: "desc" },
-      where: { createdBy: { id: ctx.session.user.id } },
+      include: { featuredUsers: { select: { image: true, name: true } } },
     });
 
-    return post ?? null;
+    return posts ?? [];
   }),
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
+  getById: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    if (isNaN(Number(input))) {
+      return null;
+    }
+    return ctx.db.post.findUnique({ where: { id: Number(input) } });
   }),
 });
