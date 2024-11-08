@@ -31,7 +31,7 @@ export const postRouter = createTRPCRouter({
   getLatest: publicProcedure.query(async ({ ctx }) => {
     const posts = await ctx.db.post.findMany({
       orderBy: { createdAt: "desc" },
-      include: { featuredUsers: { select: { image: true, name: true } } },
+      include: featuredImageQuery,
     });
 
     return posts ?? [];
@@ -41,6 +41,13 @@ export const postRouter = createTRPCRouter({
     if (isNaN(Number(input))) {
       return null;
     }
-    return ctx.db.post.findUnique({ where: { id: Number(input) } });
+    return ctx.db.post.findUnique({
+      where: { id: Number(input) },
+      include: featuredImageQuery,
+    });
   }),
 });
+
+const featuredImageQuery = {
+  featuredUsers: { select: { id: true, image: true, name: true } },
+};

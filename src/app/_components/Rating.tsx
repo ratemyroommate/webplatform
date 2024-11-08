@@ -1,6 +1,6 @@
 type RatingProps = {
   itemKey: number;
-  readOnly: boolean;
+  readOnly?: boolean;
   rating: number;
 };
 

@@ -19,6 +19,7 @@ model Post {
     description    String
     maxPersonCount Int
     featuredUsers  User[]   @relation("UserPost")
+    images         String[]
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
 
@@ -60,6 +61,8 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    socialLink    String?
+    about         String?
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
