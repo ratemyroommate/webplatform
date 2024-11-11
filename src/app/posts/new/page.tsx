@@ -2,8 +2,10 @@
 
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { Post } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { LoginModal, handleOpenModal } from "~/app/_components/LoginModal";
 import { api } from "~/trpc/react";
 
 type FormValues = Omit<
@@ -25,6 +27,7 @@ export default function NewPost() {
 
   const router = useRouter();
   const utils = api.useUtils();
+  const { data: session } = useSession();
   const createPost = api.post.create.useMutation({
     onSuccess: async () => {
       await utils.post.invalidate();
@@ -44,15 +47,16 @@ export default function NewPost() {
     setValue("maxPersonCount", currentValue + 1);
   };
 
-  const onSubmit = async (formValues: FormValues) => {
+  const onSubmit = async (formValues: FormValues) =>
     createPost.mutate(formValues);
-  };
 
   return (
     <form
       className="card bg-base-100 flex w-full flex-col p-8 shadow-xl"
       onSubmit={handleSubmit(onSubmit)}
+      onClick={() => (!session?.user ? handleOpenModal("login-modal") : null)}
     >
+      <LoginModal />
       <label className="form-control w-full">
         <div className="label">
           <span className="label-text text-lg">Leírás</span>
@@ -109,7 +113,7 @@ export default function NewPost() {
         </label>
       </div>
       <button
-        disabled={isSubmitting || createPost.isPending}
+        disabled={!session?.user || isSubmitting || createPost.isPending}
         className="btn btn-secondary btn-wide mt-4 self-center"
       >
         Közzététel

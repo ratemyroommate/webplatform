@@ -13,8 +13,8 @@ export default async function User({ params: { id } }: UserPageProps) {
 
   if (!user) return "User not found";
 
-  const canReview = user.reviewsReceived.some(
-    (review) => review.reviewer.id === session?.user.id,
+  const canReview = user.reviewsReceived.every(
+    (review) => review.reviewer.id !== session?.user.id,
   );
   const averageRating = user.reviewsReceived.length
     ? user.reviewsReceived.reduce((sum, { rating }) => sum + rating, 0) /
