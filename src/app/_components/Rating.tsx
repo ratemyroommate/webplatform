@@ -1,12 +1,22 @@
+"use client";
+
 type RatingProps = {
   itemKey: number;
   readOnly?: boolean;
   rating: number;
+  size?: string;
+  onClick?: (rating: number) => void;
 };
 
-export const Rating = ({ itemKey, readOnly, rating }: RatingProps) => {
+export const Rating = ({
+  itemKey,
+  readOnly,
+  rating,
+  size = "sm",
+  onClick,
+}: RatingProps) => {
   return (
-    <div className="rating rating-sm">
+    <div className={`rating rating-${size}`}>
       {Array.from({ length: 5 }).map((_, index) => (
         <input
           key={index}
@@ -15,6 +25,7 @@ export const Rating = ({ itemKey, readOnly, rating }: RatingProps) => {
           className="mask mask-star-2 bg-orange-400"
           readOnly={readOnly}
           defaultChecked={index === rating - 1}
+          onClick={() => (onClick ? onClick(index + 1) : null)}
         />
       ))}
     </div>

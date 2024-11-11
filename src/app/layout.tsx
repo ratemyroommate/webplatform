@@ -6,6 +6,7 @@ import { type Metadata } from "next";
 import { TRPCReactProvider } from "~/trpc/react";
 import { getServerAuthSession } from "~/server/auth";
 import Link from "next/link";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Rate My Roommate",
@@ -22,6 +23,7 @@ export default async function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <TRPCReactProvider>
+          <Toaster />
           <main className="bg-base-200 flex min-h-screen flex-col items-center">
             <div className="container flex max-w-4xl flex-col items-center justify-center gap-8 px-4 py-4">
               <div className="navbar bg-base-100 justify-between rounded-2xl shadow-xl">

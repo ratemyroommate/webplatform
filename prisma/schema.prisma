@@ -56,17 +56,19 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    socialLink    String?
-    about         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
-    featuredPosts Post[]    @relation("UserPost")
+    id              String    @id @default(cuid())
+    name            String?
+    email           String?   @unique
+    emailVerified   DateTime?
+    image           String?
+    socialLink      String?
+    about           String?
+    accounts        Account[]
+    sessions        Session[]
+    posts           Post[]
+    featuredPosts   Post[]    @relation("UserPost")
+    reviewsGiven    Review[]  @relation("ReviewsGiven")
+    reviewsReceived Review[]  @relation("ReviewsReceived")
 }
 
 model VerificationToken {
@@ -75,4 +77,19 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Review {
+    id        String   @id @default(cuid())
+    rating    Int
+    comment   String?
+    createdAt DateTime @default(now())
+
+    reviewerId String
+    reviewedId String
+
+    reviewer User @relation("ReviewsGiven", fields: [reviewerId], references: [id])
+    reviewed User @relation("ReviewsReceived", fields: [reviewedId], references: [id])
+
+    @@unique([reviewerId, reviewedId])
 }
