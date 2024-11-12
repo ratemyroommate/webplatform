@@ -31,17 +31,42 @@ export default async function RootLayout({
                   RmRm
                 </Link>
 
-                <Link href={session ? "/api/auth/signout" : "/api/auth/signin"}>
-                  {session?.user ? (
-                    <div className="avatar mr-4 w-10">
-                      <div className="ring-primary ring-offset-base-100 rounded-full ring ring-offset-2">
-                        <img src={session?.user.image ?? ""} />
-                      </div>
+                {session?.user ? (
+                  <div
+                    className="dropdown dropdown-end avatar mr-4 w-10"
+                    tabIndex={0}
+                    role="button"
+                  >
+                    <div className="ring-primary ring-offset-base-100 rounded-full ring ring-offset-2">
+                      <img src={session?.user.image ?? ""} />
                     </div>
-                  ) : (
-                    <div className="btn">Login</div>
-                  )}
-                </Link>
+                    <ul
+                      tabIndex={0}
+                      className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+                    >
+                      <li>
+                        <Link
+                          href={`/users/${session.user.id}`}
+                          className="btn"
+                        >
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          href="/api/auth/signout"
+                          className="btn btn-ghost"
+                        >
+                          Logout
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                ) : (
+                  <Link href="/api/auth/signin" className="btn">
+                    Login
+                  </Link>
+                )}
               </div>
               {children}
             </div>
