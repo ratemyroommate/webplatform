@@ -6,37 +6,50 @@ import { useForm } from "react-hook-form";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
+import { Review } from "@prisma/client";
+import { toast } from "react-hot-toast";
 
-type ReviewProps = { edit?: boolean; reviewedId: string; reviewerId?: string };
-type FormValues = { rating: number; comment: string };
+type ReviewProps = {
+  review?: Review;
+  reviewedId: string;
+  reviewerId?: string;
+};
+type FormValues = { rating: number; comment: string | null };
 
-export const Review = ({ edit, reviewedId, reviewerId }: ReviewProps) => {
-  const { register, reset, getValues, setValue, handleSubmit, formState } =
+export const ReviewModal = ({
+  review,
+  reviewedId,
+  reviewerId,
+}: ReviewProps) => {
+  const { register, watch, setValue, handleSubmit, formState } =
     useForm<FormValues>({
-      defaultValues: { rating: 5, comment: "" },
+      defaultValues: review
+        ? { rating: review.rating, comment: review.comment }
+        : { rating: 5, comment: "" },
     });
 
   const router = useRouter();
   const modalId = reviewerId ? "review-modal" : "login-modal";
-  const createReview = api.review.create.useMutation({
+  const successMessage = `Értékelés sikeresen ${review ? "módosítva" : "létrehozva"}`;
+  const reviewMutation = api.review[review ? "update" : "create"].useMutation({
     onSuccess: () => {
       router.refresh();
       handleCloseModal(modalId);
-      reset();
+      toast.success(successMessage);
     },
   });
 
   const onSubmit = (formValues: FormValues) =>
-    createReview.mutate({ ...formValues, reviewedId });
+    reviewMutation.mutate({ ...formValues, reviewedId });
   const handleRatingClick = (rating: number) => setValue("rating", rating);
 
   return (
     <>
       <button
-        className="btn btn-secondary w-full shadow-xl"
+        className={`btn ${!review && "btn-secondary w-full shadow-xl"}`}
         onClick={() => handleOpenModal(modalId)}
       >
-        {edit ? (
+        {review ? (
           <>
             <PencilSquareIcon width={20} />
             Módosítás
@@ -62,7 +75,7 @@ export const Review = ({ edit, reviewedId, reviewerId }: ReviewProps) => {
             className="flex flex-col gap-8 pt-8"
           >
             <Rating
-              rating={getValues("rating")}
+              rating={watch("rating")}
               itemKey={-1}
               size={"lg"}
               onClick={handleRatingClick}
@@ -73,7 +86,7 @@ export const Review = ({ edit, reviewedId, reviewerId }: ReviewProps) => {
               {...register("comment")}
             />
             <button
-              disabled={formState.isSubmitting || createReview.isPending}
+              disabled={formState.isSubmitting || reviewMutation.isPending}
               className="btn btn-secondary"
             >
               Közzététel

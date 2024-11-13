@@ -2,7 +2,7 @@ import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { EditProfile } from "~/app/_components/EditProfile";
 import { Rating } from "~/app/_components/Rating";
-import { Review } from "~/app/_components/Review";
+import { ReviewModal } from "~/app/_components/ReviewModal";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
 
@@ -25,7 +25,7 @@ export default async function User({ params: { id } }: UserPageProps) {
 
   return (
     <>
-      <div className="card bg-base-100 flex w-full flex-col gap-8 p-8 shadow-xl">
+      <div className="card bg-base-100 flex w-full flex-col gap-8 p-6 shadow-xl">
         <div className="flex justify-between">
           <img className="w-20 rounded-2xl" src={user.image ?? ""} />
           {canEdit && <EditProfile {...user} />}
@@ -55,16 +55,29 @@ export default async function User({ params: { id } }: UserPageProps) {
         </div>
         <p>{user.about}</p>
       </div>
-      {canReview && <Review reviewedId={id} reviewerId={session?.user.id} />}
+      {canReview && (
+        <ReviewModal reviewedId={id} reviewerId={session?.user.id} />
+      )}
       {user.reviewsReceived.length
         ? user.reviewsReceived.map((review, index) => (
-            <div className="card bg-base-100 flex w-full flex-col gap-4 p-8 shadow-xl">
-              <div className="flex gap-6">
-                <img
-                  className="w-12 rounded-full"
-                  src={review.reviewer.image ?? ""}
-                />
-                <span className="text-sm">{review.reviewer.name}</span>
+            <div className="card bg-base-100 flex w-full flex-col gap-4 p-6 shadow-xl">
+              <div className="flex justify-between">
+                <div className="flex gap-6">
+                  <Link href={`/users/${review.reviewer.id}`}>
+                    <img
+                      className="w-12 rounded-full"
+                      src={review.reviewer.image ?? ""}
+                    />
+                  </Link>
+                  <span className="text-sm">{review.reviewer.name}</span>
+                </div>
+                {review.reviewer.id === session?.user.id && (
+                  <ReviewModal
+                    reviewerId={session?.user.id}
+                    reviewedId={id}
+                    review={review}
+                  />
+                )}
               </div>
               <Rating rating={review.rating} itemKey={index} />
               <p>{review.comment || "Nincs megjegyzés"}</p>

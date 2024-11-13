@@ -24,8 +24,8 @@ export const Rating = ({
           name={`rating-${itemKey}`}
           className="mask mask-star-2 bg-orange-400"
           readOnly={readOnly}
-          defaultChecked={index === rating - 1}
-          onClick={() => (onClick ? onClick(index + 1) : null)}
+          checked={index === rating - 1}
+          onChange={() => (onClick ? onClick(index + 1) : null)}
         />
       ))}
     </div>
