@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Rating } from "./Rating";
+import { getAverageRating } from "~/utils/helpers";
 
 const defaultImage =
   "https://static.vecteezy.com/system/resources/previews/020/765/399/large_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
@@ -26,7 +27,15 @@ export const FeaturedUsers = (post: PostExtended) => {
             <p className="text-xs">
               {post.featuredUsers?.[index]?.name ?? "\u200B"}
             </p>
-            <Rating rating={3} itemKey={index} readOnly />
+            <Rating
+              rating={
+                post.featuredUsers?.[index]
+                  ? getAverageRating(post.featuredUsers?.[index])
+                  : 1
+              }
+              itemKey={`${post.id}-${index}`}
+              readOnly
+            />
           </div>
         </Link>
       ))}

@@ -2,11 +2,7 @@ import { Post as TPost } from "@prisma/client";
 import Link from "next/link";
 import { FeaturedUsers } from "./FeaturedUsers";
 
-export const Post = async (
-  post: TPost & {
-    featuredUsers: { image: string | null; name: string | null }[];
-  },
-) => {
+export const Post = async (post: TPost) => {
   return (
     <div className="card bg-base-100 flex w-full flex-col items-center justify-between gap-6 p-8 shadow-xl sm:flex-row">
       <div className="skeleton h-48 w-48 min-w-48"></div>

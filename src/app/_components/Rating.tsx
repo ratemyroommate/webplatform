@@ -1,7 +1,7 @@
 "use client";
 
 type RatingProps = {
-  itemKey: number;
+  itemKey: number | string;
   readOnly?: boolean;
   rating: number;
   size?: string;

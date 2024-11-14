@@ -5,6 +5,7 @@ import { Rating } from "~/app/_components/Rating";
 import { ReviewModal } from "~/app/_components/ReviewModal";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
+import { getAverageRating } from "~/utils/helpers";
 
 type UserPageProps = { params: { id: string } };
 
@@ -18,10 +19,6 @@ export default async function User({ params: { id } }: UserPageProps) {
   const canReview = user.reviewsReceived.every(
     (review) => review.reviewer.id !== session?.user.id,
   );
-  const averageRating = user.reviewsReceived.length
-    ? user.reviewsReceived.reduce((sum, { rating }) => sum + rating, 0) /
-      user.reviewsReceived.length
-    : 0;
 
   return (
     <>
@@ -35,7 +32,7 @@ export default async function User({ params: { id } }: UserPageProps) {
           <div className="flex items-center gap-2">
             <Rating
               itemKey={Infinity}
-              rating={averageRating}
+              rating={getAverageRating(user)}
               readOnly={true}
               size="lg"
             />

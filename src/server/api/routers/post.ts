@@ -49,5 +49,12 @@ export const postRouter = createTRPCRouter({
 });
 
 const featuredImageQuery = {
-  featuredUsers: { select: { id: true, image: true, name: true } },
+  featuredUsers: {
+    select: {
+      id: true,
+      image: true,
+      name: true,
+      reviewsReceived: { select: { rating: true } },
+    }, // improve in the future: either make pagination of posts short or save rating avg in user table
+  },
 };
