@@ -6,7 +6,7 @@ export const getAverageRating = (
   user.reviewsReceived.length
     ? user.reviewsReceived.reduce((sum, { rating }) => sum + rating, 0) /
       user.reviewsReceived.length
-    : 0;
+    : 1;
 
 export const isUserInPostGroup = (
   post: Post & { featuredUsers: Partial<User>[] },
