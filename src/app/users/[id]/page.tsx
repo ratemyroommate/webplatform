@@ -57,7 +57,10 @@ export default async function User({ params: { id } }: UserPageProps) {
       )}
       {user.reviewsReceived.length
         ? user.reviewsReceived.map((review, index) => (
-            <div className="card bg-base-100 flex w-full flex-col gap-4 p-6 shadow-xl">
+            <div
+              className="card bg-base-100 flex w-full flex-col gap-4 p-6 shadow-xl"
+              key={index}
+            >
               <div className="flex justify-between">
                 <div className="flex gap-6">
                   <Link href={`/users/${review.reviewer.id}`}>

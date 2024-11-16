@@ -11,8 +11,8 @@ export const FeaturedUsers = (post: PostExtended) => {
       {Array.from({ length: post.maxPersonCount }).map((_, index) => (
         <Link
           href={
-            post.featuredUsers?.[index]?.id
-              ? `/users/${post.featuredUsers?.[index]?.id}`
+            post.featuredUsers[index]?.id
+              ? `/users/${post.featuredUsers[index]?.id}`
               : "#"
           }
           className="flex flex-col items-center gap-2"
@@ -25,12 +25,12 @@ export const FeaturedUsers = (post: PostExtended) => {
           </div>
           <div className="flex flex-col items-center">
             <p className="text-xs">
-              {post.featuredUsers?.[index]?.name ?? "\u200B"}
+              {post.featuredUsers[index]?.name ?? "\u200B"}
             </p>
             <Rating
               rating={
-                post.featuredUsers?.[index]
-                  ? getAverageRating(post.featuredUsers?.[index])
+                post.featuredUsers[index]
+                  ? getAverageRating(post.featuredUsers[index]!)
                   : 1
               }
               itemKey={`${post.id}-${index}`}

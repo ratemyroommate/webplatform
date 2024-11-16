@@ -29,7 +29,11 @@ export const ReviewModal = ({
     });
 
   const router = useRouter();
-  const modalId = reviewerId ? "review-modal" : "login-modal";
+  const modalId = reviewerId
+    ? review
+      ? `review-modal-${review.id}`
+      : "review-modal"
+    : "login-modal";
   const successMessage = `Értékelés sikeresen ${review ? "módosítva" : "létrehozva"}`;
   const reviewMutation = api.review[review ? "update" : "create"].useMutation({
     onSuccess: () => {
@@ -62,7 +66,10 @@ export const ReviewModal = ({
         )}
       </button>
       <LoginModal />
-      <dialog id="review-modal" className="modal">
+      <dialog
+        id={review ? `review-modal-${review.id}` : "review-modal"}
+        className="modal"
+      >
         <div className="modal-box">
           <h3 className="text-lg font-bold">Adj egy értékelést</h3>
           <form method="dialog">
