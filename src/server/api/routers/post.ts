@@ -50,23 +50,16 @@ export const postRouter = createTRPCRouter({
           code: "UNAUTHORIZED",
         });
 
-      if (
-        post.featuredUsers.length === post.maxPersonCount &&
-        !isUserInPostGroup(post, ctx.session.user.id) &&
-        input.isResident
-      )
+      const addResident =
+        !isUserInPostGroup(post, ctx.session.user.id) && input.isResident;
+      const featuredUsersCount =
+        post.featuredUsers.length + Number(addResident);
+
+      if (featuredUsersCount > input.maxPersonCount)
         throw new TRPCError({
           message: "Your group is full, try increasing the group size",
           code: "CONFLICT",
         });
-
-      if (post.featuredUsers.length > input.maxPersonCount)
-        throw new TRPCError({
-          message: "You cannot kick people out of the group",
-          code: "CONFLICT",
-        });
-
-      // edge cases need to be handled
 
       return ctx.db.post.update({
         where: { id: input.id },
