@@ -47,7 +47,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
       ? `post-modal-${post.id}`
       : "post-modal"
     : "login-modal";
-  const successMessage = `Értékelés sikeresen ${post ? "módosítva" : "létrehozva"}`;
+  const successMessage = `Post sikeresen ${post ? "módosítva" : "létrehozva"}`;
   const createPost = api.post.create.useMutation({
     onSuccess: () => {
       router.refresh();

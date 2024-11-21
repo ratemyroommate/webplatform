@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { getServerAuthSession } from "~/server/auth";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
+import { NotificationModal } from "./_components/NotificationModal";
 
 export const metadata: Metadata = {
   title: "Rate My Roommate",
@@ -32,35 +33,38 @@ export default async function RootLayout({
                 </Link>
 
                 {session?.user ? (
-                  <div
-                    className="dropdown dropdown-end avatar mr-4 w-10"
-                    tabIndex={0}
-                    role="button"
-                  >
-                    <div className="ring-primary ring-offset-base-100 rounded-full ring ring-offset-2">
-                      <img src={session?.user.image ?? ""} />
-                    </div>
-                    <ul
+                  <div className="gap-6">
+                    <NotificationModal />
+                    <div
+                      className="dropdown dropdown-end avatar mr-4 w-10"
                       tabIndex={0}
-                      className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+                      role="button"
                     >
-                      <li>
-                        <Link
-                          href={`/users/${session.user.id}`}
-                          className="btn"
-                        >
-                          Profile
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/api/auth/signout"
-                          className="btn btn-ghost"
-                        >
-                          Logout
-                        </Link>
-                      </li>
-                    </ul>
+                      <div className="ring-primary ring-offset-base-100 rounded-full ring ring-offset-2">
+                        <img src={session?.user.image ?? ""} />
+                      </div>
+                      <ul
+                        tabIndex={0}
+                        className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+                      >
+                        <li>
+                          <Link
+                            href={`/users/${session.user.id}`}
+                            className="btn"
+                          >
+                            Profile
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/api/auth/signout"
+                            className="btn btn-ghost"
+                          >
+                            Logout
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 ) : (
                   <Link href="/api/auth/signin" className="btn">

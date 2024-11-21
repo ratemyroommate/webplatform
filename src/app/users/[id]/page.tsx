@@ -4,7 +4,7 @@ import { EditProfile } from "~/app/_components/EditProfile";
 import { Rating } from "~/app/_components/Rating";
 import { ReviewModal } from "~/app/_components/ReviewModal";
 import { getServerAuthSession } from "~/server/auth";
-import { api } from "~/trpc/server";
+import { HydrateClient, api } from "~/trpc/server";
 import { getAverageRating } from "~/utils/helpers";
 
 type UserPageProps = { params: { id: string } };
@@ -21,7 +21,7 @@ export default async function User({ params: { id } }: UserPageProps) {
   );
 
   return (
-    <>
+    <HydrateClient>
       <div className="card bg-base-100 flex w-full flex-col gap-8 p-6 shadow-xl">
         <div className="flex justify-between">
           <img className="w-20 rounded-2xl" src={user.image ?? ""} />
@@ -84,6 +84,6 @@ export default async function User({ params: { id } }: UserPageProps) {
             </div>
           ))
         : "Nincs értékelés"}
-    </>
+    </HydrateClient>
   );
 }

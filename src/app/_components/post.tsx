@@ -8,6 +8,8 @@ type PostProps = {
 };
 
 export const Post = ({ post, userId }: PostProps) => {
+  const canEdit = userId === post.createdById;
+
   return (
     <div className="card bg-base-100 flex w-full flex-col items-center justify-between gap-6 p-8 shadow-xl sm:flex-row">
       <div className="skeleton h-48 w-48 min-w-48"></div>
@@ -17,7 +19,7 @@ export const Post = ({ post, userId }: PostProps) => {
           {post.description}
         </p>
       </div>
-      <PostModal userId={userId} post={post} />
+      {canEdit && <PostModal userId={userId} post={post} />}
       <Link href={`/posts/${post.id}`} className="btn btn-primary">
         Megtekintés
       </Link>

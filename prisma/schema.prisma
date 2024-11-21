@@ -23,8 +23,9 @@ model Post {
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdBy   User      @relation(fields: [createdById], references: [id])
     createdById String
+    Request     Request[]
 }
 
 // Necessary for Next auth
@@ -56,19 +57,21 @@ model Session {
 }
 
 model User {
-    id              String    @id @default(cuid())
-    name            String?
-    email           String?   @unique
-    emailVerified   DateTime?
-    image           String?
-    socialLink      String?
-    about           String?
-    accounts        Account[]
-    sessions        Session[]
-    posts           Post[]
-    featuredPosts   Post[]    @relation("UserPost")
-    reviewsGiven    Review[]  @relation("ReviewsGiven")
-    reviewsReceived Review[]  @relation("ReviewsReceived")
+    id               String    @id @default(cuid())
+    name             String?
+    email            String?   @unique
+    emailVerified    DateTime?
+    image            String?
+    socialLink       String?
+    about            String?
+    accounts         Account[]
+    sessions         Session[]
+    posts            Post[]
+    featuredPosts    Post[]    @relation("UserPost")
+    reviewsGiven     Review[]  @relation("ReviewsGiven")
+    reviewsReceived  Review[]  @relation("ReviewsReceived")
+    requestedPosts   Request[] @relation("UserInvitedRequests")
+    modifiedRequests Request[] @relation("UserModifiedRequests")
 }
 
 model VerificationToken {
@@ -92,4 +95,24 @@ model Review {
     reviewed User @relation("ReviewsReceived", fields: [reviewedId], references: [id])
 
     @@unique([reviewerId, reviewedId])
+}
+
+model Request {
+    id           String        @id @default(cuid())
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    status       RequestStatus @default(PENDING)
+    comment      String?
+    postId       Int
+    post         Post          @relation(fields: [postId], references: [id])
+    userId       String
+    user         User          @relation("UserInvitedRequests", fields: [userId], references: [id])
+    modifiedById String?
+    modifiedBy   User?         @relation("UserModifiedRequests", fields: [modifiedById], references: [id])
+}
+
+enum RequestStatus {
+    PENDING
+    ACCEPTED
+    DENIED
 }
