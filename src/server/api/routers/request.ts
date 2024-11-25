@@ -6,7 +6,10 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const requestRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) =>
-    ctx.db.request.findMany({ include: { user: true } }),
+    ctx.db.request.findMany({
+      include: { user: true },
+      orderBy: { createdAt: "desc" },
+    }),
   ),
   update: protectedProcedure
     .input(
@@ -33,4 +36,15 @@ export const requestRouter = createTRPCRouter({
         data: { featuredUsers: { connect: { id: request.userId } } },
       });
     }),
+  create: protectedProcedure
+    .input(z.object({ postId: z.number(), comment: z.string().nullable() }))
+    .mutation(({ ctx, input }) =>
+      ctx.db.request.create({
+        data: {
+          postId: input.postId,
+          comment: input.comment,
+          userId: ctx.session.user.id,
+        },
+      }),
+    ),
 });

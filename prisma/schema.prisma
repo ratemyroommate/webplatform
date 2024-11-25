@@ -25,7 +25,7 @@ model Post {
 
     createdBy   User      @relation(fields: [createdById], references: [id])
     createdById String
-    Request     Request[]
+    requests    Request[]
 }
 
 // Necessary for Next auth
@@ -109,6 +109,8 @@ model Request {
     user         User          @relation("UserInvitedRequests", fields: [userId], references: [id])
     modifiedById String?
     modifiedBy   User?         @relation("UserModifiedRequests", fields: [modifiedById], references: [id])
+
+    @@unique([userId, postId])
 }
 
 enum RequestStatus {

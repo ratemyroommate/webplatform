@@ -87,7 +87,7 @@ export const postRouter = createTRPCRouter({
     if (isNaN(id)) return null;
     return ctx.db.post.findUnique({
       where: { id },
-      include: featuredImageQuery,
+      include: { ...featuredImageQuery, requests: true },
     });
   }),
 });

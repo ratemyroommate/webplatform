@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { RequestStatus } from "@prisma/client";
 import { toast } from "react-hot-toast";
+import { NotificationBell } from "./NotificationBell";
 
 export const NotificationModal = () => {
   const { data: requests, isLoading } = api.request.getAll.useQuery();
@@ -24,16 +25,13 @@ export const NotificationModal = () => {
   useEffect(() => handleCloseModal("notification-modal"), [pathname]);
 
   return (
-    <div className="indicator">
-      {requests && (
-        <span className="indicator-item badge badge-secondary">
-          {requests.length}
-        </span>
-      )}
-      <BellIcon
-        onClick={() => handleOpenModal("notification-modal")}
-        width={30}
-      />
+    <>
+      <NotificationBell requests={requests}>
+        <BellIcon
+          onClick={() => handleOpenModal("notification-modal")}
+          width={30}
+        />
+      </NotificationBell>
       <dialog id="notification-modal" className="modal">
         <div className="modal-box h-96">
           <form method="dialog">
@@ -101,7 +99,7 @@ export const NotificationModal = () => {
           )}
         </div>
       </dialog>
-    </div>
+    </>
   );
 };
 

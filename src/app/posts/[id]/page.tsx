@@ -1,5 +1,6 @@
 import { FeaturedUsers } from "~/app/_components/FeaturedUsers";
 import { PostModal } from "~/app/_components/PostModal";
+import { RequestModal } from "~/app/_components/RequestModal";
 import { getServerAuthSession } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
 
@@ -11,6 +12,9 @@ export default async function Page({ params: { id } }: PostPageProps) {
 
   if (!post) return "Post not found";
   const canEdit = session?.user.id === post.createdById;
+  const canRequest =
+    !session?.user.id ||
+    !post.requests.map((request) => request.userId).includes(session.user.id);
 
   return (
     <HydrateClient>
@@ -19,7 +23,9 @@ export default async function Page({ params: { id } }: PostPageProps) {
         <FeaturedUsers {...post} />
         <p className="">{post.description}</p>
         {canEdit && <PostModal post={post} userId={session?.user.id} />}
-        <button className="btn btn-secondary">Jelentkezés</button>
+        {canRequest && (
+          <RequestModal postId={post.id} userId={session?.user.id} />
+        )}
       </div>
     </HydrateClient>
   );
