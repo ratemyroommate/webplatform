@@ -22,10 +22,12 @@ export default async function Page({ params: { id } }: PostPageProps) {
         <div className="skeleton h-60"></div>
         <FeaturedUsers {...post} />
         <p className="">{post.description}</p>
-        {canEdit && <PostModal post={post} userId={session?.user.id} />}
-        {canRequest && (
-          <RequestModal postId={post.id} userId={session?.user.id} />
-        )}
+        <div className="flex flex-col gap-2">
+          {canEdit && <PostModal post={post} userId={session?.user.id} />}
+          {canRequest && (
+            <RequestModal postId={post.id} userId={session?.user.id} />
+          )}
+        </div>
       </div>
     </HydrateClient>
   );

@@ -4,7 +4,7 @@ type RatingProps = {
   itemKey: number | string;
   readOnly?: boolean;
   rating: number;
-  size?: string;
+  isLarge?: boolean;
   onClick?: (rating: number) => void;
 };
 
@@ -12,11 +12,11 @@ export const Rating = ({
   itemKey,
   readOnly,
   rating,
-  size = "sm",
+  isLarge,
   onClick,
 }: RatingProps) => {
   return (
-    <div className={`rating rating-${size}`}>
+    <div className={isLarge ? "rating rating-md" : "rating rating-sm"}>
       {Array.from({ length: 5 }).map((_, index) => (
         <input
           key={index}

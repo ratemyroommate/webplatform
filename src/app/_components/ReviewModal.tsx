@@ -84,7 +84,7 @@ export const ReviewModal = ({
             <Rating
               rating={watch("rating")}
               itemKey={-1}
-              size={"lg"}
+              isLarge
               onClick={handleRatingClick}
             />
             <textarea

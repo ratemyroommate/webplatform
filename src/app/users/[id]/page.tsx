@@ -34,7 +34,7 @@ export default async function User({ params: { id } }: UserPageProps) {
               itemKey={Infinity}
               rating={getAverageRating(user)}
               readOnly={true}
-              size="lg"
+              isLarge
             />
             <span>( {user.reviewsReceived.length} )</span>
           </div>

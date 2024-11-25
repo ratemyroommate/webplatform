@@ -41,8 +41,12 @@ export const NotificationModal = () => {
           </form>
           <h3 className="pb-4 text-lg font-bold">Kérelmek</h3>
           {isLoading ? (
-            <p className="py-4"></p>
-          ) : (
+            <div className="flex flex-col gap-2">
+              <div className="skeleton h-16 w-full"></div>
+              <div className="skeleton h-16 w-full"></div>
+              <div className="skeleton h-16 w-full"></div>
+            </div>
+          ) : requests?.length ? (
             <div className="flex flex-col gap-2">
               {requests?.map((request) => (
                 <div
@@ -96,6 +100,8 @@ export const NotificationModal = () => {
                 </div>
               ))}
             </div>
+          ) : (
+            "Nincs értesítés"
           )}
         </div>
       </dialog>

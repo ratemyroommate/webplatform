@@ -19,10 +19,12 @@ export const Post = ({ post, userId }: PostProps) => {
           {post.description}
         </p>
       </div>
-      {canEdit && <PostModal userId={userId} post={post} />}
-      <Link href={`/posts/${post.id}`} className="btn btn-primary">
-        Megtekintés
-      </Link>
+      <div className="flex flex-col gap-2">
+        {canEdit && <PostModal userId={userId} post={post} />}
+        <Link href={`/posts/${post.id}`} className="btn btn-primary btn-wide">
+          Megtekintés
+        </Link>
+      </div>
     </div>
   );
 };
