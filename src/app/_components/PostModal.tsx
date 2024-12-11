@@ -67,6 +67,10 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
       toast.success(successMessage);
       reset();
     },
+    onError: (error) => {
+      handleCloseModal(modalId);
+      toast.error(error.message);
+    },
   });
   const updatePost = api.post.update.useMutation({
     onSuccess: () => {

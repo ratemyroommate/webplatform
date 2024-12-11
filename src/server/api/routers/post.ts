@@ -8,6 +8,7 @@ import {
 } from "~/server/api/trpc";
 import { utapi } from "~/app/api/uploadthing/route";
 
+const maxPostCountPerUser = 4;
 const imagesValidation = z
   .array(
     z.object({
@@ -27,8 +28,19 @@ export const postRouter = createTRPCRouter({
         isResident: z.boolean(),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.db.post.create({
+    .mutation(async ({ ctx, input }) => {
+      const postCountPerUser = await ctx.db.post.count({
+        where: { createdById: ctx.session.user.id },
+      });
+
+      if (postCountPerUser > maxPostCountPerUser) {
+        throw new TRPCError({
+          message: `Maximum ${maxPostCountPerUser} poszt készíthető felhasználóként jelenleg`,
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      return ctx.db.post.create({
         data: {
           images: { create: input.images },
           description: input.description,
@@ -38,8 +50,8 @@ export const postRouter = createTRPCRouter({
             connect: input.isResident ? [{ id: ctx.session.user.id }] : [],
           },
         },
-      }),
-    ),
+      });
+    }),
 
   update: protectedProcedure
     .input(
