@@ -2,6 +2,7 @@ import { Post } from "@prisma/client";
 
 declare global {
   type PostExtended = Post & {
+    images: Image[];
     featuredUsers: {
       id: string;
       image: string | null;

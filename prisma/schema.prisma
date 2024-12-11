@@ -19,13 +19,21 @@ model Post {
     description    String
     maxPersonCount Int
     featuredUsers  User[]   @relation("UserPost")
-    images         String[]
+    images         Image[]
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
 
     createdBy   User      @relation(fields: [createdById], references: [id])
     createdById String
     requests    Request[]
+}
+
+model Image {
+    id        String   @id
+    url       String
+    createdAt DateTime @default(now())
+    post      Post     @relation(fields: [postId], references: [id])
+    postId    Int
 }
 
 // Necessary for Next auth

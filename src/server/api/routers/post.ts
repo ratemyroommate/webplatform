@@ -6,19 +6,31 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { utapi } from "~/app/api/uploadthing/route";
+
+const imagesValidation = z
+  .array(
+    z.object({
+      id: z.string().min(5).max(100),
+      url: z.string().min(5).max(100),
+    }),
+  )
+  .max(4);
 
 export const postRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
+        images: imagesValidation,
         description: z.string().min(1).max(200),
         maxPersonCount: z.number().min(2).max(6),
         isResident: z.boolean(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      return ctx.db.post.create({
+    .mutation(({ ctx, input }) =>
+      ctx.db.post.create({
         data: {
+          images: { create: input.images },
           description: input.description,
           maxPersonCount: input.maxPersonCount,
           createdBy: { connect: { id: ctx.session.user.id } },
@@ -26,13 +38,14 @@ export const postRouter = createTRPCRouter({
             connect: input.isResident ? [{ id: ctx.session.user.id }] : [],
           },
         },
-      });
-    }),
+      }),
+    ),
 
   update: protectedProcedure
     .input(
       z.object({
         id: z.number(),
+        images: imagesValidation,
         description: z.string().min(1).max(200),
         maxPersonCount: z.number().min(2).max(6),
         isResident: z.boolean(),
@@ -41,7 +54,7 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const post = await ctx.db.post.findUniqueOrThrow({
         where: { id: input.id },
-        include: { featuredUsers: true },
+        include: { featuredUsers: true, images: true },
       });
 
       if (post.createdById !== ctx.session.user.id)
@@ -61,9 +74,17 @@ export const postRouter = createTRPCRouter({
           code: "CONFLICT",
         });
 
+      const oldImageKeys = post.images.map(({ id }) => id);
+      const shouldDeleteOldImages = input.images.length;
+      if (shouldDeleteOldImages) await utapi.deleteFiles(oldImageKeys);
+
       return ctx.db.post.update({
         where: { id: input.id },
         data: {
+          images: {
+            create: input.images,
+            delete: shouldDeleteOldImages ? post.images : [],
+          },
           description: input.description,
           maxPersonCount: input.maxPersonCount,
           featuredUsers: input.isResident
@@ -93,6 +114,7 @@ export const postRouter = createTRPCRouter({
 });
 
 const featuredImageQuery = {
+  images: true,
   featuredUsers: {
     select: {
       id: true,

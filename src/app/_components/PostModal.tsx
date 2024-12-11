@@ -9,6 +9,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { isUserInPostGroup } from "~/utils/helpers";
+import { genUploader } from "uploadthing/client";
+import { ChangeEvent } from "react";
+
+export const { uploadFiles } = genUploader({ package: "uploadthing/client" });
 
 type PostModalProps = {
   post?: PostExtended;
@@ -17,16 +21,23 @@ type PostModalProps = {
 
 type FormValues = Omit<
   Post,
-  "id" | "createdAt" | "updatedAt" | "createdById"
-> & { isResident: boolean };
+  "id" | "createdAt" | "updatedAt" | "createdById" | "images"
+> & { isResident: boolean; images: File[] };
 
-const defaultValues = { description: "", maxPersonCount: 2, isResident: true };
+const defaultValues = {
+  description: "",
+  maxPersonCount: 2,
+  isResident: true,
+  images: [],
+};
 const maxPersonCount = { min: 2, max: 6 };
 
 export const PostModal = ({ post, userId }: PostModalProps) => {
   const {
+    watch,
     reset,
     register,
+    setError,
     setValue,
     getValues,
     handleSubmit,
@@ -34,6 +45,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   } = useForm<FormValues>({
     defaultValues: post
       ? {
+          images: [],
           description: post.description,
           maxPersonCount: post.maxPersonCount,
           isResident: !!userId && isUserInPostGroup(post, userId),
@@ -76,10 +88,36 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     setValue("maxPersonCount", currentValue + 1);
   };
 
-  const onSubmit = async (formValues: FormValues) =>
+  const images = watch("images");
+
+  const onSubmit = async (formValues: FormValues) => {
+    const response = await uploadFiles("imageUploader", {
+      files: images,
+    });
+    const imageInfos = response.map(({ key, url }) => ({
+      id: key,
+      url,
+    }));
     post
-      ? updatePost.mutate({ ...formValues, id: post.id })
-      : createPost.mutate(formValues);
+      ? updatePost.mutate({ ...formValues, images: imageInfos, id: post.id })
+      : createPost.mutate({ ...formValues, images: imageInfos });
+  };
+
+  const handleImagesChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (!files) return;
+    const areFilesValid = files?.length <= 4;
+    setValue("images", areFilesValid ? Array.from(files) : []);
+    setError("images", {
+      message: areFilesValid ? "" : "Maximum 4 képet lehet feltölteni jelenleg",
+    });
+  };
+
+  const previewImages = images.length
+    ? images.map((image) => URL.createObjectURL(image))
+    : post
+      ? post.images.map(({ url }) => url)
+      : [];
 
   return (
     <>
@@ -107,7 +145,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         <div className="modal-box max-w-5xl">
           <h3 className="text-lg font-bold">{`Poszt ${post ? "módosítás" : "létrehozás"}`}</h3>
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
               ✕
             </button>
           </form>
@@ -116,6 +154,36 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <LoginModal />
+            <label className="form-control w-full">
+              <div className="label">
+                <span className="label-text text-lg">Képek a lakásról</span>
+              </div>
+              <input
+                max={4}
+                multiple
+                type="file"
+                {...register("images")}
+                accept=".jpg, .jpeg, .png"
+                onChange={handleImagesChange}
+                className="file-input file-input-bordered w-full max-w-xs"
+              />
+              {errors.images && (
+                <div className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.images.message}
+                  </span>
+                </div>
+              )}
+              {!!previewImages.length && (
+                <div className="carousel carousel-center max-w-md space-x-4 rounded-box p-4">
+                  {previewImages.map((image, index) => (
+                    <div key={index} className="carousel-item">
+                      <img src={image} className="h-36 rounded-box" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </label>
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text text-lg">Leírás</span>

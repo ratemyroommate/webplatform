@@ -1,3 +1,4 @@
+import { Carousel } from "~/app/_components/Carousel";
 import { FeaturedUsers } from "~/app/_components/FeaturedUsers";
 import { PostModal } from "~/app/_components/PostModal";
 import { RequestModal } from "~/app/_components/RequestModal";
@@ -18,8 +19,8 @@ export default async function Page({ params: { id } }: PostPageProps) {
 
   return (
     <HydrateClient>
-      <div className="card bg-base-100 flex w-full flex-col gap-8 p-8 shadow-xl">
-        <div className="skeleton h-60"></div>
+      <div className="card flex w-full flex-col gap-8 bg-base-100 p-8 shadow-xl">
+        <Carousel images={post.images} id={post.id} />
         <FeaturedUsers {...post} />
         <p className="">{post.description}</p>
         <div className="flex flex-col gap-2">
