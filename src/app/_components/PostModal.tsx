@@ -5,7 +5,7 @@ import { Post } from "@prisma/client";
 import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { isUserInPostGroup } from "~/utils/helpers";
@@ -37,6 +37,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   const {
     watch,
     reset,
+    control,
     register,
     setError,
     setValue,
@@ -162,14 +163,19 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               <div className="label">
                 <span className="label-text text-lg">Képek a lakásról</span>
               </div>
-              <input
-                max={4}
-                multiple
-                type="file"
-                {...register("images")}
-                accept=".jpg, .jpeg, .png"
-                onChange={handleImagesChange}
-                className="file-input file-input-bordered w-full max-w-xs"
+              <Controller
+                name="images"
+                control={control}
+                render={() => (
+                  <input
+                    max={4}
+                    multiple
+                    type="file"
+                    accept=".jpg, .jpeg, .png"
+                    onChange={handleImagesChange}
+                    className="file-input file-input-bordered w-full max-w-xs"
+                  />
+                )}
               />
               {errors.images && (
                 <div className="label">
