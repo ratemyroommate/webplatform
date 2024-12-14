@@ -11,6 +11,7 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { isUserInPostGroup } from "~/utils/helpers";
 import { genUploader } from "uploadthing/client";
 import { ChangeEvent } from "react";
+import { compressImages } from "~/utils/imagecompression";
 
 export const { uploadFiles } = genUploader({ package: "uploadthing/client" });
 
@@ -95,9 +96,8 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   const images = watch("images");
 
   const onSubmit = async (formValues: FormValues) => {
-    const response = await uploadFiles("imageUploader", {
-      files: images,
-    });
+    const files = await compressImages(images);
+    const response = await uploadFiles("imageUploader", { files });
     const imageInfos = response.map(({ key, url }) => ({
       id: key,
       url,
