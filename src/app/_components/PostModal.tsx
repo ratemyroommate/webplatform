@@ -30,8 +30,10 @@ const defaultValues = {
   maxPersonCount: 2,
   isResident: true,
   images: [],
+  price: 80,
 };
-const maxPersonCount = { min: 2, max: 6 };
+const max = { maxPersonCount: 6, price: 999 };
+const min = { maxPersonCount: 2, price: 10 };
 
 export const PostModal = ({ post, userId }: PostModalProps) => {
   const {
@@ -48,6 +50,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     defaultValues: post
       ? {
           images: [],
+          price: post.price,
           description: post.description,
           maxPersonCount: post.maxPersonCount,
           isResident: !!userId && isUserInPostGroup(post, userId),
@@ -82,16 +85,16 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     },
   });
 
-  const handleDecrease = () => {
-    const currentValue = Number(getValues("maxPersonCount"));
-    if (currentValue === maxPersonCount.min) return;
-    setValue("maxPersonCount", currentValue - 1);
+  const handleDecrease = (field: "maxPersonCount" | "price") => {
+    const currentValue = getValues(field);
+    if (currentValue === min[field]) return;
+    setValue(field, currentValue - 1);
   };
 
-  const handleIncrease = () => {
-    const currentValue = Number(getValues("maxPersonCount"));
-    if (currentValue === maxPersonCount.max) return;
-    setValue("maxPersonCount", currentValue + 1);
+  const handleIncrease = (field: "maxPersonCount" | "price") => {
+    const currentValue = getValues(field);
+    if (currentValue === max[field]) return;
+    setValue(field, currentValue + 1);
   };
 
   const images = watch("images");
@@ -196,6 +199,41 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             </label>
             <label className="form-control w-full">
               <div className="label">
+                <span className="label-text text-lg">Bérleti díj</span>
+              </div>
+              <div className="flex gap-4">
+                <button
+                  className="btn btn-square md:btn-wide"
+                  onClick={() => handleDecrease("price")}
+                  type="button"
+                >
+                  <MinusIcon width={20} />
+                </button>
+
+                <label className="input input-bordered flex w-full items-center justify-between gap-2">
+                  <input
+                    min={10}
+                    max={999}
+                    type="number"
+                    {...register("price", {
+                      valueAsNumber: true,
+                      min: 10,
+                      max: 999,
+                    })}
+                  />
+                  <span>K ft/fő/hónap</span>
+                </label>
+                <button
+                  className="btn btn-square md:btn-wide"
+                  onClick={() => handleIncrease("price")}
+                  type="button"
+                >
+                  <PlusIcon width={20} />
+                </button>
+              </div>
+            </label>
+            <label className="form-control w-full">
+              <div className="label">
                 <span className="label-text text-lg">Leírás</span>
               </div>
               <textarea
@@ -218,21 +256,27 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               <div className="flex gap-4">
                 <button
                   className="btn btn-square md:btn-wide"
-                  onClick={handleDecrease}
+                  onClick={() => handleDecrease("maxPersonCount")}
                   type="button"
                 >
                   <MinusIcon width={20} />
                 </button>
-                <input
-                  min={2}
-                  max={6}
-                  type="number"
-                  className="input input-bordered w-full"
-                  {...register("maxPersonCount", { min: 2, max: 6 })}
-                />
+                <label className="input input-bordered flex w-full items-center justify-between gap-2">
+                  <input
+                    min={2}
+                    max={6}
+                    type="number"
+                    {...register("maxPersonCount", {
+                      valueAsNumber: true,
+                      min: 2,
+                      max: 6,
+                    })}
+                  />
+                  <span>max</span>
+                </label>
                 <button
                   className="btn btn-square md:btn-wide"
-                  onClick={handleIncrease}
+                  onClick={() => handleIncrease("maxPersonCount")}
                   type="button"
                 >
                   <PlusIcon width={20} />

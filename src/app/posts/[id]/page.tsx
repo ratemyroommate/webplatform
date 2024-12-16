@@ -1,6 +1,7 @@
 import { Carousel } from "~/app/_components/Carousel";
 import { FeaturedUsers } from "~/app/_components/FeaturedUsers";
 import { PostModal } from "~/app/_components/PostModal";
+import { PostPrice } from "~/app/_components/PostPrice";
 import { RequestModal } from "~/app/_components/RequestModal";
 import { getServerAuthSession } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
@@ -23,6 +24,7 @@ export default async function Page({ params: { id } }: PostPageProps) {
         <Carousel images={post.images} id={post.id} />
         <FeaturedUsers {...post} />
         <p className="">{post.description}</p>
+        <PostPrice price={post.price} />
         <div className="flex flex-col gap-2">
           {canEdit && <PostModal post={post} userId={session?.user.id} />}
           {canRequest && (

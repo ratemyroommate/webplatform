@@ -23,6 +23,7 @@ export const postRouter = createTRPCRouter({
     .input(
       z.object({
         images: imagesValidation,
+        price: z.number().min(10).max(999),
         description: z.string().min(1).max(200),
         maxPersonCount: z.number().min(2).max(6),
         isResident: z.boolean(),
@@ -43,6 +44,7 @@ export const postRouter = createTRPCRouter({
       return ctx.db.post.create({
         data: {
           images: { create: input.images },
+          price: input.price,
           description: input.description,
           maxPersonCount: input.maxPersonCount,
           createdBy: { connect: { id: ctx.session.user.id } },
@@ -58,6 +60,7 @@ export const postRouter = createTRPCRouter({
       z.object({
         id: z.number(),
         images: imagesValidation,
+        price: z.number().min(10).max(999),
         description: z.string().min(1).max(200),
         maxPersonCount: z.number().min(2).max(6),
         isResident: z.boolean(),
@@ -97,6 +100,7 @@ export const postRouter = createTRPCRouter({
             create: input.images,
             delete: shouldDeleteOldImages ? post.images : [],
           },
+          price: input.price,
           description: input.description,
           maxPersonCount: input.maxPersonCount,
           featuredUsers: input.isResident

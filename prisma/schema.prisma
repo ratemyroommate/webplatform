@@ -20,6 +20,7 @@ model Post {
     maxPersonCount Int
     featuredUsers  User[]   @relation("UserPost")
     images         Image[]
+    price          Int
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
 
