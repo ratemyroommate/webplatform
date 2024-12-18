@@ -8,6 +8,7 @@ import {
 } from "~/server/api/trpc";
 import { utapi } from "~/app/api/uploadthing/route";
 
+const limit = 2;
 const maxPostCountPerUser = 4;
 const imagesValidation = z
   .array(
@@ -110,14 +111,24 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
-  getLatest: publicProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.db.post.findMany({
-      orderBy: { createdAt: "desc" },
-      include: featuredImageQuery,
-    });
+  getLatest: publicProcedure
+    .input(
+      z.object({
+        filters: z.object({}),
+        cursor: z.number().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const posts = await ctx.db.post.findMany({
+        take: limit + 1,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        orderBy: { createdAt: "desc" },
+        include: featuredImageQuery,
+      });
 
-    return posts ?? [];
-  }),
+      const nextCursor = posts.length > limit ? posts.pop()?.id : undefined;
+      return { posts, nextCursor };
+    }),
 
   getById: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const id = Number(input);

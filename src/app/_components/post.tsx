@@ -13,7 +13,7 @@ export const Post = ({ post, userId }: PostProps) => {
   const canEdit = userId === post.createdById;
 
   return (
-    <div className="card flex w-full flex-col items-center justify-between gap-6 bg-base-100 p-8 shadow-xl sm:flex-row">
+    <div className="card flex w-full flex-col items-center justify-between gap-6 bg-base-100 p-4 shadow-xl sm:flex-row">
       <Carousel images={post.images} id={post.id} />
       <div className="flex w-full flex-col gap-2">
         <FeaturedUsers {...post} />
