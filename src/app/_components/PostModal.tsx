@@ -131,7 +131,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     <>
       <button
         onClick={() => handleOpenModal(modalId)}
-        className={`btn ${!post && "btn-secondary w-full shadow-xl"}`}
+        className={`btn ${!post && "btn-secondary flex-1 shadow-xl"}`}
       >
         {post ? (
           <>

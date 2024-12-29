@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { isUserInPostGroup } from "~/utils/helpers";
+import { formatOrderBy, isUserInPostGroup } from "~/utils/helpers";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -18,6 +18,13 @@ const imagesValidation = z
     }),
   )
   .max(4);
+
+export const orderBy = z.enum([
+  "price-asc",
+  "price-desc",
+  "createdAt-desc",
+  "createdAt-asc",
+]);
 
 export const postRouter = createTRPCRouter({
   create: protectedProcedure
@@ -114,7 +121,10 @@ export const postRouter = createTRPCRouter({
   getLatest: publicProcedure
     .input(
       z.object({
-        filters: z.object({}),
+        filters: z.object({
+          maxPersonCount: z.number().optional(),
+          orderBy: orderBy.default("createdAt-desc"),
+        }),
         cursor: z.number().nullish(),
       }),
     )
@@ -122,8 +132,9 @@ export const postRouter = createTRPCRouter({
       const posts = await ctx.db.post.findMany({
         take: limit + 1,
         cursor: input.cursor ? { id: input.cursor } : undefined,
-        orderBy: { createdAt: "desc" },
+        orderBy: formatOrderBy(input.filters.orderBy),
         include: featuredImageQuery,
+        where: { maxPersonCount: input.filters.maxPersonCount },
       });
 
       const nextCursor = posts.length > limit ? posts.pop()?.id : undefined;

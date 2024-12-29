@@ -11,6 +11,7 @@ export const Carousel = ({ images, id }: CarouselProps) => {
     <div className="carousel w-full rounded-xl">
       {images.map(({ url }, index) => (
         <div
+          key={index}
           id={`slide${id}${index}`}
           className="carousel-item relative w-full"
         >

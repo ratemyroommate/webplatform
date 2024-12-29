@@ -15,11 +15,8 @@ export const Post = ({ post, userId }: PostProps) => {
   return (
     <div className="card flex w-full flex-col items-center justify-between gap-6 bg-base-100 p-4 shadow-xl sm:flex-row">
       <Carousel images={post.images} id={post.id} />
-      <div className="flex w-full flex-col gap-2">
+      <div className="flex w-full flex-col gap-6">
         <FeaturedUsers {...post} />
-        <p className="line-clamp-3 overflow-hidden text-ellipsis">
-          {post.description}
-        </p>
         <PostPrice price={post.price} />
       </div>
       <div className="flex w-full flex-col gap-2">
