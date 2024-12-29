@@ -8,6 +8,7 @@ import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { orderBy } from "~/server/api/routers/post";
+import { FiltersIndicator } from "./FiltersIndicator";
 
 type FiltersProps = { filters: FormValues; setFilters: any };
 export type FormValues = { maxPersonCount?: number; orderBy?: OrderBy };
@@ -36,12 +37,14 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
 
   return (
     <>
-      <button
-        onClick={() => handleOpenModal("filters-modal")}
-        className="btn btn-square bg-base-100 shadow-xl"
-      >
-        <AdjustmentsHorizontalIcon width={26} />
-      </button>
+      <FiltersIndicator filters={filters}>
+        <button
+          onClick={() => handleOpenModal("filters-modal")}
+          className="btn btn-square bg-base-100 shadow-xl"
+        >
+          <AdjustmentsHorizontalIcon width={26} />
+        </button>
+      </FiltersIndicator>
       <dialog id="filters-modal" className="modal">
         <div className="modal-box">
           <button onClick={resetFilters} className="btn btn-sm mb-4">

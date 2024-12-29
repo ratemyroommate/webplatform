@@ -5,11 +5,11 @@ type PostPriceProps = {
 };
 
 export const PostPrice = ({ price }: PostPriceProps) => (
-  <div className="flex items-center gap-2">
-    <BanknotesIcon width={20} />
-    <b>
-      {price}
-      <span className="text-sm">k ft/fő/hónap</span>
-    </b>
+  <div className="flex flex-col items-center justify-center">
+    <span className="text-sm text-gray-500">ft/fő/hónap</span>
+    <div className="flex gap-2">
+      <b>{price}k</b>
+      <BanknotesIcon width={24} color="green" />
+    </div>
   </div>
 );
