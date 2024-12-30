@@ -11,16 +11,21 @@ import { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
 
 type FiltersProps = { filters: FormValues; setFilters: any };
-export type FormValues = { maxPersonCount?: number; orderBy?: OrderBy };
+export type FormValues = {
+  maxPersonCount?: number;
+  maxPrice?: number;
+  orderBy?: OrderBy;
+};
 export type OrderBy = z.infer<typeof orderBy>;
 
 const defaultFilters: FormValues = {
   orderBy: "createdAt-desc",
   maxPersonCount: 3,
+  maxPrice: 200,
 };
 
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
-  const { reset, register, handleSubmit } = useForm<FormValues>({
+  const { reset, register, handleSubmit, watch } = useForm<FormValues>({
     defaultValues: Object.keys(filters).length ? filters : defaultFilters,
   });
 
@@ -75,6 +80,29 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               />
               <div className="flex w-full justify-between px-2 text-xs">
                 {Array.from({ length: 5 }, (_, i) => i + 2).map((n) => (
+                  <span key={n}>{n}</span>
+                ))}
+              </div>
+            </label>
+            <label className="form-control w-full">
+              <div className="label">
+                <span className="label-text text-lg">
+                  Maximum ár{" "}
+                  <span className="text-sm text-gray-500">
+                    ( {watch("maxPrice")} ft/fő/hónap )
+                  </span>
+                </span>
+              </div>
+              <input
+                {...register("maxPrice", { valueAsNumber: true })}
+                type="range"
+                className="range"
+                min={50}
+                max={500}
+                step={10}
+              />
+              <div className="flex w-full justify-between px-2 text-xs">
+                {Array.from({ length: 10 }, (_, i) => i * 50 + 50).map((n) => (
                   <span key={n}>{n}</span>
                 ))}
               </div>

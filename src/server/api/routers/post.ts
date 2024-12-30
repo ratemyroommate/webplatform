@@ -123,6 +123,7 @@ export const postRouter = createTRPCRouter({
       z.object({
         filters: z.object({
           maxPersonCount: z.number().optional(),
+          maxPrice: z.number().optional(),
           orderBy: orderBy.default("createdAt-desc"),
         }),
         cursor: z.number().nullish(),
@@ -134,7 +135,10 @@ export const postRouter = createTRPCRouter({
         cursor: input.cursor ? { id: input.cursor } : undefined,
         orderBy: formatOrderBy(input.filters.orderBy),
         include: featuredImageQuery,
-        where: { maxPersonCount: input.filters.maxPersonCount },
+        where: {
+          maxPersonCount: input.filters.maxPersonCount,
+          price: { lte: input.filters.maxPrice },
+        },
       });
 
       const nextCursor = posts.length > limit ? posts.pop()?.id : undefined;
