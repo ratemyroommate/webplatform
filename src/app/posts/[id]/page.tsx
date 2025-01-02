@@ -21,11 +21,11 @@ export default async function Page({ params: { id } }: PostPageProps) {
 
   return (
     <HydrateClient>
-      <div className="card flex w-full flex-col gap-8 bg-base-100 p-8 shadow-xl">
+      <div className="card flex w-full flex-col gap-6 bg-base-100 p-4 shadow-xl">
         <Carousel images={post.images} id={post.id} />
         <FeaturedUsers {...post} />
-        <p className="">{post.description}</p>
         <PostPrice price={post.price} />
+        <p className="">{post.description}</p>
         <div className="flex flex-col gap-2">
           {canEdit && (
             <div className="flex w-full gap-2">
