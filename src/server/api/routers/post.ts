@@ -153,6 +153,25 @@ export const postRouter = createTRPCRouter({
       include: { ...featuredImageQuery, requests: true },
     });
   }),
+
+  deleteById: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.db.post.findUniqueOrThrow({
+        where: { id: input },
+        include: { images: true },
+      });
+
+      if (post.createdById !== ctx.session.user.id)
+        throw new TRPCError({
+          message: "Unauthorized to delete this post",
+          code: "UNAUTHORIZED",
+        });
+
+      const imageKeys = post.images.map(({ id }) => id);
+      await utapi.deleteFiles(imageKeys);
+      return ctx.db.post.delete({ where: { id: input } });
+    }),
 });
 
 const featuredImageQuery = {

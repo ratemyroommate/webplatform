@@ -33,7 +33,7 @@ model Image {
     id        String   @id
     url       String
     createdAt DateTime @default(now())
-    post      Post     @relation(fields: [postId], references: [id])
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId    Int
 }
 
@@ -113,7 +113,7 @@ model Request {
     status       RequestStatus @default(PENDING)
     comment      String?
     postId       Int
-    post         Post          @relation(fields: [postId], references: [id])
+    post         Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
     userId       String
     user         User          @relation("UserInvitedRequests", fields: [userId], references: [id])
     modifiedById String?

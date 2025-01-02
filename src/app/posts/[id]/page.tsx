@@ -1,5 +1,6 @@
 import { Carousel } from "~/app/_components/Carousel";
 import { FeaturedUsers } from "~/app/_components/FeaturedUsers";
+import { PostDelete } from "~/app/_components/PostDelete";
 import { PostModal } from "~/app/_components/PostModal";
 import { PostPrice } from "~/app/_components/PostPrice";
 import { RequestModal } from "~/app/_components/RequestModal";
@@ -26,7 +27,12 @@ export default async function Page({ params: { id } }: PostPageProps) {
         <p className="">{post.description}</p>
         <PostPrice price={post.price} />
         <div className="flex flex-col gap-2">
-          {canEdit && <PostModal post={post} userId={session?.user.id} />}
+          {canEdit && (
+            <div className="flex w-full gap-2">
+              <PostModal post={post} userId={session?.user.id} />
+              <PostDelete id={post.id} />
+            </div>
+          )}
           {canRequest && (
             <RequestModal postId={post.id} userId={session?.user.id} />
           )}

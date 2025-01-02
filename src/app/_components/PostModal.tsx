@@ -131,7 +131,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     <>
       <button
         onClick={() => handleOpenModal(modalId)}
-        className={`btn ${!post && "btn-secondary flex-1 shadow-xl"}`}
+        className={`btn flex-1 ${!post && "btn-secondary shadow-xl"}`}
       >
         {post ? (
           <>
@@ -297,7 +297,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               disabled={isSubmitting || createPost.isPending}
               className="btn btn-secondary btn-wide mt-4 self-center"
             >
-              Közzététel
+              {post ? "Mentés" : "Közzététel"}
             </button>
           </form>
         </div>
