@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FeaturedUsers } from "./FeaturedUsers";
 import { PostModal } from "./PostModal";
-import { Carousel } from "./Carousel";
+import { Images } from "./Images";
 import { PostPrice } from "./PostPrice";
 
 type PostProps = {
@@ -14,7 +14,7 @@ export const Post = ({ post, userId }: PostProps) => {
 
   return (
     <div className="card flex w-full flex-col items-center justify-between gap-6 bg-base-100 p-4 shadow-xl sm:flex-row">
-      <Carousel images={post.images} id={post.id} />
+      <Images images={post.images} />
       <div className="flex w-full flex-col gap-4">
         <FeaturedUsers {...post} />
         <PostPrice price={post.price} />
