@@ -154,6 +154,14 @@ export const postRouter = createTRPCRouter({
     });
   }),
 
+  getAllByUserId: publicProcedure.input(z.string()).query(({ ctx, input }) =>
+    ctx.db.post.findMany({
+      where: { createdById: input },
+      include: featuredImageQuery,
+      orderBy: { createdAt: "desc" },
+    }),
+  ),
+
   deleteById: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {

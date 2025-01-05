@@ -12,7 +12,7 @@ export const Images = ({ images }: CarouselProps) => {
   if (!images.length) return <div className="skeleton h-60 w-full"></div>;
   return (
     <Carousel
-      className="overflow-hidden rounded-lg"
+      className="overflow-hidden rounded-lg lg:max-w-sm"
       showThumbs={false}
       showStatus={false}
       dynamicHeight={true}

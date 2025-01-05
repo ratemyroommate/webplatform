@@ -8,6 +8,11 @@ import { getServerAuthSession } from "~/server/auth";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 import { NotificationModal } from "./_components/NotificationModal";
+import {
+  ArrowLeftStartOnRectangleIcon,
+  InboxIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 
 export const metadata: Metadata = {
   title: "Rate My Roommate",
@@ -52,7 +57,17 @@ export default async function RootLayout({
                             href={`/users/${session.user.id}`}
                             className="btn"
                           >
-                            Profile
+                            <UserCircleIcon width={20} />
+                            Profil
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href={`/users/${session.user.id}/posts`}
+                            className="btn btn-ghost"
+                          >
+                            <InboxIcon width={20} />
+                            Posztjaim
                           </Link>
                         </li>
                         <li>
@@ -60,7 +75,8 @@ export default async function RootLayout({
                             href="/api/auth/signout"
                             className="btn btn-ghost"
                           >
-                            Logout
+                            <ArrowLeftStartOnRectangleIcon width={20} />
+                            Kijelentkezés
                           </Link>
                         </li>
                       </ul>
