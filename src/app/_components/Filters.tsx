@@ -20,14 +20,15 @@ export type OrderBy = z.infer<typeof orderBy>;
 
 const defaultFilters: FormValues = {
   orderBy: "createdAt-desc",
-  maxPersonCount: 3,
-  maxPrice: 200,
+  maxPersonCount: 0,
+  maxPrice: 0,
 };
 
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
-  const { reset, register, handleSubmit, watch } = useForm<FormValues>({
-    defaultValues: Object.keys(filters).length ? filters : defaultFilters,
-  });
+  const { reset, register, handleSubmit, watch, setValue } =
+    useForm<FormValues>({
+      defaultValues: Object.keys(filters).length ? filters : defaultFilters,
+    });
 
   const onSubmit = (formValues: FormValues) => {
     handleCloseModal("filters-modal");
@@ -70,17 +71,21 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               <div className="label">
                 <span className="label-text text-lg">Lakótársak száma</span>
               </div>
-              <input
-                {...register("maxPersonCount", { valueAsNumber: true })}
-                type="range"
-                className="range"
-                min={2}
-                max={6}
-                step={1}
-              />
-              <div className="flex w-full justify-between px-2 text-xs">
-                {Array.from({ length: 5 }, (_, i) => i + 2).map((n) => (
-                  <span key={n}>{n}</span>
+              <div className="flex justify-between gap-2">
+                {Array.from({ length: 4 }, (_, i) => i + 2).map((n) => (
+                  <button
+                    key={n}
+                    className={`btn flex-1 ${watch("maxPersonCount") == n ? "btn-secondary" : ""}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setValue(
+                        "maxPersonCount",
+                        watch("maxPersonCount") === n ? 0 : n,
+                      );
+                    }}
+                  >
+                    {n}
+                  </button>
                 ))}
               </div>
             </label>
@@ -89,7 +94,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                 <span className="label-text text-lg">
                   Maximum ár{" "}
                   <span className="text-sm text-gray-500">
-                    ( {watch("maxPrice")} ft/fő/hónap )
+                    ( {watch("maxPrice")}k ft/fő/hónap )
                   </span>
                 </span>
               </div>

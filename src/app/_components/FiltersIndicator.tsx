@@ -8,11 +8,14 @@ type NotificationBellProps = {
 export const FiltersIndicator = ({
   children,
   filters,
-}: NotificationBellProps) =>
-  Object.keys(filters).length ? (
+}: NotificationBellProps) => {
+  const indicatorCount =
+    Object.values(filters).filter((filter) => !!filter).length - 1;
+
+  return indicatorCount > 0 ? (
     <div className="indicator">
       <span className="badge indicator-item badge-warning">
-        {Object.keys(filters).length - 1}
+        {indicatorCount}
       </span>
 
       {children}
@@ -20,3 +23,4 @@ export const FiltersIndicator = ({
   ) : (
     children
   );
+};
