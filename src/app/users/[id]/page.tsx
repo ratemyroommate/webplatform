@@ -22,7 +22,7 @@ export default async function User({ params: { id } }: UserPageProps) {
 
   return (
     <HydrateClient>
-      <div className="card bg-base-100 flex w-full flex-col gap-8 p-6 shadow-xl">
+      <div className="card flex w-full flex-col gap-8 bg-base-100 p-6 shadow-xl">
         <div className="flex justify-between">
           <img className="w-20 rounded-2xl" src={user.image ?? ""} />
           {canEdit && <EditProfile {...user} />}
@@ -58,7 +58,7 @@ export default async function User({ params: { id } }: UserPageProps) {
       {user.reviewsReceived.length
         ? user.reviewsReceived.map((review, index) => (
             <div
-              className="card bg-base-100 flex w-full flex-col gap-4 p-6 shadow-xl"
+              className="card flex w-full flex-col gap-4 bg-base-100 p-6 shadow-xl"
               key={index}
             >
               <div className="flex justify-between">
@@ -80,7 +80,7 @@ export default async function User({ params: { id } }: UserPageProps) {
                 )}
               </div>
               <Rating rating={review.rating} itemKey={index} />
-              <p>{review.comment || "Nincs megjegyzés"}</p>
+              <p>{review.comment ?? "Nincs megjegyzés"}</p>
             </div>
           ))
         : "Nincs értékelés"}

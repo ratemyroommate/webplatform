@@ -2,8 +2,9 @@ import { useEffect, useRef } from "react";
 import { api } from "~/trpc/react";
 import { Post } from "./post";
 import { PostSkeletons } from "./PostSkeletons";
+import { FormValues } from "./Filters";
 
-type FeedPostsProps = { filters: any; userId?: string };
+type FeedPostsProps = { filters: FormValues; userId?: string };
 
 export const FeedPosts = ({ filters, userId }: FeedPostsProps) => {
   const bottom = useRef<HTMLDivElement>(null);

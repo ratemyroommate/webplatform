@@ -19,7 +19,7 @@ export const FeaturedUsers = (post: PostExtended) => {
           key={index}
         >
           <div className="avatar w-10" key={index}>
-            <div className="ring-secondary ring-offset-base-100 rounded-full ring ring-offset-2">
+            <div className="rounded-full ring ring-secondary ring-offset-2 ring-offset-base-100">
               <img src={post.featuredUsers?.[index]?.image ?? defaultImage} />
             </div>
           </div>
