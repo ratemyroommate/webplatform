@@ -12,6 +12,4 @@ export const { GET, POST } = createRouteHandler({
 
 import { UTApi } from "uploadthing/server";
 
-export const utapi = new UTApi({
-  // ...options,
-});
+export const utapi = new UTApi();
