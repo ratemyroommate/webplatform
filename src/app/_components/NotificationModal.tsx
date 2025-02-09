@@ -18,7 +18,7 @@ export const NotificationModal = () => {
   const updateRequest = api.request.update.useMutation({
     onSuccess: () => {
       router.refresh();
-      utils.request.getAll.invalidate();
+      void utils.request.getAll.invalidate();
       toast.success("Request updated successfully");
     },
   });
@@ -35,7 +35,7 @@ export const NotificationModal = () => {
       <dialog id="notification-modal" className="modal">
         <div className="modal-box h-96">
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
               ✕
             </button>
           </form>
@@ -51,7 +51,7 @@ export const NotificationModal = () => {
               {requests?.map((request) => (
                 <div
                   key={request.id}
-                  className="card border-base-200 flex flex-row items-center justify-between border-2 p-2"
+                  className="card flex flex-row items-center justify-between border-2 border-base-200 p-2"
                 >
                   <div className="flew-row flex items-center gap-4">
                     <Link
@@ -74,7 +74,7 @@ export const NotificationModal = () => {
                   {request.status === "PENDING" && (
                     <div className="flex gap-2">
                       <button
-                        className="btn btn-success btn-square"
+                        className="btn btn-square btn-success"
                         onClick={() =>
                           updateRequest.mutate({
                             requestId: request.id,
@@ -85,7 +85,7 @@ export const NotificationModal = () => {
                         <CheckIcon width={20} />
                       </button>
                       <button
-                        className="btn btn-error btn-square"
+                        className="btn btn-square btn-error"
                         onClick={() =>
                           updateRequest.mutate({
                             requestId: request.id,

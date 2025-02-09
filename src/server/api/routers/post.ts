@@ -6,7 +6,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { utapi } from "~/app/api/uploadthing/route";
+import { utapi } from "~/app/api/uploadthing/utapi";
 
 const limit = 2;
 const maxPostCountPerUser = 4;

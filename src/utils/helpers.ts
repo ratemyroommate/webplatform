@@ -1,5 +1,5 @@
-import { Post, User } from "@prisma/client";
-import { OrderBy } from "~/app/_components/Filters";
+import type { Post, User } from "@prisma/client";
+import type { OrderBy } from "~/app/_components/Filters";
 
 export const getAverageRating = (
   user: PostExtended["featuredUsers"][number],

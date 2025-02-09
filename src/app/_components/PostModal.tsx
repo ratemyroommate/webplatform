@@ -106,9 +106,9 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
       id: key,
       url,
     }));
-    post
-      ? updatePost.mutate({ ...formValues, images: imageInfos, id: post.id })
-      : createPost.mutate({ ...formValues, images: imageInfos });
+    if (post)
+      updatePost.mutate({ ...formValues, images: imageInfos, id: post.id });
+    else createPost.mutate({ ...formValues, images: imageInfos });
   };
 
   const handleImagesChange = (e: ChangeEvent<HTMLInputElement>) => {

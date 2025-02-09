@@ -24,7 +24,11 @@ export default async function User({ params: { id } }: UserPageProps) {
     <HydrateClient>
       <div className="card flex w-full flex-col gap-8 bg-base-100 p-6 shadow-xl">
         <div className="flex justify-between">
-          <img className="w-20 rounded-2xl" src={user.image ?? ""} />
+          <img
+            className="w-20 rounded-2xl"
+            src={user.image ?? ""}
+            alt="user profile image"
+          />
           {canEdit && <EditProfile {...user} />}
         </div>
         <div className="flex flex-col gap-2">
@@ -65,6 +69,7 @@ export default async function User({ params: { id } }: UserPageProps) {
                 <div className="flex gap-6">
                   <Link href={`/users/${review.reviewer.id}`}>
                     <img
+                      alt="user profile image"
                       className="w-12 rounded-full"
                       src={review.reviewer.image ?? ""}
                     />

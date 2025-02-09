@@ -16,7 +16,7 @@ export const FeedPosts = ({ filters, userId }: FeedPostsProps) => {
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0]?.isIntersecting) fetchNextPage();
+      if (entries[0]?.isIntersecting) void fetchNextPage();
     });
     if (bottom.current) observer.observe(bottom.current);
   }, []);

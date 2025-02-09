@@ -1,7 +1,7 @@
 "use client";
 
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { useRouter } from "next/navigation";
@@ -40,7 +40,7 @@ export const EditProfile = (user: User) => {
         <div className="modal-box">
           <h3 className="text-lg font-bold">Profil módosítás</h3>
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
               ✕
             </button>
           </form>

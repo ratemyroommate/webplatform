@@ -20,7 +20,10 @@ export const FeaturedUsers = (post: PostExtended) => {
         >
           <div className="avatar w-10" key={index}>
             <div className="rounded-full ring ring-secondary ring-offset-2 ring-offset-base-100">
-              <img src={post.featuredUsers?.[index]?.image ?? defaultImage} />
+              <img
+                src={post.featuredUsers?.[index]?.image ?? defaultImage}
+                alt="szobatárs"
+              />
             </div>
           </div>
           <div className="flex flex-col items-center">

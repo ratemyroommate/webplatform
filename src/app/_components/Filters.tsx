@@ -9,8 +9,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
+import { Dispatch } from "react";
 
-type FiltersProps = { filters: FormValues; setFilters: any };
+type FiltersProps = { filters: FormValues; setFilters: Dispatch<FormValues> };
 export type FormValues = {
   maxPersonCount?: number;
   maxPrice?: number;
