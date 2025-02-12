@@ -2,9 +2,9 @@ import type { Post, User } from "@prisma/client";
 import type { OrderBy } from "~/app/_components/Filters";
 
 export const getAverageRating = (
-  user: PostExtended["featuredUsers"][number],
+  user?: PostExtended["featuredUsers"][number],
 ) =>
-  user.reviewsReceived.length
+  user?.reviewsReceived?.length
     ? user.reviewsReceived.reduce((sum, { rating }) => sum + rating, 0) /
       user.reviewsReceived.length
     : 1;

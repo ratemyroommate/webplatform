@@ -136,8 +136,14 @@ export const postRouter = createTRPCRouter({
         orderBy: formatOrderBy(input.filters.orderBy),
         include: featuredImageQuery,
         where: {
-          maxPersonCount: input.filters.maxPersonCount || undefined,
-          price: { lte: input.filters.maxPrice || undefined },
+          maxPersonCount:
+            input.filters.maxPersonCount !== 0
+              ? input.filters.maxPersonCount
+              : undefined,
+          price: {
+            lte:
+              input.filters.maxPrice !== 0 ? input.filters.maxPrice : undefined,
+          },
         },
       });
 

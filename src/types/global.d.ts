@@ -1,4 +1,4 @@
-import type { Post } from "@prisma/client";
+import type { Post, Image } from "@prisma/client";
 
 declare global {
   type PostExtended = Post & {

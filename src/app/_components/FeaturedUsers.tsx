@@ -31,11 +31,7 @@ export const FeaturedUsers = (post: PostExtended) => {
               {post.featuredUsers[index]?.name ?? "\u200B"}
             </p>
             <Rating
-              rating={
-                post.featuredUsers[index]
-                  ? getAverageRating(post.featuredUsers[index]!)
-                  : 1
-              }
+              rating={getAverageRating(post.featuredUsers[index])}
               itemKey={`${post.id}-${index}`}
               readOnly
             />
