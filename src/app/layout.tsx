@@ -46,7 +46,10 @@ export default async function RootLayout({
                       role="button"
                     >
                       <div className="rounded-full ring ring-primary ring-offset-2 ring-offset-base-100">
-                        <img src={session?.user.image ?? ""} />
+                        <img
+                          src={session?.user.image ?? ""}
+                          alt="profile picture"
+                        />
                       </div>
                       <ul
                         tabIndex={0}
