@@ -5,6 +5,27 @@
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+    images: {
+        remotePatterns: [
+            
+            {
+                hostname: "lh3.googleusercontent.com",
+                protocol: "https"
+            },
+            {
+                hostname: "static.vecteezy.com",
+                protocol: "https"
+            },
+            {
+                hostname: "utfs.io",
+                protocol: "https"
+            },
+            {
+                hostname: "platform-lookaside.fbsbx.com"
+            }
+        ]
+    }
+};
 
 export default config;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Rating } from "./Rating";
 import { getAverageRating } from "~/utils/helpers";
+import Image from "next/image";
 
 const defaultImage =
   "https://static.vecteezy.com/system/resources/previews/020/765/399/large_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
@@ -19,8 +20,10 @@ export const FeaturedUsers = (post: PostExtended) => {
           key={index}
         >
           <div className="avatar w-10" key={index}>
-            <div className="rounded-full ring ring-secondary ring-offset-2 ring-offset-base-100">
-              <img
+            <div className="w-full rounded-full ring ring-secondary ring-offset-2 ring-offset-base-100">
+              <Image
+                width={100}
+                height={100}
                 src={post.featuredUsers?.[index]?.image ?? defaultImage}
                 alt="szobatárs"
               />
