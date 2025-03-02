@@ -191,7 +191,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                 <div className="carousel carousel-center max-w-md space-x-4 rounded-box p-4">
                   {previewImages.map((image, index) => (
                     <div key={index} className="carousel-item">
-                      <img src={image} className="h-36 rounded-box" />
+                      <img src={image} className="h-36 w-auto rounded-box" />
                     </div>
                   ))}
                 </div>
