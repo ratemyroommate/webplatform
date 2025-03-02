@@ -188,11 +188,13 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                 </div>
               )}
               {!!previewImages.length && (
-                <div className="carousel carousel-center h-36 max-w-md space-x-4 rounded-box p-4">
+                <div className="flex h-24 w-full gap-4 overflow-x-scroll py-2">
                   {previewImages.map((image, index) => (
-                    <div key={index} className="carousel-item h-full">
-                      <img src={image} className="h-full w-auto rounded-box" />
-                    </div>
+                    <img
+                      key={index}
+                      src={image}
+                      className="h-full rounded-lg"
+                    />
                   ))}
                 </div>
               )}
