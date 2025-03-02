@@ -188,13 +188,10 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                 </div>
               )}
               {!!previewImages.length && (
-                <div className="carousel carousel-center max-w-md space-x-4 rounded-box p-4">
+                <div className="carousel carousel-center h-36 max-w-md space-x-4 rounded-box p-4">
                   {previewImages.map((image, index) => (
-                    <div key={index} className="carousel-item">
-                      <img
-                        src={image}
-                        className="h-36 w-auto rounded-box object-cover"
-                      />
+                    <div key={index} className="carousel-item h-full">
+                      <img src={image} className="h-full w-auto rounded-box" />
                     </div>
                   ))}
                 </div>
