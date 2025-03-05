@@ -68,6 +68,7 @@ export const postRouter = createTRPCRouter({
       z.object({
         id: z.number(),
         images: imagesValidation,
+        removeImages: z.array(z.string()),
         price: z.number().min(10).max(999),
         description: z.string().min(1).max(200),
         maxPersonCount: z.number().min(2).max(6),
@@ -97,16 +98,17 @@ export const postRouter = createTRPCRouter({
           code: "CONFLICT",
         });
 
-      const oldImageKeys = post.images.map(({ id }) => id);
-      const shouldDeleteOldImages = input.images.length;
-      if (shouldDeleteOldImages) await utapi.deleteFiles(oldImageKeys);
+      const removableImages = post.images.filter((image) =>
+        input.removeImages.includes(image.id),
+      );
+      await utapi.deleteFiles(removableImages.map(({ id }) => id));
 
       return ctx.db.post.update({
         where: { id: input.id },
         data: {
           images: {
             create: input.images,
-            delete: shouldDeleteOldImages ? post.images : [],
+            delete: removableImages,
           },
           price: input.price,
           description: input.description,
