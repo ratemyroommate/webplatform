@@ -23,13 +23,14 @@ type PostModalProps = {
 type FormValues = Omit<
   Post,
   "id" | "createdAt" | "updatedAt" | "createdById" | "images"
-> & { isResident: boolean; images: File[] };
+> & { isResident: boolean; images: File[]; removeImages: string[] };
 
 const defaultValues = {
   description: "",
   maxPersonCount: 2,
   isResident: true,
   images: [],
+  removeImages: [],
   price: 80,
 };
 const max = { maxPersonCount: 6, price: 999 };
@@ -50,6 +51,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     defaultValues: post
       ? {
           images: [],
+          removeImages: [],
           price: post.price,
           description: post.description,
           maxPersonCount: post.maxPersonCount,
@@ -98,6 +100,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   };
 
   const images = watch("images");
+  const removeImages = watch("removeImages");
 
   const onSubmit = async (formValues: FormValues) => {
     const files = await compressImages(images);
@@ -107,7 +110,12 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
       url,
     }));
     if (post)
-      updatePost.mutate({ ...formValues, images: imageInfos, id: post.id });
+      updatePost.mutate({
+        ...formValues,
+        images: imageInfos,
+        removeImages,
+        id: post.id,
+      });
     else createPost.mutate({ ...formValues, images: imageInfos });
   };
 
@@ -115,17 +123,41 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     const { files } = e.target;
     if (!files) return;
     const areFilesValid = files?.length <= 4;
-    setValue("images", areFilesValid ? Array.from(files) : []);
+    setValue(
+      "images",
+      areFilesValid ? [...getValues("images"), ...Array.from(files)] : [],
+    );
     setError("images", {
       message: areFilesValid ? "" : "Maximum 4 képet lehet feltölteni jelenleg",
     });
   };
 
-  const previewImages = images.length
-    ? images.map((image) => URL.createObjectURL(image))
-    : post
-      ? post.images.map(({ url }) => url)
-      : [];
+  const postImages = post ? post.images : [];
+  const previewPostImages = postImages.filter(
+    (image) => !removeImages.includes(image.id),
+  );
+  const newImages = images.map((image) => ({
+    url: URL.createObjectURL(image),
+  }));
+  const previewImages = [...previewPostImages, ...newImages];
+
+  const removeImage = (index: number) => {
+    if (index < previewPostImages.length) {
+      const removeImage = previewPostImages[index]?.id;
+      if (!removeImage) return;
+      return setValue("removeImages", [
+        ...getValues("removeImages"),
+        removeImage,
+      ]);
+    }
+
+    setValue(
+      "images",
+      getValues("images").filter(
+        (_, idx) => idx !== index - previewPostImages.length,
+      ),
+    );
+  };
 
   return (
     <>
@@ -166,39 +198,47 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               <div className="label">
                 <span className="label-text text-lg">Képek a lakásról</span>
               </div>
-              <Controller
-                name="images"
-                control={control}
-                render={() => (
-                  <input
-                    max={4}
-                    multiple
-                    type="file"
-                    accept=".jpg, .jpeg, .png"
-                    onChange={handleImagesChange}
-                    className="file-input file-input-bordered w-full max-w-xs"
-                  />
-                )}
-              />
-              {errors.images && (
-                <div className="label">
-                  <span className="label-text-alt text-error">
-                    {errors.images.message}
-                  </span>
-                </div>
+            </label>
+            <Controller
+              name="images"
+              control={control}
+              render={() => (
+                <input
+                  max={4}
+                  multiple
+                  type="file"
+                  accept=".jpg, .jpeg, .png"
+                  onChange={handleImagesChange}
+                  className="file-input file-input-bordered w-full max-w-xs"
+                />
               )}
-              {!!previewImages.length && (
-                <div className="flex h-24 w-full gap-4 overflow-x-scroll py-2">
-                  {previewImages.map((image, index) => (
+            />
+            {errors.images && (
+              <div className="label">
+                <span className="label-text-alt text-error">
+                  {errors.images.message}
+                </span>
+              </div>
+            )}
+            {!!previewImages.length && (
+              <div className="flex h-24 w-full gap-4 overflow-x-scroll py-2">
+                {previewImages.map((image, index) => (
+                  <div key={index} className="relative flex-none">
                     <img
                       key={index}
-                      src={image}
+                      src={image.url}
                       className="h-full rounded-lg"
                     />
-                  ))}
-                </div>
-              )}
-            </label>
+                    <div
+                      onClick={() => removeImage(index)}
+                      className="absolute right-0 top-0 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
+                    >
+                      ✕
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text text-lg">Bérleti díj</span>
