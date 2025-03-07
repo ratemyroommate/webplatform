@@ -1,20 +1,24 @@
-import Link from "next/link";
+"use client";
 import { Rating } from "./Rating";
 import { getAverageRating } from "~/utils/helpers";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const defaultImage =
   "https://static.vecteezy.com/system/resources/previews/020/765/399/large_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
 
 export const FeaturedUsers = (post: PostExtended) => {
+  const router = useRouter();
   return (
     <div className="flex flex-wrap items-center justify-center gap-2 gap-y-4">
       {Array.from({ length: post.maxPersonCount }).map((_, index) => (
-        <Link
-          href={
-            post.featuredUsers[index]?.id
-              ? `/users/${post.featuredUsers[index]?.id}`
-              : "#"
+        <div
+          onClick={() =>
+            router.push(
+              post.featuredUsers[index]?.id
+                ? `/users/${post.featuredUsers[index]?.id}`
+                : "#",
+            )
           }
           className="flex flex-col items-center gap-2"
           key={index}
@@ -39,7 +43,7 @@ export const FeaturedUsers = (post: PostExtended) => {
               readOnly
             />
           </div>
-        </Link>
+        </div>
       ))}
     </div>
   );
