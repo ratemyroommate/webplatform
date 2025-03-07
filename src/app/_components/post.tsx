@@ -13,18 +13,15 @@ export const Post = ({ post, userId }: PostProps) => {
   const canEdit = userId === post.createdById;
 
   return (
-    <div className="card flex w-full flex-col items-center justify-between gap-6 bg-base-100 p-4 shadow-xl sm:flex-row">
+    <Link
+      href={`/posts/${post.id}`}
+      className="card flex w-full flex-col items-center justify-between gap-6 bg-base-100 p-4 shadow-xl sm:flex-row"
+    >
       <Images images={post.images} />
       <div className="flex w-full flex-col gap-4">
         <FeaturedUsers {...post} />
         <PostPrice price={post.price} />
       </div>
-      <div className="flex w-full flex-col gap-2">
-        {canEdit && <PostModal userId={userId} post={post} />}
-        <Link href={`/posts/${post.id}`} className="btn btn-primary w-full">
-          Megtekintés
-        </Link>
-      </div>
-    </div>
+    </Link>
   );
 };
