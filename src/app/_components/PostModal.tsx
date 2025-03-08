@@ -220,7 +220,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                 {previewImages.map((image, index) => (
                   <div
                     key={index}
-                    className="overflow: visible; relative h-auto flex-none"
+                    className="relative h-auto flex-none overflow-visible"
                   >
                     <img
                       key={index}
