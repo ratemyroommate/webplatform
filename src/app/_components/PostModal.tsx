@@ -199,6 +199,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               </div>
             </label>
 
+            {images.length}
             <input
               name="images"
               max={4}
