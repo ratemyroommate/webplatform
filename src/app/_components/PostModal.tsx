@@ -226,7 +226,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                     />
                     <div
                       onClick={() => removeImage(index)}
-                      className="absolute right-0 top-0 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
+                      className="absolute right-0 top-0 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
                     >
                       ✕
                     </div>
