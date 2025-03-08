@@ -204,7 +204,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               max={4}
               multiple
               type="file"
-              accept=".jpg, .jpeg, .png"
+              accept="image/*"
               onChange={handleImagesChange}
               className="file-input file-input-bordered w-full max-w-xs"
             />
