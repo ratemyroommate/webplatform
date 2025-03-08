@@ -220,7 +220,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                 {previewImages.map((image, index) => (
                   <div
                     key={index}
-                    className="relative h-auto flex-none overflow-visible"
+                    className="relative flex h-auto flex-none overflow-visible"
                   >
                     <img
                       key={index}
@@ -229,7 +229,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                     />
                     <div
                       onClick={() => removeImage(index)}
-                      className="absolute right-0 top-0 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
+                      className="z-10 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
                     >
                       ✕
                     </div>
