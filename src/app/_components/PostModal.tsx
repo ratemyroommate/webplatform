@@ -217,7 +217,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               </div>
             )}
             {!!previewImages.length && (
-              <div className="flex h-24 w-full gap-4 overflow-x-scroll py-2">
+              <div className="flex h-24 w-full flex-col gap-4 py-2">
                 {previewImages.map((image, index) => (
                   <div
                     key={index}
