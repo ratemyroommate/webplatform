@@ -103,17 +103,13 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   const removeImages = watch("removeImages");
 
   const onSubmit = async (formValues: FormValues) => {
-    console.log("submit click");
     const files = await compressImages(images);
-    console.log("submit click1");
     const response = await uploadFiles("imageUploader", { files });
-    console.log("submit click2");
 
     const imageInfos = response.map(({ key, url }) => ({
       id: key,
       url,
     }));
-    console.log("submit click3");
 
     if (post)
       updatePost.mutate({
@@ -210,8 +206,6 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               </div>
             </label>
 
-            {images.length}
-            {JSON.stringify(errors)}
             <input
               name="images"
               max={4}
@@ -229,17 +223,17 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               </div>
             )}
             {!!previewImages.length && (
-              <div className="flex h-24 w-full flex-row gap-4 overflow-x-scroll py-2">
+              <div className="relative flex h-24 w-full flex-row gap-4 overflow-x-scroll py-2">
                 {previewImages.map((image, index) => (
                   <div key={index} className="relative flex h-full flex-none">
                     <img
                       key={index}
                       src={image.url}
-                      className="h-full rounded-lg"
+                      className="relative h-full rounded-lg"
                     />
                     <div
                       onClick={() => removeImage(index)}
-                      className="z-10 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
+                      className="absolute right-0 top-0 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
                     >
                       ✕
                     </div>
