@@ -102,12 +102,18 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   const removeImages = watch("removeImages");
 
   const onSubmit = async (formValues: FormValues) => {
+    console.log("submit click");
     const files = await compressImages(images);
+    console.log("submit click1");
     const response = await uploadFiles("imageUploader", { files });
+    console.log("submit click2");
+
     const imageInfos = response.map(({ key, url }) => ({
       id: key,
       url,
     }));
+    console.log("submit click3");
+
     if (post)
       updatePost.mutate({
         ...formValues,
