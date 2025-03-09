@@ -45,6 +45,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     setValue,
     getValues,
     handleSubmit,
+    clearErrors,
     formState: { isSubmitting, errors },
   } = useForm<FormValues>({
     defaultValues: post
@@ -127,14 +128,14 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   const handleImagesChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (!files) return;
-    const areFilesValid = files?.length <= 4;
-    setValue(
-      "images",
-      areFilesValid ? [...getValues("images"), ...Array.from(files)] : [],
-    );
-    setError("images", {
-      message: areFilesValid ? "" : "Maximum 4 képet lehet feltölteni jelenleg",
-    });
+
+    setValue("images", [...getValues("images"), ...Array.from(files)]);
+
+    if (previewImages.length + files.length > 4) {
+      setError("images", {
+        message: "Maximum 4 képet lehet feltölteni jelenleg",
+      });
+    }
   };
 
   const postImages = post ? post.images : [];
@@ -162,6 +163,10 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         (_, idx) => idx !== index - previewPostImages.length,
       ),
     );
+
+    if (previewImages.length - 1 < 5) {
+      clearErrors("images");
+    }
   };
 
   return (
