@@ -209,7 +209,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               onChange={handleImagesChange}
               className="file-input file-input-bordered w-full max-w-xs"
             />
-            {errors.images && (
+            {errors.images?.message && (
               <div className="label">
                 <span className="label-text-alt text-error">
                   {errors.images.message}
@@ -217,12 +217,9 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               </div>
             )}
             {!!previewImages.length && (
-              <div className="flex h-24 w-full flex-col gap-4 py-2">
+              <div className="flex h-24 w-full flex-row gap-4 overflow-x-scroll py-2">
                 {previewImages.map((image, index) => (
-                  <div
-                    key={index}
-                    className="relative flex h-auto flex-none overflow-visible"
-                  >
+                  <div key={index} className="relative flex h-full flex-none">
                     <img
                       key={index}
                       src={image.url}
