@@ -17,7 +17,10 @@ export default async function Page({ params: { id } }: PostPageProps) {
   const canEdit = session?.user.id === post.createdById;
   const canRequest =
     !session?.user.id ||
-    !post.requests.map((request) => request.userId).includes(session.user.id);
+    (post.createdById !== session.user.id &&
+      !post.requests
+        .map((request) => request.userId)
+        .includes(session.user.id));
 
   return (
     <HydrateClient>
