@@ -45,13 +45,22 @@ export const requestRouter = createTRPCRouter({
     }),
   create: protectedProcedure
     .input(z.object({ postId: z.number(), comment: z.string().nullable() }))
-    .mutation(({ ctx, input }) =>
-      ctx.db.request.create({
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.db.post.findUniqueOrThrow({
+        where: { id: input.postId },
+      });
+      if (post.createdById === ctx.session.user.id)
+        throw new TRPCError({
+          message: "Unauthorized to request for own post",
+          code: "UNAUTHORIZED",
+        });
+
+      return ctx.db.request.create({
         data: {
           postId: input.postId,
           comment: input.comment,
           userId: ctx.session.user.id,
         },
-      }),
-    ),
+      });
+    }),
 });
