@@ -9,6 +9,11 @@ export const requestRouter = createTRPCRouter({
     ctx.db.request.findMany({
       include: { user: true },
       orderBy: { createdAt: "desc" },
+      where: {
+        post: {
+          createdById: ctx.session.user.id,
+        },
+      },
     }),
   ),
   update: protectedProcedure
@@ -31,10 +36,12 @@ export const requestRouter = createTRPCRouter({
         where: { id: input.requestId },
         data: { status: input.status, modifiedById: ctx.session.user.id },
       });
-      await ctx.db.post.update({
-        where: { id: request.postId },
-        data: { featuredUsers: { connect: { id: request.userId } } },
-      });
+      if (input.status === RequestStatus.ACCEPTED) {
+        await ctx.db.post.update({
+          where: { id: request.postId },
+          data: { featuredUsers: { connect: { id: request.userId } } },
+        });
+      }
     }),
   create: protectedProcedure
     .input(z.object({ postId: z.number(), comment: z.string().nullable() }))
