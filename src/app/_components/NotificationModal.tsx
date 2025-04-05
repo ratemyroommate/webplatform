@@ -33,7 +33,7 @@ export const NotificationModal = () => {
         />
       </NotificationBell>
       <dialog id="notification-modal" className="modal">
-        <div className="modal-box h-96">
+        <div className="modal-box h-96 px-4">
           <form method="dialog">
             <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
               ✕
@@ -51,52 +51,63 @@ export const NotificationModal = () => {
               {requests?.map((request) => (
                 <div
                   key={request.id}
-                  className="card flex flex-row items-center justify-between border-2 border-base-200 p-2"
+                  className="card border-2 border-base-200 p-2"
                 >
-                  <div className="flew-row flex items-center gap-4">
-                    <Link
-                      className="h-10 w-10"
-                      href={`/users/${request.user.id}`}
-                    >
-                      <div className="avatar">
-                        <div className="rounded-full">
-                          <img src={request.user.image ?? ""} />
+                  <div className="flex flex-row items-center justify-between">
+                    <div className="flew-row flex items-center gap-4">
+                      <Link
+                        className="h-10 w-10"
+                        href={`/users/${request.user.id}`}
+                      >
+                        <div className="avatar">
+                          <div className="rounded-full">
+                            <img src={request.user.image ?? ""} />
+                          </div>
                         </div>
+                      </Link>
+                      <div className="w-2/3">
+                        <div className="line-clamp-1 overflow-hidden">
+                          {request.user.name}
+                        </div>
+                        <Badge status={request.status} />
                       </div>
-                    </Link>
-                    <div className="w-2/3">
-                      <div className="line-clamp-1 overflow-hidden">
-                        {request.user.name}
+                    </div>
+                    {request.status === "PENDING" && (
+                      <div className="flex gap-2">
+                        <button
+                          className="btn btn-square btn-success"
+                          onClick={() =>
+                            updateRequest.mutate({
+                              requestId: request.id,
+                              status: "ACCEPTED",
+                            })
+                          }
+                        >
+                          <CheckIcon width={20} />
+                        </button>
+                        <button
+                          className="btn btn-square btn-error"
+                          onClick={() =>
+                            updateRequest.mutate({
+                              requestId: request.id,
+                              status: "DENIED",
+                            })
+                          }
+                        >
+                          <XMarkIcon width={20} />
+                        </button>
                       </div>
-                      <Badge status={request.status} />
+                    )}
+                  </div>
+                  <div tabIndex={0} className="collapse collapse-arrow">
+                    <div className="collapse-title">További adatok</div>
+                    <div className="collapse-content flex flex-col gap-2">
+                      {request.comment || "Nincs megjegyzés"}
+                      <Link href={`/posts/${request.postId}`} className="btn">
+                        Kapcsolatos poszt
+                      </Link>
                     </div>
                   </div>
-                  {request.status === "PENDING" && (
-                    <div className="flex gap-2">
-                      <button
-                        className="btn btn-square btn-success"
-                        onClick={() =>
-                          updateRequest.mutate({
-                            requestId: request.id,
-                            status: "ACCEPTED",
-                          })
-                        }
-                      >
-                        <CheckIcon width={20} />
-                      </button>
-                      <button
-                        className="btn btn-square btn-error"
-                        onClick={() =>
-                          updateRequest.mutate({
-                            requestId: request.id,
-                            status: "DENIED",
-                          })
-                        }
-                      >
-                        <XMarkIcon width={20} />
-                      </button>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
