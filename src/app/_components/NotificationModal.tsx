@@ -102,7 +102,7 @@ export const NotificationModal = () => {
                   <div tabIndex={0} className="collapse collapse-arrow">
                     <div className="collapse-title">További adatok</div>
                     <div className="collapse-content flex flex-col gap-2">
-                      {request.comment || "Nincs megjegyzés"}
+                      {request.comment ?? "Nincs megjegyzés"}
                       <Link href={`/posts/${request.postId}`} className="btn">
                         Kapcsolatos poszt
                       </Link>
