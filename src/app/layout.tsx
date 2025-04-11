@@ -30,22 +30,22 @@ export default async function RootLayout({
       <body>
         <TRPCReactProvider>
           <Toaster />
-          <main className="flex min-h-screen flex-col items-center bg-base-200">
+          <main className="bg-base-200 flex min-h-screen flex-col items-center">
             <div className="container flex max-w-4xl flex-col items-center justify-center gap-4 px-4 py-4">
-              <div className="navbar justify-between rounded-2xl bg-base-100 shadow-xl">
+              <div className="navbar bg-base-100 justify-between rounded-2xl shadow-xl">
                 <Link href="/" className="btn btn-ghost text-xl">
                   RmRm
                 </Link>
 
                 {session?.user ? (
-                  <div className="gap-6">
+                  <div className="flex items-center gap-6">
                     <NotificationModal />
                     <div
                       className="avatar dropdown dropdown-end mr-4 w-10"
                       tabIndex={0}
                       role="button"
                     >
-                      <div className="rounded-full ring ring-primary ring-offset-2 ring-offset-base-100">
+                      <div className="ring-primary ring-offset-base-100 rounded-full ring-3 ring-offset-2">
                         <img
                           src={session?.user.image ?? ""}
                           alt="profile picture"
@@ -53,7 +53,7 @@ export default async function RootLayout({
                       </div>
                       <ul
                         tabIndex={0}
-                        className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
+                        className="menu dropdown-content rounded-box bg-base-100 z-1 w-52 p-2 shadow-sm"
                       >
                         <li>
                           <Link

@@ -59,7 +59,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
           </button>
           <h3 className="text-lg font-bold">Szűrés</h3>
           <form method="dialog">
-            <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
+            <button className="btn btn-circle btn-ghost btn-sm absolute top-2 right-2">
               ✕
             </button>
           </form>
@@ -124,7 +124,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                     type="radio"
                     value="price-asc"
                     {...register("orderBy")}
-                    className="radio checked:bg-green-500"
+                    className="radio checked:text-green-500"
                   />
                 </label>
               </div>
@@ -137,7 +137,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                     type="radio"
                     value="price-desc"
                     {...register("orderBy")}
-                    className="radio checked:bg-red-500"
+                    className="radio checked:text-red-500"
                   />
                 </label>
               </div>
@@ -150,7 +150,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                     type="radio"
                     value={"createdAt-asc"}
                     {...register("orderBy")}
-                    className="radio checked:bg-green-500"
+                    className="radio checked:text-green-500"
                   />
                 </label>
               </div>
@@ -163,7 +163,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                     type="radio"
                     value={"createdAt-desc"}
                     {...register("orderBy")}
-                    className="radio checked:bg-red-500"
+                    className="radio checked:text-red-500"
                   />
                 </label>
               </div>

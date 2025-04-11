@@ -16,7 +16,7 @@ export const Rating = ({
   onClick,
 }: RatingProps) => {
   return (
-    <div className={isLarge ? "rating rating-md" : "rating rating-sm"}>
+    <div className={isLarge ? "rating rating-md" : "rating rating-xs"}>
       {Array.from({ length: 5 }).map((_, index) => (
         <input
           key={index}
