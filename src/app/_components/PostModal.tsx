@@ -191,7 +191,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         <div className="modal-box max-w-5xl">
           <h3 className="text-lg font-bold">{`Poszt ${post ? "módosítás" : "létrehozás"}`}</h3>
           <form method="dialog">
-            <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
+            <button className="btn btn-circle btn-ghost btn-sm absolute top-2 right-2">
               ✕
             </button>
           </form>
@@ -202,7 +202,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             <LoginModal />
             <label className="form-control w-full">
               <div className="label">
-                <span className="label-text text-lg">Képek a lakásról</span>
+                <span className="label-text">Képek a lakásról</span>
               </div>
             </label>
 
@@ -233,7 +233,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                     />
                     <div
                       onClick={() => removeImage(index)}
-                      className="absolute right-0 top-0 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
+                      className="absolute top-0 right-0 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
                     >
                       ✕
                     </div>
@@ -243,7 +243,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             )}
             <label className="form-control w-full">
               <div className="label">
-                <span className="label-text text-lg">Bérleti díj</span>
+                <span className="label-text">Bérleti díj</span>
               </div>
               <div className="flex gap-4">
                 <button
@@ -278,7 +278,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             </label>
             <label className="form-control w-full">
               <div className="label">
-                <span className="label-text text-lg">Leírás</span>
+                <span className="label-text">Leírás</span>
               </div>
               <textarea
                 placeholder="Keresünk egy hozzánk hasonló..."
@@ -295,7 +295,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             </label>
             <label className="form-control w-full">
               <div className="label">
-                <span className="label-text text-lg">Személyek száma</span>
+                <span className="label-text">Személyek száma</span>
               </div>
               <div className="flex gap-4">
                 <button
@@ -329,7 +329,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             </label>
             <div className="form-control py-2">
               <label className="label cursor-pointer justify-start gap-4">
-                <span className="label-text text-lg">Én is lakó vagyok</span>
+                <span className="label-text">Én is lakó vagyok</span>
                 <input
                   type="checkbox"
                   {...register("isResident")}

@@ -24,7 +24,7 @@ export const FeaturedUsers = (post: PostExtended) => {
           key={index}
         >
           <div className="avatar w-10" key={index}>
-            <div className="w-full rounded-full ring ring-secondary ring-offset-2 ring-offset-base-100">
+            <div className="ring-secondary ring-offset-base-100 w-full rounded-full ring-3 ring-offset-2">
               <Image
                 width={100}
                 height={100}
