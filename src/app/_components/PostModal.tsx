@@ -276,6 +276,14 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                 </button>
               </div>
             </label>
+
+            <label className="fieldset-label">Hol</label>
+            <select defaultValue="Budapest" className="select">
+              <option disabled={true}>Hol szeretnel lakni?</option>
+              <option>Budapest</option>
+              <option>Debrecen</option>
+            </select>
+
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text">Leírás</span>
