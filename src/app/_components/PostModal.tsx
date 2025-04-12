@@ -199,7 +199,6 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             className="flex w-full flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <LoginModal />
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text">Képek a lakásról</span>
