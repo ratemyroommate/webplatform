@@ -67,9 +67,10 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
       : "post-modal"
     : "login-modal";
   const successMessage = `Post sikeresen ${post ? "módosítva" : "létrehozva"}`;
+  const utils = api.useUtils();
   const createPost = api.post.create.useMutation({
     onSuccess: () => {
-      router.refresh();
+      void utils.post.getLatest.invalidate();
       handleCloseModal(modalId);
       toast.success(successMessage);
       reset();
