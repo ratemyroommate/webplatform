@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { XButton } from "./CloseButton";
 
 export const handleOpenModal = (modalId: string) =>
   (document.getElementById(modalId) as HTMLDialogElement).showModal();
@@ -9,11 +10,7 @@ export const LoginModal = () => {
   return (
     <dialog id="login-modal" className="modal">
       <div className="modal-box py-16">
-        <form method="dialog">
-          <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
-            ✕
-          </button>
-        </form>
+        <XButton />
         <Link href="/api/auth/signin" className="btn btn-primary w-full">
           Login
         </Link>

@@ -12,6 +12,7 @@ import { isUserInPostGroup } from "~/utils/helpers";
 import { genUploader } from "uploadthing/client";
 import { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
+import { XButton } from "./CloseButton";
 
 export const { uploadFiles } = genUploader({ package: "uploadthing/client" });
 
@@ -190,11 +191,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
       >
         <div className="modal-box max-w-5xl">
           <h3 className="text-lg font-bold">{`Poszt ${post ? "módosítás" : "létrehozás"}`}</h3>
-          <form method="dialog">
-            <button className="btn btn-circle btn-ghost btn-sm absolute top-2 right-2">
-              ✕
-            </button>
-          </form>
+          <XButton />
           <form
             className="flex w-full flex-col"
             onSubmit={handleSubmit(onSubmit)}

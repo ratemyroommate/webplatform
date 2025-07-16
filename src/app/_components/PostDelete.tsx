@@ -5,6 +5,7 @@ import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { XButton } from "./CloseButton";
 
 const modalId = "post-delete-modal";
 
@@ -35,11 +36,7 @@ export const PostDelete = ({ id }: PostDeleteProps) => {
       </button>
       <dialog id={modalId} className="modal">
         <div className="modal-box">
-          <form method="dialog">
-            <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
+          <XButton />
           <h3 className="py-4 text-lg font-bold">
             Biztosan törölni szeretné a posztot?
           </h3>
