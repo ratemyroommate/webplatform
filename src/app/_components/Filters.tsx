@@ -10,6 +10,7 @@ import { z } from "zod";
 import { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
 import { Dispatch } from "react";
+import { XButton } from "./CloseButton";
 
 type FiltersProps = { filters: FormValues; setFilters: Dispatch<FormValues> };
 export type FormValues = {
@@ -58,11 +59,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
             Szűrők törlése <TrashIcon width={18} />
           </button>
           <h3 className="text-lg font-bold">Szűrés</h3>
-          <form method="dialog">
-            <button className="btn btn-circle btn-ghost btn-sm absolute top-2 right-2">
-              ✕
-            </button>
-          </form>
+          <XButton />
 
           <form
             onSubmit={handleSubmit(onSubmit)}

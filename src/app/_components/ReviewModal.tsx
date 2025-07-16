@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
 import { Review } from "@prisma/client";
 import { toast } from "react-hot-toast";
+import { XButton } from "./CloseButton";
 
 type ReviewProps = {
   review?: Review;
@@ -72,11 +73,7 @@ export const ReviewModal = ({
       >
         <div className="modal-box">
           <h3 className="text-lg font-bold">Adj egy értékelést</h3>
-          <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
+          <XButton />
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-8 pt-8"

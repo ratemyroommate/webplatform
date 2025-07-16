@@ -9,6 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { RequestStatus } from "@prisma/client";
 import { toast } from "react-hot-toast";
 import { NotificationBell } from "./NotificationBell";
+import { XButton } from "./CloseButton";
 
 export const NotificationModal = () => {
   const { data: requests, isLoading } = api.request.getAll.useQuery();
@@ -34,11 +35,7 @@ export const NotificationModal = () => {
       </NotificationBell>
       <dialog id="notification-modal" className="modal">
         <div className="modal-box h-96 px-4">
-          <form method="dialog">
-            <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
+          <XButton />
           <h3 className="pb-4 text-lg font-bold">Kérelmek</h3>
           {isLoading ? (
             <div className="flex flex-col gap-2">
@@ -51,7 +48,7 @@ export const NotificationModal = () => {
               {requests?.map((request) => (
                 <div
                   key={request.id}
-                  className="card border-2 border-base-200 p-2"
+                  className="card border-base-200 border-2 p-2"
                 >
                   <div className="flex flex-row items-center justify-between">
                     <div className="flew-row flex items-center gap-4">
@@ -99,7 +96,7 @@ export const NotificationModal = () => {
                       </div>
                     )}
                   </div>
-                  <div tabIndex={0} className="collapse collapse-arrow">
+                  <div tabIndex={0} className="collapse-arrow collapse">
                     <div className="collapse-title">További adatok</div>
                     <div className="collapse-content flex flex-col gap-2">
                       {request.comment ?? "Nincs megjegyzés"}

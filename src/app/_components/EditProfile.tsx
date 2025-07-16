@@ -7,6 +7,7 @@ import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import { toast } from "react-hot-toast";
+import { XButton } from "./CloseButton";
 
 type FormValues = { about: string | null; socialLink: string | null };
 
@@ -39,11 +40,7 @@ export const EditProfile = (user: User) => {
       <dialog id="edit-profile-modal" className="modal">
         <div className="modal-box">
           <h3 className="text-lg font-bold">Profil módosítás</h3>
-          <form method="dialog">
-            <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
+          <XButton />
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-8 pt-4"
