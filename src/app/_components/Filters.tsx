@@ -27,7 +27,7 @@ const defaultFilters: FormValues = {
 };
 
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
-  const { reset, register, handleSubmit, watch, setValue } =
+  const { reset, register, handleSubmit, watch } =
     useForm<FormValues>({
       defaultValues: Object.keys(filters).length ? filters : defaultFilters,
     });
@@ -69,23 +69,17 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               <div className="label">
                 <span className="label-text text-lg">Lakótársak száma</span>
               </div>
-              <div className="flex justify-between gap-2">
-                {Array.from({ length: 4 }, (_, i) => i + 2).map((n) => (
-                  <button
-                    key={n}
-                    className={`btn flex-1 ${watch("maxPersonCount") == n ? "btn-secondary" : ""}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setValue(
-                        "maxPersonCount",
-                        watch("maxPersonCount") === n ? 0 : n,
-                      );
-                    }}
-                  >
-                    {n}
-                  </button>
+              <select 
+                {...register("maxPersonCount", { valueAsNumber: true })}
+                className="select select-bordered w-full"
+              >
+                <option value={0}>Nincs megadva</option>
+                {Array.from({ length: 9 }, (_, i) => i + 2).map((n) => (
+                  <option key={n} value={n}>
+                    {n} fő
+                  </option>
                 ))}
-              </div>
+              </select>
             </label>
             <label className="form-control w-full">
               <div className="label">
