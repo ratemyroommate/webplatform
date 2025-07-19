@@ -99,7 +99,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               <input
                 {...register("maxPrice", { valueAsNumber: true })}
                 type="range"
-                className="range"
+                className="range w-full"
                 min={50}
                 max={500}
                 step={10}
