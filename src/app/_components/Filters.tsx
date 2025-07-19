@@ -32,6 +32,8 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
       defaultValues: Object.keys(filters).length ? filters : defaultFilters,
     });
 
+  const maxPersonCountValue = watch("maxPersonCount");
+
   const onSubmit = (formValues: FormValues) => {
     handleCloseModal("filters-modal");
     setFilters(formValues);
@@ -65,29 +67,31 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col items-center gap-6 pt-4"
           >
-            <label className="form-control w-full">
+            <label className="w-full">
               <div className="label">
                 <span className="label-text text-lg">Lakótársak száma</span>
               </div>
               <div className="flex justify-between gap-2">
                 {Array.from({ length: 4 }, (_, i) => i + 2).map((n) => (
-                  <button
+                  <div
                     key={n}
-                    className={`btn flex-1 ${watch("maxPersonCount") == n ? "btn-secondary" : ""}`}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    tabIndex={-1}
+                    onClick={() => {
                       setValue(
                         "maxPersonCount",
-                        watch("maxPersonCount") === n ? 0 : n,
+                        maxPersonCountValue === n ? 0 : n,
                       );
                     }}
+                    className={`btn flex-1 cursor-pointer ${maxPersonCountValue === n ? "btn-secondary" : ""}`}
+                    style={{ outline: "none" }}
+                    onFocus={(e) => e.currentTarget.blur()}
                   >
                     {n}
-                  </button>
+                  </div>
                 ))}
               </div>
             </label>
-            <label className="form-control w-full">
+            <label className="w-full">
               <div className="label">
                 <span className="label-text text-lg">
                   Maximum ár{" "}
@@ -112,7 +116,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
             </label>
             <h3 className="self-start text-lg font-bold">Rendezés</h3>
             <div className="flex w-full gap-4">
-              <div className="form-control w-1/4">
+              <div className="w-1/4">
                 <label className="label flex cursor-pointer flex-col gap-2">
                   <span className="label-text flex items-center gap-1">
                     Ár <ArrowTrendingUpIcon width={20} color="green" />
@@ -125,7 +129,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                   />
                 </label>
               </div>
-              <div className="form-control w-1/4">
+              <div className="w-1/4">
                 <label className="label flex cursor-pointer flex-col gap-2">
                   <span className="label-text flex items-center gap-1">
                     Ár <ArrowTrendingDownIcon width={20} color="red" />
@@ -138,7 +142,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                   />
                 </label>
               </div>
-              <div className="form-control w-1/4">
+              <div className="w-1/4">
                 <label className="label flex cursor-pointer flex-col gap-2">
                   <span className="label-text flex items-center gap-1">
                     Dátum <ArrowTrendingUpIcon width={20} color="green" />
@@ -151,7 +155,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                   />
                 </label>
               </div>
-              <div className="form-control w-1/4">
+              <div className="w-1/4">
                 <label className="label flex cursor-pointer flex-col gap-2">
                   <span className="label-text flex items-center gap-1">
                     Dátum <ArrowTrendingDownIcon width={20} color="red" />
