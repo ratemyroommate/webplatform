@@ -1,6 +1,11 @@
 "use client";
 
-import { BellIcon, CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  BellIcon,
+  CheckIcon,
+  EyeIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { api } from "~/trpc/react";
 import Link from "next/link";
@@ -13,6 +18,8 @@ import { XButton } from "./CloseButton";
 
 export const NotificationModal = () => {
   const { data: requests, isLoading } = api.request.getAll.useQuery();
+  const recievedRequests = requests?.recievedRequests;
+  const sentRequests = requests?.sentRequests;
   const pathname = usePathname();
   const router = useRouter();
   const utils = api.useUtils();
@@ -27,25 +34,25 @@ export const NotificationModal = () => {
 
   return (
     <>
-      <NotificationBell requests={requests}>
+      <NotificationBell requests={recievedRequests}>
         <BellIcon
           onClick={() => handleOpenModal("notification-modal")}
           width={30}
         />
       </NotificationBell>
       <dialog id="notification-modal" className="modal">
-        <div className="modal-box h-96 px-4">
+        <div className="modal-box px-4">
           <XButton />
-          <h3 className="pb-4 text-lg font-bold">Kérelmek</h3>
+          <h3 className="pb-4 text-lg font-bold">Kapott kérelmek</h3>
           {isLoading ? (
             <div className="flex flex-col gap-2">
               <div className="skeleton h-16 w-full"></div>
               <div className="skeleton h-16 w-full"></div>
               <div className="skeleton h-16 w-full"></div>
             </div>
-          ) : requests?.length ? (
+          ) : recievedRequests?.length ? (
             <div className="flex flex-col gap-2">
-              {requests?.map((request) => (
+              {recievedRequests?.map((request) => (
                 <div
                   key={request.id}
                   className="card border-base-200 border-2 p-2"
@@ -99,9 +106,12 @@ export const NotificationModal = () => {
                   <div tabIndex={0} className="collapse-arrow collapse">
                     <div className="collapse-title">További adatok</div>
                     <div className="collapse-content flex flex-col gap-2">
-                      {request.comment ?? "Nincs megjegyzés"}
+                      {request.comment === ""
+                        ? "Nincs megjegyzés"
+                        : request.comment}
                       <Link href={`/posts/${request.postId}`} className="btn">
                         Kapcsolatos poszt
+                        <EyeIcon width={20} />
                       </Link>
                     </div>
                   </div>
@@ -109,7 +119,62 @@ export const NotificationModal = () => {
               ))}
             </div>
           ) : (
-            "Nincs értesítés"
+            "Nincs kapott kérelem"
+          )}
+
+          <h3 className="py-4 text-lg font-bold">Küldött kérelmek</h3>
+          {isLoading ? (
+            <div className="flex flex-col gap-2">
+              <div className="skeleton h-16 w-full"></div>
+              <div className="skeleton h-16 w-full"></div>
+              <div className="skeleton h-16 w-full"></div>
+            </div>
+          ) : sentRequests?.length ? (
+            <div className="flex flex-col gap-2">
+              {sentRequests?.map((request) => (
+                <div
+                  key={request.id}
+                  className="card border-base-200 border-2 p-2"
+                >
+                  <div className="flex flex-row items-center justify-between">
+                    <Link href={`/posts/${request.postId}`} className="btn">
+                      Poszt
+                      <EyeIcon width={20} />
+                    </Link>
+                    <div className="flew-row flex items-center gap-4">
+                      <div className="w-2/3">
+                        <Badge status={request.status} />
+                      </div>
+                    </div>
+                    {request.status === "PENDING" && (
+                      <div className="flex gap-2">
+                        <button
+                          className="btn btn-square btn-error"
+                          onClick={() =>
+                            updateRequest.mutate({
+                              requestId: request.id,
+                              status: "DENIED",
+                            })
+                          }
+                        >
+                          <XMarkIcon width={20} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <div tabIndex={0} className="collapse-arrow collapse">
+                    <div className="collapse-title">További adatok</div>
+                    <div className="collapse-content flex flex-col gap-2">
+                      {request.comment === ""
+                        ? "Nincs megjegyzés"
+                        : request.comment}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            "Nincs küldött kérelem"
           )}
         </div>
       </dialog>
