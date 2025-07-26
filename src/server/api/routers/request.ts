@@ -5,17 +5,31 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const requestRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(({ ctx }) =>
-    ctx.db.request.findMany({
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    const allRequests = await ctx.db.request.findMany({
       include: { user: true },
       orderBy: { createdAt: "desc" },
       where: {
-        post: {
-          createdById: ctx.session.user.id,
-        },
+        OR: [
+          {
+            post: {
+              createdById: ctx.session.user.id,
+            },
+          },
+          {
+            userId: ctx.session.user.id,
+          },
+        ],
       },
-    }),
-  ),
+    });
+    const recievedRequests = allRequests.filter(
+      (request) => request.userId !== ctx.session.user.id,
+    );
+    const sentRequests = allRequests.filter(
+      (request) => request.userId === ctx.session.user.id,
+    );
+    return { recievedRequests, sentRequests };
+  }),
   update: protectedProcedure
     .input(
       z.object({ requestId: z.string(), status: z.nativeEnum(RequestStatus) }),
@@ -25,18 +39,29 @@ export const requestRouter = createTRPCRouter({
         where: { id: input.requestId },
         include: { post: true },
       });
-      // todo: requested user should be able to modify this also
-      if (request.post.createdById !== ctx.session.user.id)
+      const isRequester = request.userId === ctx.session.user.id;
+      const isPostOwner = request.post.createdById === ctx.session.user.id;
+      const isAccepting = input.status === RequestStatus.ACCEPTED;
+
+      if (isRequester && isAccepting) {
+        throw new TRPCError({
+          message: "Unauthorized to accept your own request",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      if (!isRequester && !isPostOwner) {
         throw new TRPCError({
           message: "Unauthorized to update the request",
           code: "UNAUTHORIZED",
         });
+      }
       // todo: make this a transaction
       await ctx.db.request.update({
         where: { id: input.requestId },
         data: { status: input.status, modifiedById: ctx.session.user.id },
       });
-      if (input.status === RequestStatus.ACCEPTED) {
+      if (isAccepting) {
         await ctx.db.post.update({
           where: { id: request.postId },
           data: { featuredUsers: { connect: { id: request.userId } } },
