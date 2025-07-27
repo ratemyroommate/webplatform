@@ -19,3 +19,14 @@ export const formatOrderBy = (orderByString: OrderBy) => {
   if (key && value) return { [key]: value };
   return undefined;
 };
+
+export const locationOptions = [
+  { value: "BUDAPEST", label: "Budapest" },
+  { value: "DEBRECEN", label: "Debrecen" },
+  { value: "SZEGED", label: "Szeged" },
+];
+
+export const getLocationLabel = (value: string) => {
+  const match = locationOptions.find((option) => option.value === value);
+  return match ? match.label : null;
+};
