@@ -11,11 +11,14 @@ import { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
 import { Dispatch } from "react";
 import { XButton } from "./CloseButton";
+import { locationOptions } from "~/utils/helpers";
+import { Location } from "@prisma/client";
 
 type FiltersProps = { filters: FormValues; setFilters: Dispatch<FormValues> };
 export type FormValues = {
   maxPersonCount?: number;
   maxPrice?: number;
+  location?: Location;
   orderBy?: OrderBy;
 };
 export type OrderBy = z.infer<typeof orderBy>;
@@ -24,6 +27,7 @@ const defaultFilters: FormValues = {
   orderBy: "createdAt-desc",
   maxPersonCount: 0,
   maxPrice: 0,
+  location: undefined,
 };
 
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
@@ -109,6 +113,26 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                   <span key={n}>{n}</span>
                 ))}
               </div>
+            </label>
+            <label className="form-control w-full">
+              <div className="label">
+                <span className="label-text text-lg">Hely</span>
+              </div>
+              <select
+                defaultValue="Budapest"
+                className="select"
+                {...register("location")}
+              >
+                <option disabled={true}>Hol lakni?</option>
+                {locationOptions.map((locationOption) => (
+                  <option
+                    key={locationOption.value}
+                    value={locationOption.value}
+                  >
+                    {locationOption.label}
+                  </option>
+                ))}
+              </select>
             </label>
             <h3 className="self-start text-lg font-bold">Rendezés</h3>
             <div className="flex w-full gap-4">

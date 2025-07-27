@@ -7,6 +7,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { utapi } from "~/app/api/uploadthing/utapi";
+import { Location } from "@prisma/client";
 
 const limit = 2;
 const maxPostCountPerUser = 4;
@@ -35,6 +36,7 @@ export const postRouter = createTRPCRouter({
         description: z.string().min(1).max(200),
         maxPersonCount: z.number().min(2).max(6),
         isResident: z.boolean(),
+        location: z.nativeEnum(Location),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -59,6 +61,7 @@ export const postRouter = createTRPCRouter({
           featuredUsers: {
             connect: input.isResident ? [{ id: ctx.session.user.id }] : [],
           },
+          location: input.location,
         },
       });
     }),
@@ -73,6 +76,7 @@ export const postRouter = createTRPCRouter({
         description: z.string().min(1).max(200),
         maxPersonCount: z.number().min(2).max(6),
         isResident: z.boolean(),
+        location: z.nativeEnum(Location),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -116,6 +120,7 @@ export const postRouter = createTRPCRouter({
           featuredUsers: input.isResident
             ? { connect: { id: ctx.session.user.id } }
             : { disconnect: { id: ctx.session.user.id } },
+          location: input.location,
         },
       });
     }),
@@ -127,6 +132,7 @@ export const postRouter = createTRPCRouter({
           maxPersonCount: z.number().optional(),
           maxPrice: z.number().optional(),
           orderBy: orderBy.default("createdAt-desc"),
+          location: z.nativeEnum(Location).optional(),
         }),
         cursor: z.number().nullish(),
       }),
@@ -146,6 +152,7 @@ export const postRouter = createTRPCRouter({
             lte:
               input.filters.maxPrice !== 0 ? input.filters.maxPrice : undefined,
           },
+          location: input.filters.location ? input.filters.location : undefined,
         },
       });
 
