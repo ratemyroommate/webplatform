@@ -285,7 +285,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             <label className="fieldset-label">Hol</label>
             <select
               defaultValue="Budapest"
-              className="select"
+              className="select w-full"
               {...register("location")}
             >
               <option disabled={true}>Hol lakni?</option>
@@ -298,7 +298,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
 
             <label className="fieldset-label">Kor</label>
             <select
-              className="select"
+              className="select w-full"
               {...register("age", { valueAsNumber: true })}
             >
               <option defaultValue={0} disabled={true}>
