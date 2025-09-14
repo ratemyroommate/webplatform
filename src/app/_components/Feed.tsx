@@ -16,7 +16,7 @@ export const Feed = ({ userId }: FeedProps) => {
         <PostModal userId={userId} />
         <Filters filters={filters} setFilters={setFilters} />
       </div>
-      <FeedPosts filters={filters} userId={userId} />
+      <FeedPosts filters={filters} />
     </>
   );
 };

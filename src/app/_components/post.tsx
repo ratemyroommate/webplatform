@@ -1,18 +1,13 @@
 import Link from "next/link";
 import { FeaturedUsers } from "./FeaturedUsers";
 import { Images } from "./Images";
-import { PostPrice } from "./PostPrice";
-import { MapPinIcon, UserIcon } from "@heroicons/react/24/outline";
-import { getAgeLabel, getLocationLabel } from "~/utils/helpers";
+import { PostInfo } from "./PostInfo";
 
 type PostProps = {
   post: PostExtended;
-  userId?: string;
 };
 
-export const Post = ({ post, userId }: PostProps) => {
-  const canEdit = userId === post.createdById;
-
+export const Post = ({ post }: PostProps) => {
   return (
     <Link
       href={`/posts/${post.id}`}
@@ -21,19 +16,7 @@ export const Post = ({ post, userId }: PostProps) => {
       <Images images={post.images} />
       <div className="flex w-full flex-col gap-4">
         <FeaturedUsers {...post} />
-        <div className="flex justify-around gap-4">
-          <PostPrice price={post.price} />
-          <div className="flex flex-1 items-center gap-2">
-            <MapPinIcon width={24} color="brown" />
-            <b>{getLocationLabel(post.location)}</b>
-          </div>
-        </div>
-        <div className="flex gap-4">
-          <div className="flex w-1/2 items-center gap-2 pl-6">
-            <UserIcon width={24} color="red" />
-            <b>{getAgeLabel(post.age)}</b>
-          </div>
-        </div>
+        <PostInfo post={post} />
       </div>
     </Link>
   );

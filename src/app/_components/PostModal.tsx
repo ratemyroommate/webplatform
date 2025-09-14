@@ -189,7 +189,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         ) : (
           <>
             <PlusIcon width={20} />
-            Új post
+            Új poszt
           </>
         )}
       </button>

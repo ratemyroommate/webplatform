@@ -10,7 +10,7 @@ const defaultImage =
 export const FeaturedUsers = (post: PostExtended) => {
   const router = useRouter();
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2 gap-y-4">
+    <div className="flex flex-wrap items-center gap-2 gap-y-4">
       {Array.from({ length: post.maxPersonCount }).map((_, index) => (
         <div
           onClick={() =>
