@@ -2,8 +2,8 @@ import Link from "next/link";
 import { FeaturedUsers } from "./FeaturedUsers";
 import { Images } from "./Images";
 import { PostPrice } from "./PostPrice";
-import { MapPinIcon } from "@heroicons/react/24/outline";
-import { getLocationLabel } from "~/utils/helpers";
+import { MapPinIcon, UserIcon } from "@heroicons/react/24/outline";
+import { getAgeLabel, getLocationLabel } from "~/utils/helpers";
 
 type PostProps = {
   post: PostExtended;
@@ -26,6 +26,12 @@ export const Post = ({ post, userId }: PostProps) => {
           <div className="flex flex-1 items-center gap-2">
             <MapPinIcon width={24} color="brown" />
             <b>{getLocationLabel(post.location)}</b>
+          </div>
+        </div>
+        <div className="flex gap-4">
+          <div className="flex w-1/2 items-center gap-2 pl-6">
+            <UserIcon width={24} color="red" />
+            <b>{getAgeLabel(post.age)}</b>
           </div>
         </div>
       </div>

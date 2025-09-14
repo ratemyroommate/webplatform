@@ -8,7 +8,11 @@ import { api } from "~/trpc/react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import { isUserInPostGroup, locationOptions } from "~/utils/helpers";
+import {
+  ageOptions,
+  isUserInPostGroup,
+  locationOptions,
+} from "~/utils/helpers";
 import { genUploader } from "uploadthing/client";
 import { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
@@ -34,6 +38,7 @@ const defaultValues = {
   removeImages: [],
   price: 80,
   location: Location.BUDAPEST,
+  age: 0,
 };
 const max = { maxPersonCount: 6, price: 999 };
 const min = { maxPersonCount: 2, price: 10 };
@@ -59,6 +64,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
           maxPersonCount: post.maxPersonCount,
           isResident: !!userId && isUserInPostGroup(post, userId),
           location: post.location,
+          age: post.age,
         }
       : defaultValues,
   });
@@ -286,6 +292,21 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               {locationOptions.map((locationOption) => (
                 <option key={locationOption.value} value={locationOption.value}>
                   {locationOption.label}
+                </option>
+              ))}
+            </select>
+
+            <label className="fieldset-label">Kor</label>
+            <select
+              className="select"
+              {...register("age", { valueAsNumber: true })}
+            >
+              <option defaultValue={0} disabled={true}>
+                Kor
+              </option>
+              {ageOptions.map((ageOption) => (
+                <option key={ageOption.value} value={ageOption.value}>
+                  {ageOption.label}
                 </option>
               ))}
             </select>

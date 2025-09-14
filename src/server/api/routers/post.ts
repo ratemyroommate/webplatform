@@ -37,6 +37,7 @@ export const postRouter = createTRPCRouter({
         maxPersonCount: z.number().min(2).max(6),
         isResident: z.boolean(),
         location: z.nativeEnum(Location),
+        age: z.number().min(0).max(4),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -62,6 +63,7 @@ export const postRouter = createTRPCRouter({
             connect: input.isResident ? [{ id: ctx.session.user.id }] : [],
           },
           location: input.location,
+          age: input.age,
         },
       });
     }),
@@ -77,6 +79,7 @@ export const postRouter = createTRPCRouter({
         maxPersonCount: z.number().min(2).max(6),
         isResident: z.boolean(),
         location: z.nativeEnum(Location),
+        age: z.number().min(0).max(4),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -121,6 +124,7 @@ export const postRouter = createTRPCRouter({
             ? { connect: { id: ctx.session.user.id } }
             : { disconnect: { id: ctx.session.user.id } },
           location: input.location,
+          age: input.age,
         },
       });
     }),
@@ -132,7 +136,8 @@ export const postRouter = createTRPCRouter({
           maxPersonCount: z.number().optional(),
           maxPrice: z.number().optional(),
           orderBy: orderBy.default("createdAt-desc"),
-          location: z.nativeEnum(Location).optional(),
+          location: z.union([z.nativeEnum(Location), z.enum([""])]).optional(),
+          age: z.number().min(0).max(4).optional(),
         }),
         cursor: z.number().nullish(),
       }),
@@ -153,6 +158,7 @@ export const postRouter = createTRPCRouter({
               input.filters.maxPrice !== 0 ? input.filters.maxPrice : undefined,
           },
           location: input.filters.location ? input.filters.location : undefined,
+          age: input.filters.age !== 0 ? input.filters.age : undefined,
         },
       });
 

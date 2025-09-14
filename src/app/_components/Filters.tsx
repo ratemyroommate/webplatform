@@ -11,14 +11,15 @@ import { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
 import { Dispatch } from "react";
 import { XButton } from "./CloseButton";
-import { locationOptions } from "~/utils/helpers";
+import { ageOptions, locationOptions } from "~/utils/helpers";
 import { Location } from "@prisma/client";
 
 type FiltersProps = { filters: FormValues; setFilters: Dispatch<FormValues> };
 export type FormValues = {
   maxPersonCount?: number;
   maxPrice?: number;
-  location?: Location;
+  location?: Location | "";
+  age?: number;
   orderBy?: OrderBy;
 };
 export type OrderBy = z.infer<typeof orderBy>;
@@ -27,7 +28,8 @@ const defaultFilters: FormValues = {
   orderBy: "createdAt-desc",
   maxPersonCount: 0,
   maxPrice: 0,
-  location: undefined,
+  location: "",
+  age: 0,
 };
 
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
@@ -118,18 +120,32 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               <div className="label">
                 <span className="label-text text-lg">Hely</span>
               </div>
-              <select
-                defaultValue="Budapest"
-                className="select"
-                {...register("location")}
-              >
+              <select className="select" {...register("location")}>
                 <option disabled={true}>Hol lakni?</option>
-                {locationOptions.map((locationOption) => (
-                  <option
-                    key={locationOption.value}
-                    value={locationOption.value}
-                  >
-                    {locationOption.label}
+                {[{ value: "", label: "Mindegy" }, ...locationOptions].map(
+                  (locationOption) => (
+                    <option
+                      key={locationOption.value}
+                      value={locationOption.value}
+                    >
+                      {locationOption.label}
+                    </option>
+                  ),
+                )}
+              </select>
+            </label>
+            <label className="form-control w-full">
+              <div className="label">
+                <span className="label-text text-lg">Kor</span>
+              </div>
+              <select
+                className="select"
+                {...register("age", { valueAsNumber: true })}
+              >
+                <option disabled={true}>Kor intervallum</option>
+                {ageOptions.map((ageOption) => (
+                  <option key={ageOption.value} value={ageOption.value}>
+                    {ageOption.label}
                   </option>
                 ))}
               </select>

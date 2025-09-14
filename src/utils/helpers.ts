@@ -26,7 +26,24 @@ export const locationOptions = [
   { value: "SZEGED", label: "Szeged" },
 ];
 
-export const getLocationLabel = (value: string) => {
-  const match = locationOptions.find((option) => option.value === value);
+export const getLocationLabel = (value: string | number) =>
+  getSelectLabel(locationOptions, value);
+
+const getSelectLabel = (
+  options: { value: string | number; label: string }[],
+  value: string | number,
+) => {
+  const match = options.find((option) => option.value === value);
   return match ? match.label : null;
 };
+
+export const ageOptions = [
+  { value: 0, label: "Mindegy" },
+  { value: 1, label: "18 - 24" },
+  { value: 2, label: "25 - 34" },
+  { value: 3, label: "35 - 44" },
+  { value: 4, label: "45+" },
+];
+
+export const getAgeLabel = (value: string | number) =>
+  getSelectLabel(ageOptions, value);
