@@ -116,11 +116,11 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                 ))}
               </div>
             </label>
-            <label className="form-control w-full">
+            <label className="form-control flex w-full flex-col">
               <div className="label">
                 <span className="label-text text-lg">Hely</span>
               </div>
-              <select className="select" {...register("location")}>
+              <select className="select w-full" {...register("location")}>
                 <option disabled={true}>Hol lakni?</option>
                 {[{ value: "", label: "Mindegy" }, ...locationOptions].map(
                   (locationOption) => (
@@ -134,12 +134,12 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                 )}
               </select>
             </label>
-            <label className="form-control w-full">
+            <label className="form-control flex w-full flex-col">
               <div className="label">
                 <span className="label-text text-lg">Kor</span>
               </div>
               <select
-                className="select"
+                className="select w-full"
                 {...register("age", { valueAsNumber: true })}
               >
                 <option disabled={true}>Kor intervallum</option>
