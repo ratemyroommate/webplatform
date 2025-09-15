@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import {
   ageOptions,
+  genderOptions,
   isUserInPostGroup,
   locationOptions,
 } from "~/utils/helpers";
@@ -39,6 +40,7 @@ const defaultValues = {
   price: 80,
   location: Location.BUDAPEST,
   age: 0,
+  gender: 0,
 };
 const max = { maxPersonCount: 6, price: 999 };
 const min = { maxPersonCount: 2, price: 10 };
@@ -65,6 +67,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
           isResident: !!userId && isUserInPostGroup(post, userId),
           location: post.location,
           age: post.age,
+          gender: post.gender,
         }
       : defaultValues,
   });
@@ -199,7 +202,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         className="modal"
       >
         <div className="modal-box max-w-5xl">
-          <h3 className="text-lg font-bold">{`Poszt ${post ? "módosítás" : "létrehozás"}`}</h3>
+          <h3 className="pb-2 text-lg font-bold">{`Poszt ${post ? "módosítás" : "létrehozás"}`}</h3>
           <XButton />
           <form
             className="flex w-full flex-col"
@@ -307,6 +310,21 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               {ageOptions.map((ageOption) => (
                 <option key={ageOption.value} value={ageOption.value}>
                   {ageOption.label}
+                </option>
+              ))}
+            </select>
+
+            <label className="fieldset-label">Nem preferencia</label>
+            <select
+              className="select w-full"
+              {...register("gender", { valueAsNumber: true })}
+            >
+              <option defaultValue={0} disabled={true}>
+                Nem
+              </option>
+              {genderOptions.map((gender) => (
+                <option key={gender.value} value={gender.value}>
+                  {gender.label}
                 </option>
               ))}
             </select>

@@ -1,7 +1,7 @@
 import type { Post } from "@prisma/client";
 import { PostPrice } from "./PostPrice";
 import { MapPinIcon, UserIcon } from "@heroicons/react/24/outline";
-import { getAgeLabel, getLocationLabel } from "~/utils/helpers";
+import { getAgeLabel, getGenderLabel, getLocationLabel } from "~/utils/helpers";
 
 type PostInfoProps = {
   post: Post;
@@ -26,7 +26,7 @@ export const PostInfo = ({ post }: PostInfoProps) => {
       <div className="flex">
         <div className="flex items-center gap-2">
           <img src="/gender-fluid.png" width={25} />
-          <b>Fiú - Lány</b>
+          <b>{getGenderLabel(post.gender)}</b>
         </div>
       </div>
     </div>

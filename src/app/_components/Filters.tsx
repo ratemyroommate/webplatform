@@ -11,7 +11,7 @@ import { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
 import { Dispatch } from "react";
 import { XButton } from "./CloseButton";
-import { ageOptions, locationOptions } from "~/utils/helpers";
+import { ageOptions, genderOptions, locationOptions } from "~/utils/helpers";
 import { Location } from "@prisma/client";
 
 type FiltersProps = { filters: FormValues; setFilters: Dispatch<FormValues> };
@@ -20,6 +20,7 @@ export type FormValues = {
   maxPrice?: number;
   location?: Location | "";
   age?: number;
+  gender?: number;
   orderBy?: OrderBy;
 };
 export type OrderBy = z.infer<typeof orderBy>;
@@ -30,6 +31,7 @@ const defaultFilters: FormValues = {
   maxPrice: 0,
   location: "",
   age: 0,
+  gender: 0,
 };
 
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
@@ -69,7 +71,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
 
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col items-center gap-6 pt-4"
+            className="flex flex-col items-center gap-4 pt-4"
           >
             <label className="form-control w-full">
               <div className="label">
@@ -146,6 +148,22 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                 {ageOptions.map((ageOption) => (
                   <option key={ageOption.value} value={ageOption.value}>
                     {ageOption.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="form-control flex w-full flex-col">
+              <div className="label">
+                <span className="label-text text-lg">Nem preferencia</span>
+              </div>
+              <select
+                className="select w-full"
+                {...register("gender", { valueAsNumber: true })}
+              >
+                <option disabled={true}>Nem preferencia</option>
+                {genderOptions.map((genderOption) => (
+                  <option key={genderOption.value} value={genderOption.value}>
+                    {genderOption.label}
                   </option>
                 ))}
               </select>

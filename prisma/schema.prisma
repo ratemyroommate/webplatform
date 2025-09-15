@@ -23,6 +23,7 @@ model Post {
     price          Int
     location       Location @default(BUDAPEST)
     age            Int      @default(0)
+    gender         Int      @default(0)
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
 

@@ -45,5 +45,13 @@ export const ageOptions = [
   { value: 4, label: "45+" },
 ];
 
-export const getAgeLabel = (value: string | number) =>
-  getSelectLabel(ageOptions, value);
+export const getAgeLabel = (value: number) => getSelectLabel(ageOptions, value);
+
+export const genderOptions = [
+  { value: 0, label: "Fiú és Lány" },
+  { value: 1, label: "Csak Fiú" },
+  { value: 2, label: "Csak Lány" },
+];
+
+export const getGenderLabel = (value: number) =>
+  getSelectLabel(genderOptions, value);

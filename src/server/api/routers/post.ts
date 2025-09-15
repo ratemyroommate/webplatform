@@ -38,6 +38,7 @@ export const postRouter = createTRPCRouter({
         isResident: z.boolean(),
         location: z.nativeEnum(Location),
         age: z.number().min(0).max(4),
+        gender: z.number().min(0).max(2),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -64,6 +65,7 @@ export const postRouter = createTRPCRouter({
           },
           location: input.location,
           age: input.age,
+          gender: input.gender,
         },
       });
     }),
@@ -80,6 +82,7 @@ export const postRouter = createTRPCRouter({
         isResident: z.boolean(),
         location: z.nativeEnum(Location),
         age: z.number().min(0).max(4),
+        gender: z.number().min(0).max(2),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -125,6 +128,7 @@ export const postRouter = createTRPCRouter({
             : { disconnect: { id: ctx.session.user.id } },
           location: input.location,
           age: input.age,
+          gender: input.gender,
         },
       });
     }),
@@ -138,6 +142,7 @@ export const postRouter = createTRPCRouter({
           orderBy: orderBy.default("createdAt-desc"),
           location: z.union([z.nativeEnum(Location), z.enum([""])]).optional(),
           age: z.number().min(0).max(4).optional(),
+          gender: z.number().min(0).max(2).optional(),
         }),
         cursor: z.number().nullish(),
       }),
@@ -159,6 +164,7 @@ export const postRouter = createTRPCRouter({
           },
           location: input.filters.location ? input.filters.location : undefined,
           age: input.filters.age !== 0 ? input.filters.age : undefined,
+          gender: input.filters.gender ? input.filters.gender : undefined,
         },
       });
 
