@@ -8,7 +8,7 @@ type FeedPostsProps = { filters: FormValues };
 
 export const FeedPosts = ({ filters }: FeedPostsProps) => {
   const bottom = useRef<HTMLDivElement>(null);
-  const { data, fetchNextPage, isLoading } =
+  const { data, fetchNextPage, isLoading, isFetchingNextPage } =
     api.post.getLatest.useInfiniteQuery(
       { filters },
       { getNextPageParam: (lastPage) => lastPage.nextCursor },
@@ -26,7 +26,7 @@ export const FeedPosts = ({ filters }: FeedPostsProps) => {
       {data?.pages.map((page) =>
         page.posts.map((post) => <Post post={post} key={post.id} />),
       )}
-      {isLoading && <PostSkeletons />}
+      {(isLoading || isFetchingNextPage) && <PostSkeletons />}
       <div ref={bottom} />
     </>
   );
