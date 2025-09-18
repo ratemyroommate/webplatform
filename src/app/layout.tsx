@@ -17,7 +17,7 @@ import {
 export const metadata: Metadata = {
   title: "Rate My Roommate",
   description: "A hely ahol megtalálod a helyed",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/R-favicon.png" }],
 };
 
 export default async function RootLayout({
@@ -34,7 +34,7 @@ export default async function RootLayout({
             <div className="container flex max-w-4xl flex-col items-center justify-center gap-4 px-4 py-4">
               <div className="navbar bg-base-100 justify-between rounded-2xl shadow-xl">
                 <Link href="/" className="btn btn-ghost text-xl">
-                  RmRm
+                  <img src="/R.png" className="w-16" />
                 </Link>
 
                 {session?.user ? (
