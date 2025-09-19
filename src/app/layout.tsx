@@ -53,38 +53,28 @@ export default async function RootLayout({
                           )}
                         </div>
                       </div>
-                      <ul
-                        tabIndex={0}
-                        className="menu dropdown-content rounded-box bg-base-100 z-1 mt-2 w-52 p-2 shadow-sm"
-                      >
-                        <li>
-                          <Link
-                            href={`/users/${session.user.id}`}
-                            className="btn"
-                          >
-                            <UserCircleIcon width={20} />
-                            Profil
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href={`/users/${session.user.id}/posts`}
-                            className="btn btn-ghost"
-                          >
-                            <InboxIcon width={20} />
-                            Posztjaim
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/api/auth/signout"
-                            className="btn btn-ghost"
-                          >
-                            <ArrowLeftStartOnRectangleIcon width={20} />
-                            Kijelentkezés
-                          </Link>
-                        </li>
-                      </ul>
+                      <div tabIndex={0} className="dropdown-content">
+                        <ul className="menu rounded-box bg-base-100 z-1 mt-2 w-52 p-2 shadow-sm">
+                          <li>
+                            <Link href={`/users/${session.user.id}`}>
+                              <UserCircleIcon width={20} />
+                              Profil
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href={`/users/${session.user.id}/posts`}>
+                              <InboxIcon width={20} />
+                              Posztjaim
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/api/auth/signout">
+                              <ArrowLeftStartOnRectangleIcon width={20} />
+                              Kijelentkezés
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 ) : (
