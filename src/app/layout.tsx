@@ -40,21 +40,22 @@ export default async function RootLayout({
                 {session?.user ? (
                   <div className="flex items-center gap-6">
                     <NotificationModal />
-                    <div
-                      className="avatar dropdown dropdown-end mr-4 w-10"
-                      tabIndex={0}
-                      role="button"
-                    >
-                      <div className="ring-primary ring-offset-base-100 w-full rounded-full ring-3 ring-offset-2">
-                        {session?.user.image ? (
-                          <img src={session.user.image} alt="profile picture" />
-                        ) : (
-                          <div className="skeleton h-full w-full rounded-full"></div>
-                        )}
+                    <div className="dropdown dropdown-end mr-4 w-10">
+                      <div role="button" tabIndex={0} className="avatar">
+                        <div className="ring-primary ring-offset-base-100 w-full rounded-full ring-3 ring-offset-2">
+                          {session?.user.image ? (
+                            <img
+                              src={session.user.image}
+                              alt="profile picture"
+                            />
+                          ) : (
+                            <div className="skeleton h-full w-full rounded-full"></div>
+                          )}
+                        </div>
                       </div>
                       <ul
                         tabIndex={0}
-                        className="menu dropdown-content rounded-box bg-base-100 z-1 w-52 p-2 shadow-sm"
+                        className="menu dropdown-content rounded-box bg-base-100 z-1 mt-2 w-52 p-2 shadow-sm"
                       >
                         <li>
                           <Link
