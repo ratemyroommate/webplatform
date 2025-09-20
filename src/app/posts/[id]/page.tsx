@@ -6,6 +6,8 @@ import { RequestModal } from "~/app/_components/RequestModal";
 import { getServerAuthSession } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
 import { PostInfo } from "~/app/_components/PostInfo";
+import Image from "next/image";
+import Link from "next/link";
 
 type PostPageProps = { params: { id: string } };
 
@@ -28,7 +30,25 @@ export default async function Page({ params: { id } }: PostPageProps) {
         <Images images={post.images} />
         <FeaturedUsers {...post} />
         <PostInfo post={post} />
-        <p className="">{post.description}</p>
+        <p>{post.description}</p>
+
+        <Link
+          href={`/users/${post.createdById}`}
+          className="flex items-center gap-2"
+        >
+          <label className="text-sm">Meghirdette:</label>
+          <div className="avatar w-6">
+            <div className="w-full rounded-full">
+              <Image
+                width={100}
+                height={100}
+                src={post.createdBy.image ?? ""}
+                alt="hirdette"
+              />
+            </div>
+          </div>
+          <div className="text-sm">{post.createdBy.name}</div>
+        </Link>
         <div className="flex flex-col gap-2">
           {canEdit && (
             <div className="flex w-full gap-2">
