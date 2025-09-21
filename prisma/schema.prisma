@@ -69,21 +69,22 @@ model Session {
 }
 
 model User {
-    id               String    @id @default(cuid())
-    name             String?
-    email            String?   @unique
-    emailVerified    DateTime?
-    image            String?
-    socialLink       String?
-    about            String?
-    accounts         Account[]
-    sessions         Session[]
-    posts            Post[]
-    featuredPosts    Post[]    @relation("UserPost")
-    reviewsGiven     Review[]  @relation("ReviewsGiven")
-    reviewsReceived  Review[]  @relation("ReviewsReceived")
-    requestedPosts   Request[] @relation("UserInvitedRequests")
-    modifiedRequests Request[] @relation("UserModifiedRequests")
+    id                   String                 @id @default(cuid())
+    name                 String?
+    email                String?                @unique
+    emailVerified        DateTime?
+    image                String?
+    socialLink           String?
+    about                String?
+    accounts             Account[]
+    sessions             Session[]
+    posts                Post[]
+    featuredPosts        Post[]                 @relation("UserPost")
+    reviewsGiven         Review[]               @relation("ReviewsGiven")
+    reviewsReceived      Review[]               @relation("ReviewsReceived")
+    requestedPosts       Request[]              @relation("UserInvitedRequests")
+    modifiedRequests     Request[]              @relation("UserModifiedRequests")
+    compatibilityAnswers CompatibilityAnswers[]
 }
 
 model VerificationToken {
@@ -123,6 +124,17 @@ model Request {
     modifiedBy   User?         @relation("UserModifiedRequests", fields: [modifiedById], references: [id])
 
     @@unique([userId, postId])
+}
+
+model CompatibilityAnswers {
+    id            String   @id @default(cuid())
+    questionIndex Int
+    answerIndex   Int?
+    createdAt     DateTime @default(now())
+    createdBy     User     @relation(fields: [createdById], references: [id])
+    createdById   String
+
+    @@unique([createdById, questionIndex])
 }
 
 enum RequestStatus {

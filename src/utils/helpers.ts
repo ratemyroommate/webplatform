@@ -55,3 +55,21 @@ export const genderOptions = [
 
 export const getGenderLabel = (value: number) =>
   getSelectLabel(genderOptions, value);
+
+export const compatibilityKvizQuestions: {
+  text: string;
+  answers: { text: string }[];
+}[] = [
+  {
+    text: "Do you clean your room frequently?",
+    answers: [{ text: "Yes" }, { text: "No" }, { text: "Maybe" }],
+  },
+  {
+    text: "Do you party a lot?",
+    answers: [{ text: "Yes" }, { text: "No" }, { text: "Only on weekends" }],
+  },
+  {
+    text: "Do you smoke cigarettes?",
+    answers: [{ text: "Yes" }, { text: "No" }, { text: "Only rarely" }],
+  },
+];
