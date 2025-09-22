@@ -69,9 +69,9 @@ model Session {
 }
 
 model User {
-    id                   String                 @id @default(cuid())
+    id                   String                @id @default(cuid())
     name                 String?
-    email                String?                @unique
+    email                String?               @unique
     emailVerified        DateTime?
     image                String?
     socialLink           String?
@@ -79,12 +79,12 @@ model User {
     accounts             Account[]
     sessions             Session[]
     posts                Post[]
-    featuredPosts        Post[]                 @relation("UserPost")
-    reviewsGiven         Review[]               @relation("ReviewsGiven")
-    reviewsReceived      Review[]               @relation("ReviewsReceived")
-    requestedPosts       Request[]              @relation("UserInvitedRequests")
-    modifiedRequests     Request[]              @relation("UserModifiedRequests")
-    compatibilityAnswers CompatibilityAnswers[]
+    featuredPosts        Post[]                @relation("UserPost")
+    reviewsGiven         Review[]              @relation("ReviewsGiven")
+    reviewsReceived      Review[]              @relation("ReviewsReceived")
+    requestedPosts       Request[]             @relation("UserInvitedRequests")
+    modifiedRequests     Request[]             @relation("UserModifiedRequests")
+    compatibilityAnswers CompatibilityAnswer[]
 }
 
 model VerificationToken {
@@ -126,15 +126,34 @@ model Request {
     @@unique([userId, postId])
 }
 
-model CompatibilityAnswers {
-    id            String   @id @default(cuid())
-    questionIndex Int
-    answerIndex   Int?
-    createdAt     DateTime @default(now())
-    createdBy     User     @relation(fields: [createdById], references: [id])
-    createdById   String
+model CompatibilityAnswer {
+    id          String                      @id @default(cuid())
+    questionId  Int
+    question    CompatibilityQuestionOption @relation(fields: [questionId], references: [id])
+    answerId    Int
+    answer      CompatibilityAnswerOption   @relation(fields: [answerId], references: [id])
+    createdAt   DateTime                    @default(now())
+    createdBy   User                        @relation(fields: [createdById], references: [id])
+    createdById String
 
-    @@unique([createdById, questionIndex])
+    @@unique([createdById, questionId])
+}
+
+model CompatibilityQuestionOption {
+    id               Int                         @unique
+    text             String
+    order            Int                         @unique
+    active           Boolean                     @default(true)
+    answers          CompatibilityAnswerOption[]
+    submittedAnswers CompatibilityAnswer[]
+}
+
+model CompatibilityAnswerOption {
+    id               Int                         @unique
+    text             String
+    questionId       Int
+    question         CompatibilityQuestionOption @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    submittedAnswers CompatibilityAnswer[]
 }
 
 enum RequestStatus {

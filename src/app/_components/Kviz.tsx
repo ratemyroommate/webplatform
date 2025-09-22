@@ -2,36 +2,26 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { api } from "~/trpc/react";
-import { compatibilityKvizQuestions } from "~/utils/helpers";
 
 export const Kviz = () => {
-  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
-    null,
-  );
+  const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
 
   const utils = api.useUtils();
   const saveAnswerMutation = api.kviz.saveAnswer.useMutation({
-    onSuccess: () => utils.kviz.getQuestionIndex.invalidate(),
+    onSuccess: () => utils.kviz.getQuestion.invalidate(),
   });
 
-  const {
-    data: questionIndex,
-    isLoading,
-    isRefetching,
-  } = api.kviz.getQuestionIndex.useQuery();
+  const { data, isLoading, isRefetching } = api.kviz.getQuestion.useQuery();
+  if (isLoading || isRefetching || !data) return <LoadingKviz />;
 
-  if (isLoading || isRefetching) return <LoadingKviz />;
-  if (questionIndex === undefined) return "something went wrong";
-  if (questionIndex === compatibilityKvizQuestions.length)
-    return <CompletedKvizView />;
-  const question = compatibilityKvizQuestions[questionIndex];
-  if (!question) return <div>Nincs ilyen kerdes</div>;
+  const { question, questionIndex, totalQuestionCount } = data;
+  if (!question) return <CompletedKvizView />;
 
   const handleSubmit = () => {
-    if (selectedAnswerIndex === null) return;
+    if (selectedAnswerId === null) return;
     saveAnswerMutation.mutate({
-      answerIndex: selectedAnswerIndex,
-      questionIndex,
+      answerId: selectedAnswerId,
+      questionId: question.id,
     });
   };
 
@@ -45,25 +35,28 @@ export const Kviz = () => {
           lehetőség. Továbblépés után minden válasz mentésre kerül.
         </div>
       </div>
-      <TimeLine questionIndex={questionIndex} />
+      <TimeLine
+        questionIndex={questionIndex}
+        totalQuestionCount={totalQuestionCount}
+      />
       <div className="flex flex-col gap-4">
         <b className="rounded-lg text-2xl">{question.text}</b>
         <div className="join join-vertical">
           {question.answers.map((answer, index) => (
             <input
-              key={index}
+              key={answer.id}
               className="join-item btn"
               type="radio"
               name="answer"
               aria-label={answer.text}
-              value={index}
-              onChange={() => setSelectedAnswerIndex(index)}
+              value={answer.id}
+              onChange={() => setSelectedAnswerId(answer.id)}
             />
           ))}
         </div>
       </div>
       <button
-        disabled={saveAnswerMutation.isPending || selectedAnswerIndex === null}
+        disabled={saveAnswerMutation.isPending || selectedAnswerId === null}
         onClick={handleSubmit}
         className="btn btn-secondary w-1/2 self-end"
       >
@@ -83,9 +76,15 @@ const LoadingKviz = () => (
   </>
 );
 
-const TimeLine = ({ questionIndex }: { questionIndex: number }) => (
+const TimeLine = ({
+  questionIndex,
+  totalQuestionCount,
+}: {
+  questionIndex: number;
+  totalQuestionCount: number;
+}) => (
   <ul className="steps">
-    {compatibilityKvizQuestions.map((_, index) => (
+    {Array.from({ length: totalQuestionCount }).map((_, index) => (
       <li
         key={index}
         className={`step ${questionIndex >= index ? "step-primary" : ""}`}
@@ -118,28 +117,20 @@ const CompletedKvizView = () => {
         <LoadingAnswers />
       ) : (
         <div className="flex flex-col gap-6">
-          {questions?.map((question, questionIndex) => (
+          {questions?.map((question) => (
             <div key={question.id} className="flex flex-col gap-4">
-              <b className="rounded-lg text-2xl">
-                {compatibilityKvizQuestions[question.questionIndex]?.text}
-              </b>
+              <b className="rounded-lg text-2xl">{question.text}</b>
               <div className="join join-vertical">
-                {compatibilityKvizQuestions[
-                  question.questionIndex
-                ]?.answers.map((answer, index) => (
+                {question.answers.map((answer, index) => (
                   <input
                     key={index}
                     className="join-item btn"
                     type="radio"
                     name={`question-${question.id}`}
                     aria-label={answer.text}
-                    value={question.id + index}
+                    value={question.id + answer.id}
                     readOnly
-                    checked={
-                      question.answerIndex !== null &&
-                      index === question.answerIndex &&
-                      questionIndex === question.questionIndex
-                    }
+                    checked={answer.id === answer.submittedAnswers[0]?.answerId}
                   />
                 ))}
               </div>
