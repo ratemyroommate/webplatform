@@ -9,9 +9,9 @@ const main = async () => {
       order: 1,
       text: "Do you clean your room frequently?",
       answers: [
-        { id: 1, text: "Yes" },
-        { id: 2, text: "Maybe" },
-        { id: 3, text: "No" },
+        { id: 1, text: "Yes", value: 0 },
+        { id: 2, text: "Maybe", value: 1 },
+        { id: 3, text: "No", value: 2 },
       ]
     },
     {
@@ -19,9 +19,9 @@ const main = async () => {
       order: 2,
       text: "Do you party a lot?",
       answers: [
-        { id: 4, text: "Yes" },
-        { id: 5, text: "Only on weekends" },
-        { id: 6, text: "No" },
+        { id: 4, text: "Yes", value: 0 },
+        { id: 5, text: "Only on weekends", value: 1 },
+        { id: 6, text: "No", value: 2 },
       ],
     },
     {
@@ -29,9 +29,9 @@ const main = async () => {
       order: 3,
       text: "Do you smoke cigarettes?",
       answers: [
-        { id: 7, text: "Yes" },
-        { id: 8, text: "Only rarely" },
-        { id: 9, text: "No" },
+        { id: 7, text: "Yes", value: 0 },
+        { id: 8, text: "Only rarely", value: 1 },
+        { id: 9, text: "No", value: 2 },
       ],
     },
   ];

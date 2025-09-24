@@ -11,8 +11,10 @@ import { NotificationModal } from "./_components/NotificationModal";
 import {
   ArrowLeftStartOnRectangleIcon,
   InboxIcon,
+  PresentationChartBarIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Rate My Roommate",
@@ -44,9 +46,12 @@ export default async function RootLayout({
                       <div role="button" tabIndex={0} className="avatar">
                         <div className="ring-primary ring-offset-base-100 w-full rounded-full ring-3 ring-offset-2">
                           {session?.user.image ? (
-                            <img
+                            <Image
+                              width={30}
+                              height={30}
                               src={session.user.image}
                               alt="profile picture"
+                              loading="eager"
                             />
                           ) : (
                             <div className="skeleton h-full w-full rounded-full"></div>
@@ -59,6 +64,12 @@ export default async function RootLayout({
                             <Link href={`/users/${session.user.id}`}>
                               <UserCircleIcon width={20} />
                               Profil
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href={`/compatibility-kviz`}>
+                              <PresentationChartBarIcon width={20} />
+                              Kvíz
                             </Link>
                           </li>
                           <li>

@@ -8,6 +8,7 @@ import { HydrateClient, api } from "~/trpc/server";
 import { PostInfo } from "~/app/_components/PostInfo";
 import Image from "next/image";
 import Link from "next/link";
+import { CompatibilityScore } from "~/app/_components/CompatibilityScore";
 
 type PostPageProps = { params: { id: string } };
 
@@ -49,6 +50,10 @@ export default async function Page({ params: { id } }: PostPageProps) {
           </div>
           <div className="text-sm">{post.createdBy.name}</div>
         </Link>
+        <CompatibilityScore
+          compareUserId={post.createdById}
+          session={session}
+        />
         <div className="flex flex-col gap-2">
           {canEdit && (
             <div className="flex w-full gap-2">
