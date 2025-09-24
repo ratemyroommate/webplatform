@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE "CompatibilityAnswerOption" ADD COLUMN     "value" INTEGER NOT NULL;
+ALTER TABLE "CompatibilityAnswerOption" ADD COLUMN "value" INTEGER NOT NULL DEFAULT 0;

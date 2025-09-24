@@ -153,7 +153,7 @@ model CompatibilityQuestionOption {
 model CompatibilityAnswerOption {
     id               Int                         @unique
     text             String
-    value            Int
+    value            Int                         @default(0)
     questionId       Int
     question         CompatibilityQuestionOption @relation(fields: [questionId], references: [id], onDelete: Cascade)
     submittedAnswers CompatibilityAnswer[]
