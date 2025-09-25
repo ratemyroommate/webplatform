@@ -4,11 +4,11 @@ import { Post } from "./post";
 import { PostSkeletons } from "./PostSkeletons";
 import { FormValues } from "./Filters";
 
-type FeedPostsProps = { filters: FormValues; userId?: string };
+type FeedPostsProps = { filters: FormValues };
 
-export const FeedPosts = ({ filters, userId }: FeedPostsProps) => {
+export const FeedPosts = ({ filters }: FeedPostsProps) => {
   const bottom = useRef<HTMLDivElement>(null);
-  const { data, fetchNextPage, isLoading } =
+  const { data, fetchNextPage, isLoading, isFetchingNextPage } =
     api.post.getLatest.useInfiniteQuery(
       { filters },
       { getNextPageParam: (lastPage) => lastPage.nextCursor },
@@ -24,11 +24,9 @@ export const FeedPosts = ({ filters, userId }: FeedPostsProps) => {
   return (
     <>
       {data?.pages.map((page) =>
-        page.posts.map((post) => (
-          <Post post={post} key={post.id} userId={userId} />
-        )),
+        page.posts.map((post) => <Post post={post} key={post.id} />),
       )}
-      {isLoading && <PostSkeletons />}
+      {(isLoading || isFetchingNextPage) && <PostSkeletons />}
       <div ref={bottom} />
     </>
   );

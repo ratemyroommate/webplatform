@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Post" ADD COLUMN     "gender" INTEGER NOT NULL DEFAULT 0;

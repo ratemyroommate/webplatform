@@ -21,6 +21,9 @@ model Post {
     featuredUsers  User[]   @relation("UserPost")
     images         Image[]
     price          Int
+    location       Location @default(BUDAPEST)
+    age            Int      @default(0)
+    gender         Int      @default(0)
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
 
@@ -66,21 +69,22 @@ model Session {
 }
 
 model User {
-    id               String    @id @default(cuid())
-    name             String?
-    email            String?   @unique
-    emailVerified    DateTime?
-    image            String?
-    socialLink       String?
-    about            String?
-    accounts         Account[]
-    sessions         Session[]
-    posts            Post[]
-    featuredPosts    Post[]    @relation("UserPost")
-    reviewsGiven     Review[]  @relation("ReviewsGiven")
-    reviewsReceived  Review[]  @relation("ReviewsReceived")
-    requestedPosts   Request[] @relation("UserInvitedRequests")
-    modifiedRequests Request[] @relation("UserModifiedRequests")
+    id                   String                @id @default(cuid())
+    name                 String?
+    email                String?               @unique
+    emailVerified        DateTime?
+    image                String?
+    socialLink           String?
+    about                String?
+    accounts             Account[]
+    sessions             Session[]
+    posts                Post[]
+    featuredPosts        Post[]                @relation("UserPost")
+    reviewsGiven         Review[]              @relation("ReviewsGiven")
+    reviewsReceived      Review[]              @relation("ReviewsReceived")
+    requestedPosts       Request[]             @relation("UserInvitedRequests")
+    modifiedRequests     Request[]             @relation("UserModifiedRequests")
+    compatibilityAnswers CompatibilityAnswer[]
 }
 
 model VerificationToken {
@@ -122,8 +126,49 @@ model Request {
     @@unique([userId, postId])
 }
 
+model CompatibilityAnswer {
+    id          String                      @id @default(cuid())
+    questionId  Int
+    question    CompatibilityQuestionOption @relation(fields: [questionId], references: [id])
+    answerId    Int
+    answer      CompatibilityAnswerOption   @relation(fields: [answerId], references: [id])
+    createdAt   DateTime                    @default(now())
+    createdBy   User                        @relation(fields: [createdById], references: [id])
+    createdById String
+
+    @@unique([createdById, questionId])
+}
+
+model CompatibilityQuestionOption {
+    id               Int                         @unique
+    text             String
+    order            Int                         @unique
+    active           Boolean                     @default(true)
+    answers          CompatibilityAnswerOption[]
+    submittedAnswers CompatibilityAnswer[]
+
+    @@id([id])
+}
+
+model CompatibilityAnswerOption {
+    id               Int                         @unique
+    text             String
+    value            Int                         @default(0)
+    questionId       Int
+    question         CompatibilityQuestionOption @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    submittedAnswers CompatibilityAnswer[]
+
+    @@id([id])
+}
+
 enum RequestStatus {
     PENDING
     ACCEPTED
     DENIED
+}
+
+enum Location {
+    BUDAPEST
+    DEBRECEN
+    SZEGED
 }

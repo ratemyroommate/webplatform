@@ -5,7 +5,6 @@ import { HydrateClient, api } from "~/trpc/server";
 type FeedPostsProps = { params: { id: string } };
 
 export default async function UserPosts({ params: { id } }: FeedPostsProps) {
-  const session = await getServerAuthSession();
   const data = await api.post.getAllByUserId(id);
 
   if (!data.length) return "Nem találtunk posztot a megadott felhasználótól.";
@@ -13,9 +12,7 @@ export default async function UserPosts({ params: { id } }: FeedPostsProps) {
   return (
     <HydrateClient>
       <div className="text-sm font-bold">Saját posztok</div>
-      {data?.map((post) => (
-        <Post post={post} key={post.id} userId={session?.user.id} />
-      ))}
+      {data?.map((post) => <Post post={post} key={post.id} />)}
     </HydrateClient>
   );
 }

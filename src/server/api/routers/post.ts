@@ -7,6 +7,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { utapi } from "~/app/api/uploadthing/utapi";
+import { Location } from "@prisma/client";
 
 const limit = 2;
 const maxPostCountPerUser = 4;
@@ -35,6 +36,9 @@ export const postRouter = createTRPCRouter({
         description: z.string().min(1).max(200),
         maxPersonCount: z.number().min(2).max(6),
         isResident: z.boolean(),
+        location: z.nativeEnum(Location),
+        age: z.number().min(0).max(4),
+        gender: z.number().min(0).max(2),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -59,6 +63,9 @@ export const postRouter = createTRPCRouter({
           featuredUsers: {
             connect: input.isResident ? [{ id: ctx.session.user.id }] : [],
           },
+          location: input.location,
+          age: input.age,
+          gender: input.gender,
         },
       });
     }),
@@ -73,6 +80,9 @@ export const postRouter = createTRPCRouter({
         description: z.string().min(1).max(200),
         maxPersonCount: z.number().min(2).max(6),
         isResident: z.boolean(),
+        location: z.nativeEnum(Location),
+        age: z.number().min(0).max(4),
+        gender: z.number().min(0).max(2),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -116,6 +126,9 @@ export const postRouter = createTRPCRouter({
           featuredUsers: input.isResident
             ? { connect: { id: ctx.session.user.id } }
             : { disconnect: { id: ctx.session.user.id } },
+          location: input.location,
+          age: input.age,
+          gender: input.gender,
         },
       });
     }),
@@ -127,6 +140,9 @@ export const postRouter = createTRPCRouter({
           maxPersonCount: z.number().optional(),
           maxPrice: z.number().optional(),
           orderBy: orderBy.default("createdAt-desc"),
+          location: z.union([z.nativeEnum(Location), z.enum([""])]).optional(),
+          age: z.number().min(0).max(4).optional(),
+          gender: z.number().min(0).max(2).optional(),
         }),
         cursor: z.number().nullish(),
       }),
@@ -146,6 +162,9 @@ export const postRouter = createTRPCRouter({
             lte:
               input.filters.maxPrice !== 0 ? input.filters.maxPrice : undefined,
           },
+          location: input.filters.location ? input.filters.location : undefined,
+          age: input.filters.age !== 0 ? input.filters.age : undefined,
+          gender: input.filters.gender ? input.filters.gender : undefined,
         },
       });
 
@@ -158,7 +177,11 @@ export const postRouter = createTRPCRouter({
     if (isNaN(id)) return null;
     return ctx.db.post.findUnique({
       where: { id },
-      include: { ...featuredImageQuery, requests: true },
+      include: {
+        ...featuredImageQuery,
+        requests: true,
+        createdBy: { select: { name: true, image: true } },
+      },
     });
   }),
 

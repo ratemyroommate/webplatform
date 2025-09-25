@@ -4,13 +4,19 @@ import { Image as TImage } from "@prisma/client";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import Image from "next/image";
+import { PhotoIcon } from "@heroicons/react/24/outline";
 
 type CarouselProps = {
   images: TImage[];
 };
 
 export const Images = ({ images }: CarouselProps) => {
-  if (!images.length) return <div className="skeleton h-60 w-full"></div>;
+  if (!images.length)
+    return (
+      <div className="bg-base-200 flex h-60 w-full items-center justify-center rounded-lg">
+        <PhotoIcon width={30} />
+      </div>
+    );
   return (
     <Carousel
       className="w-full overflow-hidden rounded-lg"

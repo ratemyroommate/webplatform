@@ -1,14 +1,19 @@
 "use client";
 
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid";
-import { Post } from "@prisma/client";
+import { Post, Location } from "@prisma/client";
 import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import { isUserInPostGroup } from "~/utils/helpers";
+import {
+  ageOptions,
+  genderOptions,
+  isUserInPostGroup,
+  locationOptions,
+} from "~/utils/helpers";
 import { genUploader } from "uploadthing/client";
 import { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
@@ -33,6 +38,9 @@ const defaultValues = {
   images: [],
   removeImages: [],
   price: 80,
+  location: Location.BUDAPEST,
+  age: 0,
+  gender: 0,
 };
 const max = { maxPersonCount: 6, price: 999 };
 const min = { maxPersonCount: 2, price: 10 };
@@ -57,6 +65,9 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
           description: post.description,
           maxPersonCount: post.maxPersonCount,
           isResident: !!userId && isUserInPostGroup(post, userId),
+          location: post.location,
+          age: post.age,
+          gender: post.gender,
         }
       : defaultValues,
   });
@@ -181,7 +192,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         ) : (
           <>
             <PlusIcon width={20} />
-            Új post
+            Új poszt
           </>
         )}
       </button>
@@ -191,7 +202,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         className="modal"
       >
         <div className="modal-box max-w-5xl">
-          <h3 className="text-lg font-bold">{`Poszt ${post ? "módosítás" : "létrehozás"}`}</h3>
+          <h3 className="pb-2 text-lg font-bold">{`Poszt ${post ? "módosítás" : "létrehozás"}`}</h3>
           <XButton />
           <form
             className="flex w-full flex-col"
@@ -275,10 +286,47 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             </label>
 
             <label className="fieldset-label">Hol</label>
-            <select defaultValue="Budapest" className="select">
-              <option disabled={true}>Hol szeretnel lakni?</option>
-              <option>Budapest</option>
-              <option>Debrecen</option>
+            <select
+              defaultValue="Budapest"
+              className="select w-full"
+              {...register("location")}
+            >
+              <option disabled={true}>Hol lakni?</option>
+              {locationOptions.map((locationOption) => (
+                <option key={locationOption.value} value={locationOption.value}>
+                  {locationOption.label}
+                </option>
+              ))}
+            </select>
+
+            <label className="fieldset-label">Kor</label>
+            <select
+              className="select w-full"
+              {...register("age", { valueAsNumber: true })}
+            >
+              <option defaultValue={0} disabled={true}>
+                Kor
+              </option>
+              {ageOptions.map((ageOption) => (
+                <option key={ageOption.value} value={ageOption.value}>
+                  {ageOption.label}
+                </option>
+              ))}
+            </select>
+
+            <label className="fieldset-label">Nem preferencia</label>
+            <select
+              className="select w-full"
+              {...register("gender", { valueAsNumber: true })}
+            >
+              <option defaultValue={0} disabled={true}>
+                Nem
+              </option>
+              {genderOptions.map((gender) => (
+                <option key={gender.value} value={gender.value}>
+                  {gender.label}
+                </option>
+              ))}
             </select>
 
             <label className="form-control w-full">

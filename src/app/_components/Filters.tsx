@@ -11,11 +11,16 @@ import { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
 import { Dispatch } from "react";
 import { XButton } from "./CloseButton";
+import { ageOptions, genderOptions, locationOptions } from "~/utils/helpers";
+import { Location } from "@prisma/client";
 
 type FiltersProps = { filters: FormValues; setFilters: Dispatch<FormValues> };
 export type FormValues = {
   maxPersonCount?: number;
   maxPrice?: number;
+  location?: Location | "";
+  age?: number;
+  gender?: number;
   orderBy?: OrderBy;
 };
 export type OrderBy = z.infer<typeof orderBy>;
@@ -24,6 +29,9 @@ const defaultFilters: FormValues = {
   orderBy: "createdAt-desc",
   maxPersonCount: 0,
   maxPrice: 0,
+  location: "",
+  age: 0,
+  gender: 0,
 };
 
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
@@ -63,7 +71,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
 
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col items-center gap-6 pt-4"
+            className="flex flex-col items-center gap-4 pt-4"
           >
             <label className="form-control w-full">
               <div className="label">
@@ -109,6 +117,56 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                   <span key={n}>{n}</span>
                 ))}
               </div>
+            </label>
+            <label className="form-control flex w-full flex-col">
+              <div className="label">
+                <span className="label-text text-lg">Hely</span>
+              </div>
+              <select className="select w-full" {...register("location")}>
+                <option disabled={true}>Hol lakni?</option>
+                {[{ value: "", label: "Mindegy" }, ...locationOptions].map(
+                  (locationOption) => (
+                    <option
+                      key={locationOption.value}
+                      value={locationOption.value}
+                    >
+                      {locationOption.label}
+                    </option>
+                  ),
+                )}
+              </select>
+            </label>
+            <label className="form-control flex w-full flex-col">
+              <div className="label">
+                <span className="label-text text-lg">Kor</span>
+              </div>
+              <select
+                className="select w-full"
+                {...register("age", { valueAsNumber: true })}
+              >
+                <option disabled={true}>Kor intervallum</option>
+                {ageOptions.map((ageOption) => (
+                  <option key={ageOption.value} value={ageOption.value}>
+                    {ageOption.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="form-control flex w-full flex-col">
+              <div className="label">
+                <span className="label-text text-lg">Nem preferencia</span>
+              </div>
+              <select
+                className="select w-full"
+                {...register("gender", { valueAsNumber: true })}
+              >
+                <option disabled={true}>Nem preferencia</option>
+                {genderOptions.map((genderOption) => (
+                  <option key={genderOption.value} value={genderOption.value}>
+                    {genderOption.label}
+                  </option>
+                ))}
+              </select>
             </label>
             <h3 className="self-start text-lg font-bold">Rendezés</h3>
             <div className="flex w-full gap-4">

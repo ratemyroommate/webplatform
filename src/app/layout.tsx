@@ -11,13 +11,15 @@ import { NotificationModal } from "./_components/NotificationModal";
 import {
   ArrowLeftStartOnRectangleIcon,
   InboxIcon,
+  PresentationChartBarIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Rate My Roommate",
   description: "A hely ahol megtalálod a helyed",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/R-favicon.png" }],
 };
 
 export default async function RootLayout({
@@ -34,56 +36,56 @@ export default async function RootLayout({
             <div className="container flex max-w-4xl flex-col items-center justify-center gap-4 px-4 py-4">
               <div className="navbar bg-base-100 justify-between rounded-2xl shadow-xl">
                 <Link href="/" className="btn btn-ghost text-xl">
-                  RmRm
+                  <img src="/R.png" className="w-16" />
                 </Link>
 
                 {session?.user ? (
                   <div className="flex items-center gap-6">
                     <NotificationModal />
-                    <div
-                      className="avatar dropdown dropdown-end mr-4 w-10"
-                      tabIndex={0}
-                      role="button"
-                    >
-                      <div className="ring-primary ring-offset-base-100 w-full rounded-full ring-3 ring-offset-2">
-                        {session?.user.image ? (
-                          <img src={session.user.image} alt="profile picture" />
-                        ) : (
-                          <div className="skeleton h-full w-full rounded-full"></div>
-                        )}
+                    <div className="dropdown dropdown-end mr-4 w-10">
+                      <div role="button" tabIndex={0} className="avatar">
+                        <div className="ring-primary ring-offset-base-100 w-full rounded-full ring-3 ring-offset-2">
+                          {session?.user.image ? (
+                            <Image
+                              width={30}
+                              height={30}
+                              src={session.user.image}
+                              alt="profile picture"
+                              loading="eager"
+                            />
+                          ) : (
+                            <div className="skeleton h-full w-full rounded-full"></div>
+                          )}
+                        </div>
                       </div>
-                      <ul
-                        tabIndex={0}
-                        className="menu dropdown-content rounded-box bg-base-100 z-1 w-52 p-2 shadow-sm"
-                      >
-                        <li>
-                          <Link
-                            href={`/users/${session.user.id}`}
-                            className="btn"
-                          >
-                            <UserCircleIcon width={20} />
-                            Profil
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href={`/users/${session.user.id}/posts`}
-                            className="btn btn-ghost"
-                          >
-                            <InboxIcon width={20} />
-                            Posztjaim
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/api/auth/signout"
-                            className="btn btn-ghost"
-                          >
-                            <ArrowLeftStartOnRectangleIcon width={20} />
-                            Kijelentkezés
-                          </Link>
-                        </li>
-                      </ul>
+                      <div tabIndex={0} className="dropdown-content">
+                        <ul className="menu rounded-box bg-base-100 z-1 mt-2 w-52 p-2 shadow-sm">
+                          <li>
+                            <Link href={`/users/${session.user.id}`}>
+                              <UserCircleIcon width={20} />
+                              Profil
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href={`/compatibility-kviz`}>
+                              <PresentationChartBarIcon width={20} />
+                              Kvíz
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href={`/users/${session.user.id}/posts`}>
+                              <InboxIcon width={20} />
+                              Posztjaim
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/api/auth/signout">
+                              <ArrowLeftStartOnRectangleIcon width={20} />
+                              Kijelentkezés
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 ) : (
