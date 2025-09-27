@@ -27,33 +27,26 @@ export const CompatibilityScore = ({
           <Loading />
         ) : (
           <>
+            {data.completedQuestionCountByCurrentUser === 0 && (
+              <KvizCallToAction label="Töltsd ki a kvízt, hogy lásd mennyire vagytok kompatibilisak" />
+            )}
+
             {data.completedQuestionCountByCurrentUser > 0 &&
               data.completedQuestionCountByCurrentUser <
                 data.totalQuestionCount && (
-                <div className="btn btn-xs btn-warning mb-3">
-                  Töltsd ki az összes kérdést a eredményért
-                </div>
+                <KvizCallToAction label="Töltsd ki az összes kérdést pontosabb eredményért" />
               )}
-            <div className="flex">
-              {data.completedQuestionCountByCurrentUser === 0 ? (
-                <div className="flex flex-col gap-2">
-                  <div className="text-xs">
-                    Töltsd ki a kvízt, hogy lásd mennyire vagytok kompatibilisak
-                  </div>
-                  <Link
-                    className="btn btn-sm btn-success"
-                    href="/compatibility-kviz"
-                  >
-                    Kitöltöm
-                  </Link>
-                </div>
-              ) : data.completedQuestionCountByPostUser === 0 ? (
-                <div>
-                  A poszt létrehozója nem töltötte ki a kvízt, kérlek nézz
-                  vissza később
-                </div>
-              ) : (
-                <>
+
+            {data.completedQuestionCountByPostUser === 0 && (
+              <div className="mb-3 text-sm">
+                A poszt létrehozója nem töltötte ki a kvízt, kérlek nézz vissza
+                később.
+              </div>
+            )}
+
+            {data.completedQuestionCountByCurrentUser > 0 &&
+              data.completedQuestionCountByPostUser > 0 && (
+                <div className="flex">
                   <div className="flex flex-col">
                     <div className="stat-title">
                       Kompatibilitás kvíz alapján
@@ -76,9 +69,8 @@ export const CompatibilityScore = ({
                       Ellentét: {data.noMatches}
                     </div>
                   </div>
-                </>
+                </div>
               )}
-            </div>
           </>
         )}
       </div>
@@ -95,7 +87,7 @@ const getButtonConfig = (data?: number) => {
 
   if (data < 50) {
     return {
-      label: "Nem idális",
+      label: "Nem ideális",
       color: "error",
     };
   } else if (data < 70) {
@@ -123,5 +115,14 @@ const Loading = () => (
       <div className="skeleton h-6 w-1/2"></div>
       <div className="skeleton h-6 w-1/2"></div>
     </div>
+  </div>
+);
+
+const KvizCallToAction = ({ label }: { label: string }) => (
+  <div className="mb-3 flex flex-col gap-2">
+    <div className="text-sm">{label}</div>
+    <Link className="btn btn-sm btn-success" href="/compatibility-kviz">
+      Kitöltöm
+    </Link>
   </div>
 );
