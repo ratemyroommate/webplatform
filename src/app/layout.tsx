@@ -99,6 +99,15 @@ export default async function RootLayout({
               {children}
             </div>
           </main>
+          <div className="bg-neutral text-base-300 flex h-32 flex-col items-center justify-center">
+            <img src="/R-white.png" className="w-16" />
+            <ul>
+              <li>
+                <Link href="/privacy-policy">Privacy Policy</Link>
+              </li>
+            </ul>
+            <span className="text-base-300">© 2025 Ratemyroommate</span>
+          </div>
         </TRPCReactProvider>
       </body>
     </html>
