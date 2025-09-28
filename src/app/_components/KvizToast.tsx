@@ -11,9 +11,9 @@ type KvizToastProps = {
 };
 
 export const KvizToast = ({ session }: KvizToastProps) => {
-  if (!session) return null;
-
-  const { data } = api.kviz.getCurrentUserAnswerCount.useQuery();
+  const { data } = api.kviz.getCurrentUserAnswerCount.useQuery(undefined, {
+    enabled: !!session,
+  });
 
   useEffect(() => {
     if (
