@@ -130,6 +130,7 @@ export const kvizRouter = createTRPCRouter({
       const completedQuestionCountByCurrentUser =
         await ctx.db.compatibilityQuestionOption.count({
           where: {
+            active: true,
             submittedAnswers: {
               some: {
                 createdById: currentUser,
@@ -164,6 +165,7 @@ export const kvizRouter = createTRPCRouter({
     const completedQuestionCountByCurrentUser =
       await ctx.db.compatibilityQuestionOption.count({
         where: {
+          active: true,
           submittedAnswers: {
             some: {
               createdById: ctx.session.user.id,
