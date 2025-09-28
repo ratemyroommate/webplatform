@@ -137,7 +137,7 @@ export const postRouter = createTRPCRouter({
     .input(
       z.object({
         filters: z.object({
-          maxPersonCount: z.number().optional(),
+          maxPersonCount: z.coerce.number().optional(),
           maxPrice: z.number().optional(),
           orderBy: orderBy.default("createdAt-desc"),
           location: z.union([z.nativeEnum(Location), z.enum([""])]).optional(),

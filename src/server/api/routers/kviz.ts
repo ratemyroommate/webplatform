@@ -160,4 +160,21 @@ export const kvizRouter = createTRPCRouter({
         totalQuestionCount,
       };
     }),
+  getCurrentUserAnswerCount: protectedProcedure.query(async ({ ctx }) => {
+    const completedQuestionCountByCurrentUser =
+      await ctx.db.compatibilityQuestionOption.count({
+        where: {
+          submittedAnswers: {
+            some: {
+              createdById: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    const totalQuestionCount = await ctx.db.compatibilityQuestionOption.count({
+      where: { active: true },
+    });
+
+    return { completedQuestionCountByCurrentUser, totalQuestionCount };
+  }),
 });

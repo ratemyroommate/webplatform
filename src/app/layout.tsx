@@ -15,6 +15,7 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { KvizToast } from "./_components/KvizToast";
 
 export const metadata: Metadata = {
   title: "Rate My Roommate",
@@ -32,6 +33,7 @@ export default async function RootLayout({
       <body>
         <TRPCReactProvider>
           <Toaster />
+          <KvizToast session={session} />
           <main className="bg-base-200 flex min-h-screen flex-col items-center">
             <div className="container flex max-w-4xl flex-col items-center justify-center gap-4 px-4 py-4">
               <div className="navbar bg-base-100 justify-between rounded-2xl shadow-xl">

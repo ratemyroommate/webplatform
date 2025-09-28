@@ -77,21 +77,16 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               <div className="label">
                 <span className="label-text text-lg">Lakótársak száma</span>
               </div>
-              <div className="flex justify-between gap-2">
+              <div className="join flex">
                 {Array.from({ length: 4 }, (_, i) => i + 2).map((n) => (
-                  <button
+                  <input
                     key={n}
-                    className={`btn flex-1 ${watch("maxPersonCount") == n ? "btn-secondary" : ""}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setValue(
-                        "maxPersonCount",
-                        watch("maxPersonCount") === n ? 0 : n,
-                      );
-                    }}
-                  >
-                    {n}
-                  </button>
+                    type="radio"
+                    className="join-item btn flex-1"
+                    aria-label={`${n}`}
+                    value={n}
+                    {...register("maxPersonCount", { valueAsNumber: true })}
+                  />
                 ))}
               </div>
             </label>
