@@ -16,6 +16,12 @@ export const KvizToast = ({ session }: KvizToastProps) => {
   });
 
   useEffect(() => {
+    if (!session) {
+      toast.success("Jelentkezz be, és töltsd ki a kompatibilitás kvízt");
+    }
+  }, [session]);
+
+  useEffect(() => {
     if (
       data &&
       data.completedQuestionCountByCurrentUser < data.totalQuestionCount

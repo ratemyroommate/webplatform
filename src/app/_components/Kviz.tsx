@@ -42,7 +42,7 @@ export const Kviz = () => {
       <div className="flex flex-col gap-4">
         <b className="rounded-lg text-2xl">{question.text}</b>
         <div className="join join-vertical">
-          {question.answers.map((answer, index) => (
+          {question.answers.map((answer) => (
             <input
               key={answer.id}
               className="join-item btn"
