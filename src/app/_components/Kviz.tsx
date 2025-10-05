@@ -58,7 +58,7 @@ export const Kviz = () => {
       <button
         disabled={saveAnswerMutation.isPending || selectedAnswerId === null}
         onClick={handleSubmit}
-        className="btn btn-secondary w-1/2 self-end"
+        className="btn btn-secondary self-end"
       >
         Mentés és Tovább
         <ArrowRightIcon width={16} />
