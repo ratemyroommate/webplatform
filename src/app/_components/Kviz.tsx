@@ -45,7 +45,7 @@ export const Kviz = () => {
           {question.answers.map((answer) => (
             <input
               key={answer.id}
-              className="join-item btn"
+              className="join-item btn h-auto p-4 text-left"
               type="radio"
               name="answer"
               aria-label={answer.text}
@@ -87,7 +87,7 @@ const TimeLine = ({
     {Array.from({ length: totalQuestionCount }).map((_, index) => (
       <li
         key={index}
-        className={`step ${questionIndex >= index ? "step-primary" : ""}`}
+        className={`step !min-w-auto ${questionIndex >= index ? "step-primary" : ""}`}
       ></li>
     ))}
   </ul>
@@ -124,7 +124,7 @@ const CompletedKvizView = () => {
                 {question.answers.map((answer, index) => (
                   <input
                     key={index}
-                    className="join-item btn"
+                    className="join-item btn h-auto p-4 text-left"
                     type="radio"
                     name={`question-${question.id}`}
                     aria-label={answer.text}
