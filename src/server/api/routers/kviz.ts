@@ -51,21 +51,25 @@ export const kvizRouter = createTRPCRouter({
         },
       }),
     ),
-  getAnsers: protectedProcedure.query(({ ctx }) =>
-    ctx.db.compatibilityQuestionOption.findMany({
-      where: { active: true },
-      include: {
-        answers: {
-          include: {
-            submittedAnswers: { where: { createdById: ctx.session.user.id } },
+  getAnsers: protectedProcedure
+    .input(z.string().optional())
+    .query(({ ctx, input }) =>
+      ctx.db.compatibilityQuestionOption.findMany({
+        where: { active: true },
+        include: {
+          answers: {
+            include: {
+              submittedAnswers: {
+                where: { createdById: input ?? ctx.session.user.id },
+              },
+            },
           },
         },
-      },
-      orderBy: {
-        order: "asc",
-      },
-    }),
-  ),
+        orderBy: {
+          order: "asc",
+        },
+      }),
+    ),
   getStats: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {

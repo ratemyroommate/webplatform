@@ -1,5 +1,4 @@
 import { Post } from "~/app/_components/post";
-import { getServerAuthSession } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
 
 type FeedPostsProps = { params: { id: string } };

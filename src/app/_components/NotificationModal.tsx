@@ -9,14 +9,16 @@ import {
 import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { api } from "~/trpc/react";
 import Link from "next/link";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { RequestStatus } from "@prisma/client";
+import { Request, RequestStatus } from "@prisma/client";
 import { toast } from "react-hot-toast";
 import { NotificationBell } from "./NotificationBell";
 import { XButton } from "./CloseButton";
+import { Session } from "next-auth";
+import { CompatibilityScore } from "./CompatibilityScore";
 
-export const NotificationModal = () => {
+export const NotificationModal = ({ session }: { session: Session }) => {
   const { data: requests, isLoading } = api.request.getAll.useQuery();
   const recievedRequests = requests?.recievedRequests;
   const sentRequests = requests?.sentRequests;
@@ -53,69 +55,12 @@ export const NotificationModal = () => {
           ) : recievedRequests?.length ? (
             <div className="flex flex-col gap-2">
               {recievedRequests?.map((request) => (
-                <div
+                <RecievedRequest
                   key={request.id}
-                  className="card border-base-200 border-2 p-2"
-                >
-                  <div className="flex flex-row items-center justify-between">
-                    <div className="flew-row flex items-center gap-4">
-                      <Link
-                        className="h-10 w-10"
-                        href={`/users/${request.user.id}`}
-                      >
-                        <div className="avatar">
-                          <div className="rounded-full">
-                            <img src={request.user.image ?? ""} />
-                          </div>
-                        </div>
-                      </Link>
-                      <div className="w-2/3">
-                        <div className="line-clamp-1 overflow-hidden">
-                          {request.user.name}
-                        </div>
-                        <Badge status={request.status} />
-                      </div>
-                    </div>
-                    {request.status === "PENDING" && (
-                      <div className="flex gap-2">
-                        <button
-                          className="btn btn-square btn-success"
-                          onClick={() =>
-                            updateRequest.mutate({
-                              requestId: request.id,
-                              status: "ACCEPTED",
-                            })
-                          }
-                        >
-                          <CheckIcon width={20} />
-                        </button>
-                        <button
-                          className="btn btn-square btn-error"
-                          onClick={() =>
-                            updateRequest.mutate({
-                              requestId: request.id,
-                              status: "DENIED",
-                            })
-                          }
-                        >
-                          <XMarkIcon width={20} />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  <div tabIndex={0} className="collapse-arrow collapse">
-                    <div className="collapse-title">További adatok</div>
-                    <div className="collapse-content flex flex-col gap-2">
-                      {request.comment === ""
-                        ? "Nincs megjegyzés"
-                        : request.comment}
-                      <Link href={`/posts/${request.postId}`} className="btn">
-                        Kapcsolatos poszt
-                        <EyeIcon width={20} />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                  session={session}
+                  request={request}
+                  updateRequest={updateRequest}
+                />
               ))}
             </div>
           ) : (
@@ -191,4 +136,96 @@ const Badge = ({ status }: { status: RequestStatus }) => {
     default:
       return <div className="badge badge-warning">{status}</div>;
   }
+};
+
+const RecievedRequest = ({
+  session,
+  request,
+  updateRequest,
+}: {
+  session: Session;
+  request: Request & {
+    user: { id: string; image: string | null; name: string | null };
+  };
+  updateRequest: ReturnType<typeof api.request.update.useMutation>;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div
+      key={request.id}
+      className="card border-base-200 border-2 p-2"
+      onClick={() => setIsOpen(true)}
+    >
+      <div className="flex flex-row items-center justify-between">
+        <div className="flew-row flex items-center gap-4">
+          <Link className="h-10 w-10" href={`/users/${request.user.id}`}>
+            <div className="avatar">
+              <div className="rounded-full">
+                <img src={request.user.image ?? ""} />
+              </div>
+            </div>
+          </Link>
+          <div className="w-2/3">
+            <div className="line-clamp-1 overflow-hidden">
+              {request.user.name}
+            </div>
+            <Badge status={request.status} />
+          </div>
+        </div>
+        {request.status === "PENDING" && (
+          <div className="flex gap-2">
+            <button
+              className="btn btn-square btn-success"
+              onClick={() =>
+                updateRequest.mutate({
+                  requestId: request.id,
+                  status: "ACCEPTED",
+                })
+              }
+            >
+              <CheckIcon width={20} />
+            </button>
+            <button
+              className="btn btn-square btn-error"
+              onClick={() =>
+                updateRequest.mutate({
+                  requestId: request.id,
+                  status: "DENIED",
+                })
+              }
+            >
+              <XMarkIcon width={20} />
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="collapse-arrow collapse">
+        <input type="checkbox" />
+        <div className="collapse-title">További adatok</div>
+        <div className="collapse-content flex flex-col gap-2">
+          {request.comment === "" ? "Nincs megjegyzés" : request.comment}
+          {isOpen && (
+            <CompatibilityScore
+              compareUserId={request.userId}
+              session={session}
+            />
+          )}
+          <div className="flex gap-2">
+            <Link
+              href={`/posts/${request.postId}`}
+              className="btn btn-sm w-1/2"
+            >
+              Kapcsolatos poszt
+            </Link>
+            <Link
+              href={`/compatibility-kviz/${request.userId}`}
+              className="btn btn-sm w-1/2"
+            >
+              Kvíz válaszok
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };

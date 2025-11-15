@@ -39,7 +39,7 @@ export const CompatibilityScore = ({
 
             {data.completedQuestionCountByPostUser === 0 && (
               <div className="mb-3 text-sm">
-                A poszt létrehozója nem töltötte ki a kvízt, kérlek nézz vissza
+                A másik felhasználó nem töltötte ki a kvízt, kérlek nézz vissza
                 később.
               </div>
             )}
