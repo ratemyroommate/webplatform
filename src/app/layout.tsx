@@ -15,6 +15,7 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { KvizToast } from "./_components/KvizToast";
 
 export const metadata: Metadata = {
   title: "Rate My Roommate",
@@ -32,6 +33,7 @@ export default async function RootLayout({
       <body>
         <TRPCReactProvider>
           <Toaster />
+          <KvizToast session={session} />
           <main className="bg-base-200 flex min-h-screen flex-col items-center">
             <div className="container flex max-w-4xl flex-col items-center justify-center gap-4 px-4 py-4">
               <div className="navbar bg-base-100 justify-between rounded-2xl shadow-xl">
@@ -41,7 +43,7 @@ export default async function RootLayout({
 
                 {session?.user ? (
                   <div className="flex items-center gap-6">
-                    <NotificationModal />
+                    <NotificationModal session={session} />
                     <div className="dropdown dropdown-end mr-4 w-10">
                       <div role="button" tabIndex={0} className="avatar">
                         <div className="ring-primary ring-offset-base-100 w-full rounded-full ring-3 ring-offset-2">
@@ -97,6 +99,22 @@ export default async function RootLayout({
               {children}
             </div>
           </main>
+          <div className="bg-neutral text-base-300 flex h-48 flex-col items-center justify-center">
+            <img src="/R-white.png" className="w-16" />
+            <ul className="flex flex-col items-center">
+              <li>
+                <Link href="/contact" className="link">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="link">
+                  Privacy Policy
+                </Link>
+              </li>
+            </ul>
+            <span className="text-base-300">© 2025 Ratemyroommate</span>
+          </div>
         </TRPCReactProvider>
       </body>
     </html>

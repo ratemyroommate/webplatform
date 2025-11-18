@@ -1,16 +1,20 @@
 import { HydrateClient } from "~/trpc/server";
-import { Kviz } from "../_components/Kviz";
 import { getServerAuthSession } from "~/server/auth";
+import { CompletedKviz } from "~/app/_components/CompletedKviz";
 
-export default async function Page() {
+type KvizPageProps = { params: { id: string } };
+
+export default async function Page({ params: { id } }: KvizPageProps) {
   const session = await getServerAuthSession();
   return (
     <HydrateClient>
       <div className="card bg-base-100 flex w-full flex-col gap-6 p-4 shadow-xl">
         {session ? (
-          <Kviz />
+          <CompletedKviz userId={id} />
         ) : (
-          <div className="text-center">Jelentkezz be, hogy lásd a kvízt</div>
+          <div className="text-center">
+            Jelentkezz be, hogy lásd a kvíz válaszokat
+          </div>
         )}
       </div>
     </HydrateClient>

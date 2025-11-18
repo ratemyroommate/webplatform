@@ -129,11 +129,11 @@ model Request {
 model CompatibilityAnswer {
     id          String                      @id @default(cuid())
     questionId  Int
-    question    CompatibilityQuestionOption @relation(fields: [questionId], references: [id])
+    question    CompatibilityQuestionOption @relation(fields: [questionId], references: [id], onDelete: Cascade)
     answerId    Int
-    answer      CompatibilityAnswerOption   @relation(fields: [answerId], references: [id])
+    answer      CompatibilityAnswerOption   @relation(fields: [answerId], references: [id], onDelete: Cascade)
     createdAt   DateTime                    @default(now())
-    createdBy   User                        @relation(fields: [createdById], references: [id])
+    createdBy   User                        @relation(fields: [createdById], references: [id], onDelete: Cascade)
     createdById String
 
     @@unique([createdById, questionId])

@@ -8,7 +8,7 @@ type FeedPostsProps = { filters: FormValues };
 
 export const FeedPosts = ({ filters }: FeedPostsProps) => {
   const bottom = useRef<HTMLDivElement>(null);
-  const { data, fetchNextPage, isLoading, isFetchingNextPage } =
+  const { data, fetchNextPage, isLoading, isFetchingNextPage, hasNextPage } =
     api.post.getLatest.useInfiniteQuery(
       { filters },
       { getNextPageParam: (lastPage) => lastPage.nextCursor },
@@ -27,6 +27,7 @@ export const FeedPosts = ({ filters }: FeedPostsProps) => {
         page.posts.map((post) => <Post post={post} key={post.id} />),
       )}
       {(isLoading || isFetchingNextPage) && <PostSkeletons />}
+      {!hasNextPage && "Minden elérhető posztot megjelenítettünk."}
       <div ref={bottom} />
     </>
   );

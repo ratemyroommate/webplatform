@@ -51,21 +51,25 @@ export const kvizRouter = createTRPCRouter({
         },
       }),
     ),
-  getAnsers: protectedProcedure.query(({ ctx }) =>
-    ctx.db.compatibilityQuestionOption.findMany({
-      where: { active: true },
-      include: {
-        answers: {
-          include: {
-            submittedAnswers: { where: { createdById: ctx.session.user.id } },
+  getAnsers: protectedProcedure
+    .input(z.string().optional())
+    .query(({ ctx, input }) =>
+      ctx.db.compatibilityQuestionOption.findMany({
+        where: { active: true },
+        include: {
+          answers: {
+            include: {
+              submittedAnswers: {
+                where: { createdById: input ?? ctx.session.user.id },
+              },
+            },
           },
         },
-      },
-      orderBy: {
-        order: "asc",
-      },
-    }),
-  ),
+        orderBy: {
+          order: "asc",
+        },
+      }),
+    ),
   getStats: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
@@ -130,6 +134,7 @@ export const kvizRouter = createTRPCRouter({
       const completedQuestionCountByCurrentUser =
         await ctx.db.compatibilityQuestionOption.count({
           where: {
+            active: true,
             submittedAnswers: {
               some: {
                 createdById: currentUser,
@@ -160,4 +165,22 @@ export const kvizRouter = createTRPCRouter({
         totalQuestionCount,
       };
     }),
+  getCurrentUserAnswerCount: protectedProcedure.query(async ({ ctx }) => {
+    const completedQuestionCountByCurrentUser =
+      await ctx.db.compatibilityQuestionOption.count({
+        where: {
+          active: true,
+          submittedAnswers: {
+            some: {
+              createdById: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    const totalQuestionCount = await ctx.db.compatibilityQuestionOption.count({
+      where: { active: true },
+    });
+
+    return { completedQuestionCountByCurrentUser, totalQuestionCount };
+  }),
 });
