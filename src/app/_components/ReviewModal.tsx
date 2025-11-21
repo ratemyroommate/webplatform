@@ -85,7 +85,7 @@ export const ReviewModal = ({
               onClick={handleRatingClick}
             />
             <textarea
-              className="textarea textarea-bordered"
+              className="textarea textarea-bordered w-full"
               placeholder="Írd le a véleményed"
               {...register("comment")}
             />

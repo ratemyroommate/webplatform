@@ -45,22 +45,22 @@ export const EditProfile = (user: User) => {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-8 pt-4"
           >
-            <label className="form-control w-full">
+            <label className="form-control flex w-full flex-col">
               <div className="label">
                 <span className="label-text text-lg">Social link</span>
               </div>
               <input
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 placeholder="https://facebook.com/..."
                 {...register("socialLink")}
               />
             </label>
-            <label className="form-control w-full">
+            <label className="form-control flex w-full flex-col">
               <div className="label">
                 <span className="label-text text-lg">Magadról</span>
               </div>
               <textarea
-                className="textarea textarea-bordered"
+                className="textarea textarea-bordered w-full"
                 placeholder="Írj magadról pár mondatot..."
                 {...register("about", {
                   required: "Kötelező mező",
@@ -68,7 +68,7 @@ export const EditProfile = (user: User) => {
               />
               {formState.errors.about && (
                 <div className="label">
-                  <span className="label-text-alt text-error">
+                  <span className="label-text-alt text-orange-600">
                     {formState.errors.about?.message}
                   </span>
                 </div>
