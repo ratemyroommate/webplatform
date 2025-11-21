@@ -63,10 +63,15 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
       </FiltersIndicator>
       <dialog id="filters-modal" className="modal">
         <div className="modal-box">
-          <button onClick={resetFilters} className="btn btn-sm mb-4">
-            Szűrők törlése <TrashIcon width={18} />
-          </button>
-          <h3 className="text-lg font-bold">Szűrés</h3>
+          <div className="flex gap-4">
+            <h3 className="text-lg font-bold">Szűrés</h3>
+            <button
+              onClick={resetFilters}
+              className="btn btn-sm btn-error mb-4"
+            >
+              Szűrők törlése <TrashIcon width={18} />
+            </button>
+          </div>
           <XButton />
 
           <form

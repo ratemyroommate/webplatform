@@ -44,7 +44,7 @@ export default async function RootLayout({
                 {session?.user ? (
                   <div className="flex items-center gap-6">
                     <NotificationModal session={session} />
-                    <div className="dropdown dropdown-end mr-4 w-10">
+                    <div className="dropdown dropdown-end mr-4 w-10 hover:cursor-pointer">
                       <div role="button" tabIndex={0} className="avatar">
                         <div className="ring-primary ring-offset-base-100 w-full rounded-full ring-3 ring-offset-2">
                           {session?.user.image ? (

@@ -225,7 +225,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             />
             {errors.images?.message && (
               <div className="label">
-                <span className="label-text-alt text-error">
+                <span className="label-text-alt text-orange-600">
                   {errors.images.message}
                 </span>
               </div>
@@ -340,7 +340,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               ></textarea>
               {errors.description && (
                 <div className="label">
-                  <span className="label-text-alt text-error">
+                  <span className="label-text-alt text-orange-600">
                     {errors.description.message}
                   </span>
                 </div>
