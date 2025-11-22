@@ -135,7 +135,7 @@ export const NotificationModal = ({ session }: { session: Session }) => {
                   ))}
                 </div>
               ) : (
-                <div className="p-4">"Nincs küldött kérelem"</div>
+                <div className="p-4">Nincs küldött kérelem</div>
               )}
             </div>
           </div>
