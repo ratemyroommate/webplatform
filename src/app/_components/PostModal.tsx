@@ -241,7 +241,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                     />
                     <div
                       onClick={() => removeImage(index)}
-                      className="absolute top-0 right-0 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
+                      className="absolute top-0 right-0 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-400"
                     >
                       ✕
                     </div>
@@ -249,7 +249,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                 ))}
               </div>
             )}
-            <label className="form-control w-full">
+            <div className="form-control w-full">
               <div className="label">
                 <span className="label-text">Bérleti díj</span>
               </div>
@@ -283,7 +283,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                   <PlusIcon width={20} />
                 </button>
               </div>
-            </label>
+            </div>
 
             <label className="fieldset-label">Hol</label>
             <select
@@ -346,7 +346,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                 </div>
               )}
             </label>
-            <label className="form-control w-full">
+            <div className="form-control w-full">
               <div className="label">
                 <span className="label-text">Személyek száma</span>
               </div>
@@ -379,7 +379,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                   <PlusIcon width={20} />
                 </button>
               </div>
-            </label>
+            </div>
             <div className="form-control py-2">
               <label className="label cursor-pointer justify-start gap-4">
                 <span className="label-text">Én is lakó vagyok</span>

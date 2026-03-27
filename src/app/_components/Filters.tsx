@@ -2,6 +2,7 @@ import {
   AdjustmentsHorizontalIcon,
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
+  FunnelIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { handleCloseModal, handleOpenModal } from "./LoginModal";
@@ -63,22 +64,16 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
       </FiltersIndicator>
       <dialog id="filters-modal" className="modal">
         <div className="modal-box">
-          <div className="flex gap-4">
+          <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold">Szűrés</h3>
-            <button
-              onClick={resetFilters}
-              className="btn btn-sm btn-error mb-4"
-            >
-              Szűrők törlése <TrashIcon width={18} />
-            </button>
+            <XButton />
           </div>
-          <XButton />
 
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col items-center gap-4 pt-4"
           >
-            <label className="form-control w-full">
+            <div className="form-control w-full">
               <div className="label">
                 <span className="label-text text-lg">Lakótársak száma</span>
               </div>
@@ -94,7 +89,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                   />
                 ))}
               </div>
-            </label>
+            </div>
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text text-lg">
@@ -223,9 +218,18 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                 </label>
               </div>
             </div>
-            <button type="submit" className="btn btn-secondary btn-wide">
-              Alkalmaz
-            </button>
+            <div className="flex w-full gap-2">
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="btn btn-outline btn-error flex-1"
+              >
+                <TrashIcon width={18} /> Törlés
+              </button>
+              <button type="submit" className="btn btn-secondary flex-1">
+                <FunnelIcon width={18} /> Szűrés
+              </button>
+            </div>
           </form>
         </div>
       </dialog>
