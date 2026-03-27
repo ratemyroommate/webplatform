@@ -18,6 +18,7 @@ import { genUploader } from "uploadthing/client";
 import { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
 import { XButton } from "./CloseButton";
+import { useState } from "react";
 
 export const { uploadFiles } = genUploader({ package: "uploadthing/client" });
 
@@ -97,6 +98,8 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
       router.refresh();
       handleCloseModal(modalId);
       toast.success(successMessage);
+      setValue("images", []);
+      setValue("removeImages", []);
     },
   });
 
@@ -114,24 +117,35 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
 
   const images = watch("images");
   const removeImages = watch("removeImages");
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 
   const onSubmit = async (formValues: FormValues) => {
-    const files = await compressImages(images);
-    const response = await uploadFiles("imageUploader", { files });
+    try {
+      setUploadStatus("Képek tömörítése...");
+      const files = await compressImages(images);
 
-    const imageInfos = response.map(({ key, url }) => ({
-      id: key,
-      url,
-    }));
+      setUploadStatus("Képek feltöltése...");
+      const response = await uploadFiles("imageUploader", { files });
 
-    if (post)
-      updatePost.mutate({
-        ...formValues,
-        images: imageInfos,
-        removeImages,
-        id: post.id,
-      });
-    else createPost.mutate({ ...formValues, images: imageInfos });
+      const imageInfos = response.map(({ key, url }) => ({
+        id: key,
+        url,
+      }));
+
+      setUploadStatus("Mentés...");
+      if (post)
+        await updatePost.mutateAsync({
+          ...formValues,
+          images: imageInfos,
+          removeImages,
+          id: post.id,
+        });
+      else await createPost.mutateAsync({ ...formValues, images: imageInfos });
+    } catch (error) {
+      toast.error("Hiba történt a feltöltés során");
+    } finally {
+      setUploadStatus(null);
+    }
   };
 
   const handleImagesChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -391,10 +405,19 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               </label>
             </div>
             <button
-              disabled={isSubmitting || createPost.isPending}
+              disabled={isSubmitting}
               className="btn btn-secondary btn-wide mt-4 self-center"
             >
-              {post ? "Mentés" : "Közzététel"}
+              {uploadStatus ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  {uploadStatus}
+                </>
+              ) : post ? (
+                "Mentés"
+              ) : (
+                "Közzététel"
+              )}
             </button>
           </form>
         </div>
