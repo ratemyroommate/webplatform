@@ -9,12 +9,15 @@ type PostProps = {
 
 export const Post = ({ post }: PostProps) => {
   return (
-    <div className="card bg-base-100 flex w-full flex-col items-center justify-between gap-6 p-4 shadow-xl sm:flex-row">
+    <Link
+      href={`/posts/${post.id}`}
+      className="card bg-base-100 flex w-full flex-col items-center justify-between gap-6 p-4 shadow-xl sm:flex-row"
+    >
       <Images images={post.images} />
-      <Link href={`/posts/${post.id}`} className="flex w-full flex-col gap-4">
+      <div className="flex w-full flex-col gap-4">
         <FeaturedUsers {...post} />
         <PostInfo post={post} />
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 };

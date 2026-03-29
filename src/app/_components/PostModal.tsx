@@ -18,6 +18,7 @@ import { genUploader } from "uploadthing/client";
 import { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
 import { XButton } from "./CloseButton";
+import { useState } from "react";
 
 export const { uploadFiles } = genUploader({ package: "uploadthing/client" });
 
@@ -97,6 +98,8 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
       router.refresh();
       handleCloseModal(modalId);
       toast.success(successMessage);
+      setValue("images", []);
+      setValue("removeImages", []);
     },
   });
 
@@ -114,24 +117,35 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
 
   const images = watch("images");
   const removeImages = watch("removeImages");
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 
   const onSubmit = async (formValues: FormValues) => {
-    const files = await compressImages(images);
-    const response = await uploadFiles("imageUploader", { files });
+    try {
+      setUploadStatus("Képek tömörítése...");
+      const files = await compressImages(images);
 
-    const imageInfos = response.map(({ key, url }) => ({
-      id: key,
-      url,
-    }));
+      setUploadStatus("Képek feltöltése...");
+      const response = await uploadFiles("imageUploader", { files });
 
-    if (post)
-      updatePost.mutate({
-        ...formValues,
-        images: imageInfos,
-        removeImages,
-        id: post.id,
-      });
-    else createPost.mutate({ ...formValues, images: imageInfos });
+      const imageInfos = response.map(({ key, url }) => ({
+        id: key,
+        url,
+      }));
+
+      setUploadStatus("Mentés...");
+      if (post)
+        await updatePost.mutateAsync({
+          ...formValues,
+          images: imageInfos,
+          removeImages,
+          id: post.id,
+        });
+      else await createPost.mutateAsync({ ...formValues, images: imageInfos });
+    } catch (error) {
+      toast.error("Hiba történt a feltöltés során");
+    } finally {
+      setUploadStatus(null);
+    }
   };
 
   const handleImagesChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -225,7 +239,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             />
             {errors.images?.message && (
               <div className="label">
-                <span className="label-text-alt text-error">
+                <span className="label-text-alt text-orange-600">
                   {errors.images.message}
                 </span>
               </div>
@@ -241,7 +255,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                     />
                     <div
                       onClick={() => removeImage(index)}
-                      className="absolute top-0 right-0 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-red-400"
+                      className="absolute top-0 right-0 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-400"
                     >
                       ✕
                     </div>
@@ -249,7 +263,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                 ))}
               </div>
             )}
-            <label className="form-control w-full">
+            <div className="form-control w-full">
               <div className="label">
                 <span className="label-text">Bérleti díj</span>
               </div>
@@ -283,7 +297,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                   <PlusIcon width={20} />
                 </button>
               </div>
-            </label>
+            </div>
 
             <label className="fieldset-label">Hol</label>
             <select
@@ -340,13 +354,13 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               ></textarea>
               {errors.description && (
                 <div className="label">
-                  <span className="label-text-alt text-error">
+                  <span className="label-text-alt text-orange-600">
                     {errors.description.message}
                   </span>
                 </div>
               )}
             </label>
-            <label className="form-control w-full">
+            <div className="form-control w-full">
               <div className="label">
                 <span className="label-text">Személyek száma</span>
               </div>
@@ -379,7 +393,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                   <PlusIcon width={20} />
                 </button>
               </div>
-            </label>
+            </div>
             <div className="form-control py-2">
               <label className="label cursor-pointer justify-start gap-4">
                 <span className="label-text">Én is lakó vagyok</span>
@@ -391,10 +405,19 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               </label>
             </div>
             <button
-              disabled={isSubmitting || createPost.isPending}
+              disabled={isSubmitting}
               className="btn btn-secondary btn-wide mt-4 self-center"
             >
-              {post ? "Mentés" : "Közzététel"}
+              {uploadStatus ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  {uploadStatus}
+                </>
+              ) : post ? (
+                "Mentés"
+              ) : (
+                "Közzététel"
+              )}
             </button>
           </form>
         </div>

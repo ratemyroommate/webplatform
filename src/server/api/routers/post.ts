@@ -47,27 +47,33 @@ export const postRouter = createTRPCRouter({
       });
 
       if (postCountPerUser > maxPostCountPerUser) {
+        await utapi.deleteFiles(input.images.map(({ id }) => id));
         throw new TRPCError({
           message: `Maximum ${maxPostCountPerUser} poszt készíthető felhasználóként jelenleg`,
           code: "UNAUTHORIZED",
         });
       }
 
-      return ctx.db.post.create({
-        data: {
-          images: { create: input.images },
-          price: input.price,
-          description: input.description,
-          maxPersonCount: input.maxPersonCount,
-          createdBy: { connect: { id: ctx.session.user.id } },
-          featuredUsers: {
-            connect: input.isResident ? [{ id: ctx.session.user.id }] : [],
+      try {
+        return await ctx.db.post.create({
+          data: {
+            images: { create: input.images },
+            price: input.price,
+            description: input.description,
+            maxPersonCount: input.maxPersonCount,
+            createdBy: { connect: { id: ctx.session.user.id } },
+            featuredUsers: {
+              connect: input.isResident ? [{ id: ctx.session.user.id }] : [],
+            },
+            location: input.location,
+            age: input.age,
+            gender: input.gender,
           },
-          location: input.location,
-          age: input.age,
-          gender: input.gender,
-        },
-      });
+        });
+      } catch (error) {
+        await utapi.deleteFiles(input.images.map(({ id }) => id));
+        throw error;
+      }
     }),
 
   update: protectedProcedure
