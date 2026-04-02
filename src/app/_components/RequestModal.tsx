@@ -50,7 +50,7 @@ export const RequestModal = ({ postId, userId }: ReviewProps) => {
             className="flex flex-col gap-8 pt-8"
           >
             <textarea
-              className="textarea textarea-bordered"
+              className="textarea textarea-bordered w-full"
               placeholder="Írd le a megjegyzésed"
               {...register("comment")}
             />
