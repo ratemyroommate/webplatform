@@ -27,43 +27,80 @@ export default async function Page({ params: { id } }: PostPageProps) {
 
   return (
     <HydrateClient>
-      <div className="card bg-base-100 flex w-full flex-col gap-6 p-4 shadow-xl">
+      <div className="card bg-base-100 w-full overflow-hidden shadow-xl">
+        {/* Hero image */}
         <Images images={post.images} />
-        <FeaturedUsers {...post} />
-        <PostInfo post={post} />
-        <p>{post.description}</p>
 
-        <Link
-          href={`/users/${post.createdById}`}
-          className="flex items-center gap-2"
-        >
-          <label className="text-sm">Meghirdette:</label>
-          <div className="avatar w-6">
-            <div className="w-full rounded-full">
-              <Image
-                width={100}
-                height={100}
-                src={post.createdBy.image ?? ""}
-                alt="hirdette"
-              />
-            </div>
+        <div className="flex flex-col gap-5 p-5">
+          {/* Price & Location header */}
+          <div className="flex items-center justify-between">
+            <PostInfo post={post} />
           </div>
-          <div className="text-sm">{post.createdBy.name}</div>
-        </Link>
-        <CompatibilityScore
-          compareUserId={post.createdById}
-          session={session}
-        />
-        <div className="flex flex-col gap-2">
-          {canEdit && (
-            <div className="flex w-full gap-2">
-              <PostModal post={post} userId={session?.user.id} />
-              <PostDelete id={post.id} />
+
+          <div className="divider my-0" />
+
+          {/* Roommates section */}
+          <div className="flex flex-col gap-3">
+            <h3 className="text-sm font-semibold tracking-wide uppercase opacity-60">
+              Szobatársak
+            </h3>
+            <FeaturedUsers {...post} />
+          </div>
+
+          {/* Description */}
+          {post.description && (
+            <>
+              <div className="divider my-0" />
+              <div className="flex flex-col gap-2">
+                <h3 className="text-sm font-semibold tracking-wide uppercase opacity-60">
+                  Leírás
+                </h3>
+                <p className="leading-relaxed">{post.description}</p>
+              </div>
+            </>
+          )}
+
+          <div className="divider my-0" />
+
+          {/* Posted by */}
+          <Link
+            href={`/users/${post.createdById}`}
+            className="bg-base-200 hover:bg-base-300 flex items-center gap-3 rounded-xl p-3 transition-colors"
+          >
+            <div className="avatar w-10">
+              <div className="w-full rounded-full">
+                <Image
+                  width={100}
+                  height={100}
+                  src={post.createdBy.image ?? ""}
+                  alt="hirdette"
+                />
+              </div>
             </div>
-          )}
-          {canRequest && (
-            <RequestModal postId={post.id} userId={session?.user.id} />
-          )}
+            <div className="flex flex-col">
+              <span className="text-xs opacity-60">Meghirdette</span>
+              <span className="font-medium">{post.createdBy.name}</span>
+            </div>
+          </Link>
+
+          {/* Compatibility */}
+          <CompatibilityScore
+            compareUserId={post.createdById}
+            session={session}
+          />
+
+          {/* Actions */}
+          <div className="flex flex-col gap-2">
+            {canEdit && (
+              <div className="flex w-full gap-2">
+                <PostModal post={post} userId={session?.user.id} />
+                <PostDelete id={post.id} />
+              </div>
+            )}
+            {canRequest && (
+              <RequestModal postId={post.id} userId={session?.user.id} />
+            )}
+          </div>
         </div>
       </div>
     </HydrateClient>
