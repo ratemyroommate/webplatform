@@ -25,13 +25,13 @@ export const Images = ({ images }: CarouselProps) => {
       dynamicHeight={true}
     >
       {images.map(({ url }, index) => (
-        <div key={index} className="relative w-full">
+        <div key={index} className="relative aspect-[4/3] w-full">
           <Image
-            width="100"
-            height="100"
+            fill
             src={url}
-            className="w-full"
+            className="object-cover"
             alt={url}
+            sizes="(max-width: 768px) 100vw, 768px"
           />
         </div>
       ))}

@@ -1,5 +1,4 @@
 import type { Post } from "@prisma/client";
-import { PostPrice } from "./PostPrice";
 import { MapPinIcon, UserIcon } from "@heroicons/react/24/outline";
 import { getAgeLabel, getGenderLabel, getLocationLabel } from "~/utils/helpers";
 
@@ -9,24 +8,23 @@ type PostInfoProps = {
 
 export const PostInfo = ({ post }: PostInfoProps) => {
   return (
-    <div className="grid grid-cols-2 grid-rows-2 gap-2">
-      <PostPrice price={post.price} />
-      <div className="flex items-center">
-        <div className="tooltip flex items-center gap-2" data-tip="Város">
-          <MapPinIcon width={24} color="brown" />
-          <b>{getLocationLabel(post.location)}</b>
-        </div>
+    <div className="flex w-full flex-col gap-3">
+      <div className="flex items-baseline gap-2">
+        <span className="text-2xl font-bold">{post.price}k</span>
+        <span className="text-sm opacity-50">ft/hónap</span>
       </div>
-      <div className="flex">
-        <div className="tooltip flex items-center gap-2" data-tip="Kor">
-          <UserIcon width={24} color="red" />
-          <b>{getAgeLabel(post.age)}</b>
+      <div className="flex flex-wrap gap-2">
+        <div className="badge badge-lg gap-1.5 py-3">
+          <MapPinIcon width={16} color="brown" />
+          {getLocationLabel(post.location)}
         </div>
-      </div>
-      <div className="flex">
-        <div className="tooltip flex items-center gap-2" data-tip="Nem">
-          <img src="/gender-fluid.png" width={25} />
-          <b>{getGenderLabel(post.gender)}</b>
+        <div className="badge badge-lg gap-1.5 py-3">
+          <UserIcon width={16} color="red" />
+          {getAgeLabel(post.age)}
+        </div>
+        <div className="badge badge-lg gap-1.5 py-3">
+          <img src="/gender-fluid.png" width={16} />
+          {getGenderLabel(post.gender)}
         </div>
       </div>
     </div>
