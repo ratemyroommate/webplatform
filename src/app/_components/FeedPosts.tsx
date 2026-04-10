@@ -22,13 +22,17 @@ export const FeedPosts = ({ filters }: FeedPostsProps) => {
   }, []);
 
   return (
-    <>
+    <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
       {data?.pages.map((page) =>
         page.posts.map((post) => <Post post={post} key={post.id} />),
       )}
       {(isLoading || isFetchingNextPage) && <PostSkeletons />}
-      {!hasNextPage && "Minden elérhető posztot megjelenítettünk."}
-      <div ref={bottom} />
-    </>
+      {!hasNextPage && (
+        <p className="col-span-full py-6 text-center text-sm opacity-50">
+          Minden elérhető posztot megjelenítettünk.
+        </p>
+      )}
+      <div ref={bottom} className="col-span-full" />
+    </div>
   );
 };

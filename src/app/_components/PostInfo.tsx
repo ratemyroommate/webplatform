@@ -4,26 +4,32 @@ import { getAgeLabel, getGenderLabel, getLocationLabel } from "~/utils/helpers";
 
 type PostInfoProps = {
   post: Post;
+  compact?: boolean;
 };
 
-export const PostInfo = ({ post }: PostInfoProps) => {
+export const PostInfo = ({ post, compact }: PostInfoProps) => {
   return (
     <div className="flex w-full flex-col gap-3">
-      <div className="flex items-baseline gap-2">
-        <span className="text-2xl font-bold">{post.price}k</span>
-        <span className="text-sm opacity-50">ft/hónap</span>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <div className="badge badge-lg gap-1.5 py-3">
-          <MapPinIcon width={16} color="brown" />
+      {/* Price — hidden in compact mode (shown as overlay badge on card image instead) */}
+      {!compact && (
+        <div className="flex items-baseline gap-2">
+          <span className="text-3xl font-extrabold tracking-tight">
+            {post.price}k
+          </span>
+          <span className="text-sm opacity-50">ft/hónap</span>
+        </div>
+      )}
+      <div className="flex flex-wrap gap-1.5">
+        <div className="badge badge-warning gap-1.5 py-3 font-medium shadow-sm">
+          <MapPinIcon width={14} />
           {getLocationLabel(post.location)}
         </div>
-        <div className="badge badge-lg gap-1.5 py-3">
-          <UserIcon width={16} color="red" />
+        <div className="badge badge-info gap-1.5 py-3 font-medium shadow-sm">
+          <UserIcon width={14} />
           {getAgeLabel(post.age)}
         </div>
-        <div className="badge badge-lg gap-1.5 py-3">
-          <img src="/gender-fluid.png" width={16} />
+        <div className="badge badge-secondary gap-1.5 py-3 font-medium shadow-sm">
+          <img src="/gender-fluid.png" width={14} />
           {getGenderLabel(post.gender)}
         </div>
       </div>
