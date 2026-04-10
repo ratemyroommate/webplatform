@@ -13,13 +13,13 @@ type CarouselProps = {
 export const Images = ({ images }: CarouselProps) => {
   if (!images.length)
     return (
-      <div className="bg-base-200 flex h-60 w-full items-center justify-center rounded-lg">
-        <PhotoIcon width={30} />
+      <div className="from-base-200 to-base-300 flex aspect-[4/3] w-full items-center justify-center rounded-2xl bg-gradient-to-br">
+        <PhotoIcon width={48} className="opacity-30" />
       </div>
     );
   return (
     <Carousel
-      className="w-full overflow-hidden rounded-lg"
+      className="w-full overflow-hidden rounded-2xl"
       showThumbs={false}
       showStatus={false}
       dynamicHeight={true}

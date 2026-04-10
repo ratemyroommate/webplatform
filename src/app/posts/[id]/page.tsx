@@ -28,21 +28,25 @@ export default async function Page({ params: { id } }: PostPageProps) {
   return (
     <HydrateClient>
       <div className="card bg-base-100 w-full overflow-hidden shadow-xl">
+        {/* Accent gradient stripe */}
+        <div className="from-primary via-secondary to-accent h-1.5 w-full bg-gradient-to-r" />
+
         {/* Hero image */}
         <Images images={post.images} />
 
-        <div className="flex flex-col gap-5 p-5">
+        <div className="flex flex-col gap-6 p-6">
           {/* Price & Location header */}
-          <div className="flex items-center justify-between">
-            <PostInfo post={post} />
-          </div>
+          <PostInfo post={post} />
 
           <div className="divider my-0" />
 
           {/* Roommates section */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-semibold tracking-wide uppercase opacity-60">
-              Szobatársak
+            <h3 className="flex items-center gap-2 text-sm font-semibold tracking-wide uppercase opacity-60">
+              <span>Szobatársak</span>
+              <span className="badge badge-outline badge-sm">
+                {post.featuredUsers.length}/{post.maxPersonCount}
+              </span>
             </h3>
             <FeaturedUsers {...post} />
           </div>
@@ -55,20 +59,20 @@ export default async function Page({ params: { id } }: PostPageProps) {
                 <h3 className="text-sm font-semibold tracking-wide uppercase opacity-60">
                   Leírás
                 </h3>
-                <p className="leading-relaxed">{post.description}</p>
+                <p className="leading-relaxed opacity-80">{post.description}</p>
               </div>
             </>
           )}
 
           <div className="divider my-0" />
 
-          {/* Posted by */}
+          {/* Posted by — bordered card style */}
           <Link
             href={`/users/${post.createdById}`}
-            className="bg-base-200 hover:bg-base-300 flex items-center gap-3 rounded-xl p-3 transition-colors"
+            className="border-base-300 hover:border-primary/30 hover:bg-base-200/50 flex items-center gap-4 rounded-2xl border p-4 transition-all"
           >
-            <div className="avatar w-10">
-              <div className="w-full rounded-full">
+            <div className="avatar w-12">
+              <div className="ring-primary ring-offset-base-100 w-full rounded-full shadow-md ring-2 ring-offset-2">
                 <Image
                   width={100}
                   height={100}
@@ -77,9 +81,11 @@ export default async function Page({ params: { id } }: PostPageProps) {
                 />
               </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-xs opacity-60">Meghirdette</span>
-              <span className="font-medium">{post.createdBy.name}</span>
+            <div className="flex flex-col gap-0.5">
+              <span className="badge badge-primary badge-sm">Hirdető</span>
+              <span className="text-lg font-semibold">
+                {post.createdBy.name}
+              </span>
             </div>
           </Link>
 
@@ -90,7 +96,7 @@ export default async function Page({ params: { id } }: PostPageProps) {
           />
 
           {/* Actions */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             {canEdit && (
               <div className="flex w-full gap-2">
                 <PostModal post={post} userId={session?.user.id} />

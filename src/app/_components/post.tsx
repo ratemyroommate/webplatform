@@ -11,12 +11,22 @@ export const Post = ({ post }: PostProps) => {
   return (
     <Link
       href={`/posts/${post.id}`}
-      className="card bg-base-100 flex w-full flex-col items-center justify-between gap-6 p-4 shadow-xl sm:flex-row"
+      className="card bg-base-100 group flex w-full flex-col overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
     >
-      <Images images={post.images} />
-      <div className="flex w-full flex-col gap-4">
-        <FeaturedUsers {...post} />
-        <PostInfo post={post} />
+      {/* Image with price overlay */}
+      <div className="relative">
+        <Images images={post.images} />
+        <div className="absolute bottom-3 left-3 z-10">
+          <span className="badge badge-lg badge-success gap-1 font-bold shadow-md">
+            {post.price}k ft/hó
+          </span>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col gap-3 p-4">
+        <FeaturedUsers {...post} compact />
+        <PostInfo post={post} compact />
       </div>
     </Link>
   );
