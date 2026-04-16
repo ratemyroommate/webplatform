@@ -10,8 +10,8 @@ export const Kviz = () => {
   const utils = api.useUtils();
   const saveAnswerMutation = api.kviz.saveAnswer.useMutation({
     onSuccess: () => {
-      utils.kviz.getQuestion.invalidate();
-      utils.user.getProfileCompleteness.invalidate();
+      void utils.kviz.getQuestion.invalidate();
+      void utils.user.getProfileCompleteness.invalidate();
     },
   });
 
