@@ -30,8 +30,10 @@ export const EditProfile = (user: User) => {
   const onSubmit = (formValues: FormValues) =>
     updateUser.mutate({
       id: user.id,
-      about: formValues.about?.trim() || null,
-      socialLink: formValues.socialLink?.trim() || null,
+      about: formValues.about?.trim() ? formValues.about.trim() : null,
+      socialLink: formValues.socialLink?.trim()
+        ? formValues.socialLink.trim()
+        : null,
     });
 
   return (
