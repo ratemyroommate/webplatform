@@ -17,16 +17,24 @@ export const EditProfile = (user: User) => {
   });
 
   const router = useRouter();
+  const utils = api.useUtils();
   const updateUser = api.user.update.useMutation({
     onSuccess: async () => {
       router.refresh();
       handleCloseModal("edit-profile-modal");
       toast.success("Profil sikeresen frissítve");
+      void utils.user.getProfileCompleteness.invalidate();
     },
   });
 
   const onSubmit = (formValues: FormValues) =>
-    updateUser.mutate({ id: user.id, ...formValues });
+    updateUser.mutate({
+      id: user.id,
+      about: formValues.about?.trim() ? formValues.about.trim() : null,
+      socialLink: formValues.socialLink?.trim()
+        ? formValues.socialLink.trim()
+        : null,
+    });
 
   return (
     <div>
@@ -35,11 +43,11 @@ export const EditProfile = (user: User) => {
         className="btn"
       >
         <PencilSquareIcon width={20} />
-        Módosítás
+        Profil szerkesztése
       </button>
       <dialog id="edit-profile-modal" className="modal">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Profil módosítás</h3>
+          <h3 className="text-lg font-bold">Profil szerkesztése</h3>
           <XButton />
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -52,8 +60,21 @@ export const EditProfile = (user: User) => {
               <input
                 className="input input-bordered w-full"
                 placeholder="https://facebook.com/..."
-                {...register("socialLink")}
+                {...register("socialLink", {
+                  required: "Kötelező mező",
+                  validate: (value) =>
+                    !value ||
+                    /^https?:\/\/.+/.test(value.trim()) ||
+                    "Érvényes URL-t adj meg (https://...)",
+                })}
               />
+              {formState.errors.socialLink && (
+                <div className="label">
+                  <span className="label-text-alt text-orange-600">
+                    {formState.errors.socialLink?.message}
+                  </span>
+                </div>
+              )}
             </label>
             <label className="form-control flex w-full flex-col">
               <div className="label">

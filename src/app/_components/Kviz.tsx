@@ -9,7 +9,10 @@ export const Kviz = () => {
 
   const utils = api.useUtils();
   const saveAnswerMutation = api.kviz.saveAnswer.useMutation({
-    onSuccess: () => utils.kviz.getQuestion.invalidate(),
+    onSuccess: () => {
+      void utils.kviz.getQuestion.invalidate();
+      void utils.user.getProfileCompleteness.invalidate();
+    },
   });
 
   const { data, isLoading, isRefetching } = api.kviz.getQuestion.useQuery();

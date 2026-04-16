@@ -6,6 +6,7 @@ import { ReviewModal } from "~/app/_components/ReviewModal";
 import { getServerAuthSession } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
 import { getAverageRating } from "~/utils/helpers";
+import { ProfileCompleteness } from "~/app/_components/ProfileCompleteness";
 
 type UserPageProps = { params: { id: string } };
 
@@ -22,7 +23,7 @@ export default async function User({ params: { id } }: UserPageProps) {
 
   return (
     <HydrateClient>
-      <div className="card flex w-full flex-col gap-8 bg-base-100 p-6 shadow-xl">
+      <div className="card bg-base-100 flex w-full flex-col gap-8 p-6 shadow-xl">
         <div className="flex justify-between">
           <img
             className="w-20 rounded-2xl"
@@ -31,6 +32,7 @@ export default async function User({ params: { id } }: UserPageProps) {
           />
           {canEdit && <EditProfile {...user} />}
         </div>
+        {canEdit && <ProfileCompleteness />}
         <div className="flex flex-col gap-2">
           <b>{user.name}</b>
           <div className="flex items-center gap-2">
@@ -62,7 +64,7 @@ export default async function User({ params: { id } }: UserPageProps) {
       {user.reviewsReceived.length
         ? user.reviewsReceived.map((review, index) => (
             <div
-              className="card flex w-full flex-col gap-4 bg-base-100 p-6 shadow-xl"
+              className="card bg-base-100 flex w-full flex-col gap-4 p-6 shadow-xl"
               key={index}
             >
               <div className="flex justify-between">

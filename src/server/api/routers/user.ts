@@ -34,4 +34,31 @@ export const userRouter = createTRPCRouter({
         data: { about: input.about, socialLink: input.socialLink },
       });
     }),
+
+  getProfileCompleteness: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.session.user.id },
+      select: { about: true, socialLink: true },
+    });
+
+    const kvizTotal = await ctx.db.compatibilityQuestionOption.count({
+      where: { active: true },
+    });
+
+    const kvizAnswered = await ctx.db.compatibilityQuestionOption.count({
+      where: {
+        active: true,
+        submittedAnswers: {
+          some: { createdById: ctx.session.user.id },
+        },
+      },
+    });
+
+    return {
+      hasAbout: !!user?.about?.trim(),
+      hasSocialLink: !!user?.socialLink?.trim(),
+      kvizAnswered,
+      kvizTotal,
+    };
+  }),
 });
