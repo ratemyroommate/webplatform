@@ -11,7 +11,7 @@ export const FeedPosts = ({ filters }: FeedPostsProps) => {
   const { data, fetchNextPage, isLoading, isFetchingNextPage, hasNextPage } =
     api.post.getLatest.useInfiniteQuery(
       { filters },
-      { getNextPageParam: (lastPage) => lastPage.nextCursor },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor }
     );
 
   useEffect(() => {
@@ -23,9 +23,7 @@ export const FeedPosts = ({ filters }: FeedPostsProps) => {
 
   return (
     <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
-      {data?.pages.map((page) =>
-        page.posts.map((post) => <Post post={post} key={post.id} />),
-      )}
+      {data?.pages.map((page) => page.posts.map((post) => <Post post={post} key={post.id} />))}
       {(isLoading || isFetchingNextPage) && <PostSkeletons />}
       {!hasNextPage && (
         <p className="col-span-full py-6 text-center text-sm opacity-50">

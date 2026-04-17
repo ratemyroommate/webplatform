@@ -9,10 +9,7 @@ type CompatibilityScoreProps = {
   session: Session | null;
 };
 
-export const CompatibilityScore = ({
-  compareUserId,
-  session,
-}: CompatibilityScoreProps) => {
+export const CompatibilityScore = ({ compareUserId, session }: CompatibilityScoreProps) => {
   const { data, isLoading } = api.kviz.getStats.useQuery(compareUserId, {
     enabled: !!session?.user.id,
   });
@@ -32,15 +29,13 @@ export const CompatibilityScore = ({
             )}
 
             {data.completedQuestionCountByCurrentUser > 0 &&
-              data.completedQuestionCountByCurrentUser <
-                data.totalQuestionCount && (
+              data.completedQuestionCountByCurrentUser < data.totalQuestionCount && (
                 <KvizCallToAction label="Töltsd ki az összes kérdést pontosabb eredményért" />
               )}
 
             {data.completedQuestionCountByPostUser === 0 && (
               <div className="mb-3 text-sm">
-                A másik felhasználó nem töltötte ki a kvízt, kérlek nézz vissza
-                később.
+                A másik felhasználó nem töltötte ki a kvízt, kérlek nézz vissza később.
               </div>
             )}
 
@@ -48,26 +43,16 @@ export const CompatibilityScore = ({
               data.completedQuestionCountByPostUser > 0 && (
                 <div className="flex">
                   <div className="flex flex-col">
-                    <div className="stat-title">
-                      Kompatibilitás kvíz alapján
-                    </div>
+                    <div className="stat-title">Kompatibilitás kvíz alapján</div>
                     <div className="stat-value">{data.percentage}%</div>
                     <div className="stat-actions">
-                      <button className={`btn btn-xs btn-${color}`}>
-                        {label}
-                      </button>
+                      <button className={`btn btn-xs btn-${color}`}>{label}</button>
                     </div>
                   </div>
                   <div className="flex flex-1 flex-col items-end justify-between">
-                    <div className="btn btn-xs btn-success">
-                      Egyező: {data.exactMatches}
-                    </div>
-                    <div className="btn btn-xs btn-warning">
-                      Hasonló: {data.closeMatches}
-                    </div>
-                    <div className="btn btn-xs btn-error">
-                      Ellentét: {data.noMatches}
-                    </div>
+                    <div className="btn btn-xs btn-success">Egyező: {data.exactMatches}</div>
+                    <div className="btn btn-xs btn-warning">Hasonló: {data.closeMatches}</div>
+                    <div className="btn btn-xs btn-error">Ellentét: {data.noMatches}</div>
                   </div>
                 </div>
               )}

@@ -48,9 +48,7 @@ export const FeaturedUsers = ({ compact, ...post }: FeaturedUsersProps) => {
           onClick={(e) => {
             e.preventDefault();
             router.push(
-              post.featuredUsers[index]?.id
-                ? `/users/${post.featuredUsers[index]?.id}`
-                : "#",
+              post.featuredUsers[index]?.id ? `/users/${post.featuredUsers[index]?.id}` : "#"
             );
           }}
           className="flex cursor-pointer flex-col items-center gap-2 transition-transform hover:scale-105"

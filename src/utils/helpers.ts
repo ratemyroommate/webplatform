@@ -1,9 +1,7 @@
 import type { Post, User } from "@prisma/client";
 import type { OrderBy } from "~/app/_components/Filters";
 
-export const getAverageRating = (
-  user?: PostExtended["featuredUsers"][number],
-) =>
+export const getAverageRating = (user?: PostExtended["featuredUsers"][number]) =>
   user?.reviewsReceived?.length
     ? user.reviewsReceived.reduce((sum, { rating }) => sum + rating, 0) /
       user.reviewsReceived.length
@@ -11,7 +9,7 @@ export const getAverageRating = (
 
 export const isUserInPostGroup = (
   post: Post & { featuredUsers: Partial<User>[] },
-  userId: string,
+  userId: string
 ) => post.featuredUsers.map((user) => user.id).includes(userId);
 
 export const formatOrderBy = (orderByString: OrderBy) => {
@@ -26,12 +24,11 @@ export const locationOptions = [
   { value: "SZEGED", label: "Szeged" },
 ];
 
-export const getLocationLabel = (value: string | number) =>
-  getSelectLabel(locationOptions, value);
+export const getLocationLabel = (value: string | number) => getSelectLabel(locationOptions, value);
 
 const getSelectLabel = (
   options: { value: string | number; label: string }[],
-  value: string | number,
+  value: string | number
 ) => {
   const match = options.find((option) => option.value === value);
   return match ? match.label : null;
@@ -53,5 +50,4 @@ export const genderOptions = [
   { value: 2, label: "Csak Lány" },
 ];
 
-export const getGenderLabel = (value: number) =>
-  getSelectLabel(genderOptions, value);
+export const getGenderLabel = (value: number) => getSelectLabel(genderOptions, value);

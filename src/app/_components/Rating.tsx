@@ -8,13 +8,7 @@ type RatingProps = {
   onClick?: (rating: number) => void;
 };
 
-export const Rating = ({
-  itemKey,
-  readOnly,
-  rating,
-  isLarge,
-  onClick,
-}: RatingProps) => {
+export const Rating = ({ itemKey, readOnly, rating, isLarge, onClick }: RatingProps) => {
   return (
     <div className={isLarge ? "rating rating-md" : "rating rating-xs"}>
       {Array.from({ length: 5 }).map((_, index) => (

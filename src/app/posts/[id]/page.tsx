@@ -21,9 +21,7 @@ export default async function Page({ params: { id } }: PostPageProps) {
   const canRequest =
     !session?.user.id ||
     (post.createdById !== session.user.id &&
-      !post.requests
-        .map((request) => request.userId)
-        .includes(session.user.id));
+      !post.requests.map((request) => request.userId).includes(session.user.id));
 
   return (
     <HydrateClient>
@@ -56,9 +54,7 @@ export default async function Page({ params: { id } }: PostPageProps) {
             <>
               <div className="divider my-0" />
               <div className="flex flex-col gap-2">
-                <h3 className="text-sm font-semibold tracking-wide uppercase opacity-60">
-                  Leírás
-                </h3>
+                <h3 className="text-sm font-semibold tracking-wide uppercase opacity-60">Leírás</h3>
                 <p className="leading-relaxed opacity-80">{post.description}</p>
               </div>
             </>
@@ -73,27 +69,17 @@ export default async function Page({ params: { id } }: PostPageProps) {
           >
             <div className="avatar w-12">
               <div className="ring-primary ring-offset-base-100 w-full rounded-full shadow-md ring-2 ring-offset-2">
-                <Image
-                  width={100}
-                  height={100}
-                  src={post.createdBy.image ?? ""}
-                  alt="hirdette"
-                />
+                <Image width={100} height={100} src={post.createdBy.image ?? ""} alt="hirdette" />
               </div>
             </div>
             <div className="flex flex-col gap-0.5">
               <span className="badge badge-primary badge-sm">Hirdető</span>
-              <span className="text-lg font-semibold">
-                {post.createdBy.name}
-              </span>
+              <span className="text-lg font-semibold">{post.createdBy.name}</span>
             </div>
           </Link>
 
           {/* Compatibility */}
-          <CompatibilityScore
-            compareUserId={post.createdById}
-            session={session}
-          />
+          <CompatibilityScore compareUserId={post.createdById} session={session} />
 
           {/* Actions */}
           <div className="flex flex-col gap-3">
@@ -103,9 +89,7 @@ export default async function Page({ params: { id } }: PostPageProps) {
                 <PostDelete id={post.id} />
               </div>
             )}
-            {canRequest && (
-              <RequestModal postId={post.id} userId={session?.user.id} />
-            )}
+            {canRequest && <RequestModal postId={post.id} userId={session?.user.id} />}
           </div>
         </div>
       </div>

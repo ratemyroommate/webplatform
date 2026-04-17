@@ -13,9 +13,7 @@ export const PostInfo = ({ post, compact }: PostInfoProps) => {
       {/* Price — hidden in compact mode (shown as overlay badge on card image instead) */}
       {!compact && (
         <div className="flex items-baseline gap-2">
-          <span className="text-3xl font-extrabold tracking-tight">
-            {post.price}k
-          </span>
+          <span className="text-3xl font-extrabold tracking-tight">{post.price}k</span>
           <span className="text-sm opacity-50">ft/hónap</span>
         </div>
       )}

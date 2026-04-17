@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  BellIcon,
-  CheckIcon,
-  EyeIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { BellIcon, CheckIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { api } from "~/trpc/react";
 import Link from "next/link";
@@ -77,12 +72,7 @@ export const NotificationModal = ({ session }: { session: Session }) => {
               )}
             </div>
 
-            <input
-              type="radio"
-              name="my_tabs_3"
-              className="tab"
-              aria-label="Küldött kérelmek"
-            />
+            <input type="radio" name="my_tabs_3" className="tab" aria-label="Küldött kérelmek" />
             <div className="tab-content bg-base-100 border-base-300 p-2">
               {isLoading ? (
                 <div className="flex flex-col gap-2">
@@ -93,10 +83,7 @@ export const NotificationModal = ({ session }: { session: Session }) => {
               ) : sentRequests?.length ? (
                 <div className="flex flex-col gap-2">
                   {sentRequests?.map((request) => (
-                    <div
-                      key={request.id}
-                      className="card border-base-200 border-2 p-2"
-                    >
+                    <div key={request.id} className="card border-base-200 border-2 p-2">
                       <div className="flex flex-row items-center justify-between">
                         <Link href={`/posts/${request.postId}`} className="btn">
                           Poszt
@@ -126,9 +113,7 @@ export const NotificationModal = ({ session }: { session: Session }) => {
                       <div tabIndex={0} className="collapse-arrow collapse">
                         <div className="collapse-title">További adatok</div>
                         <div className="collapse-content flex flex-col gap-2">
-                          {request.comment === ""
-                            ? "Nincs megjegyzés"
-                            : request.comment}
+                          {request.comment === "" ? "Nincs megjegyzés" : request.comment}
                         </div>
                       </div>
                     </div>
@@ -184,9 +169,7 @@ const RecievedRequest = ({
             </div>
           </Link>
           <div className="w-2/3">
-            <div className="line-clamp-1 overflow-hidden">
-              {request.user.name}
-            </div>
+            <div className="line-clamp-1 overflow-hidden">{request.user.name}</div>
             <Badge status={request.status} />
           </div>
         </div>
@@ -222,23 +205,12 @@ const RecievedRequest = ({
         <div className="collapse-title">További adatok</div>
         <div className="collapse-content flex flex-col gap-2">
           {request.comment === "" ? "Nincs megjegyzés" : request.comment}
-          {isOpen && (
-            <CompatibilityScore
-              compareUserId={request.userId}
-              session={session}
-            />
-          )}
+          {isOpen && <CompatibilityScore compareUserId={request.userId} session={session} />}
           <div className="flex gap-2">
-            <Link
-              href={`/posts/${request.postId}`}
-              className="btn btn-sm w-1/2"
-            >
+            <Link href={`/posts/${request.postId}`} className="btn btn-sm w-1/2">
               Kapcsolatos poszt
             </Link>
-            <Link
-              href={`/compatibility-kviz/${request.userId}`}
-              className="btn btn-sm w-1/2"
-            >
+            <Link href={`/compatibility-kviz/${request.userId}`} className="btn btn-sm w-1/2">
               Kvíz válaszok
             </Link>
           </div>

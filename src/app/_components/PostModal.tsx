@@ -8,12 +8,7 @@ import { api } from "~/trpc/react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import {
-  ageOptions,
-  genderOptions,
-  isUserInPostGroup,
-  locationOptions,
-} from "~/utils/helpers";
+import { ageOptions, genderOptions, isUserInPostGroup, locationOptions } from "~/utils/helpers";
 import { genUploader } from "uploadthing/client";
 import { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
@@ -27,10 +22,11 @@ type PostModalProps = {
   userId?: string;
 };
 
-type FormValues = Omit<
-  Post,
-  "id" | "createdAt" | "updatedAt" | "createdById" | "images"
-> & { isResident: boolean; images: File[]; removeImages: string[] };
+type FormValues = Omit<Post, "id" | "createdAt" | "updatedAt" | "createdById" | "images"> & {
+  isResident: boolean;
+  images: File[];
+  removeImages: string[];
+};
 
 const defaultValues = {
   description: "",
@@ -74,11 +70,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   });
 
   const router = useRouter();
-  const modalId = userId
-    ? post
-      ? `post-modal-${post.id}`
-      : "post-modal"
-    : "login-modal";
+  const modalId = userId ? (post ? `post-modal-${post.id}` : "post-modal") : "login-modal";
   const successMessage = `Post sikeresen ${post ? "módosítva" : "létrehozva"}`;
   const utils = api.useUtils();
   const createPost = api.post.create.useMutation({
@@ -162,9 +154,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   };
 
   const postImages = post ? post.images : [];
-  const previewPostImages = postImages.filter(
-    (image) => !removeImages.includes(image.id),
-  );
+  const previewPostImages = postImages.filter((image) => !removeImages.includes(image.id));
   const newImages = images.map((image) => ({
     url: URL.createObjectURL(image),
   }));
@@ -174,17 +164,12 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     if (index < previewPostImages.length) {
       const removeImage = previewPostImages[index]?.id;
       if (!removeImage) return;
-      return setValue("removeImages", [
-        ...getValues("removeImages"),
-        removeImage,
-      ]);
+      return setValue("removeImages", [...getValues("removeImages"), removeImage]);
     }
 
     setValue(
       "images",
-      getValues("images").filter(
-        (_, idx) => idx !== index - previewPostImages.length,
-      ),
+      getValues("images").filter((_, idx) => idx !== index - previewPostImages.length)
     );
 
     if (previewImages.length - 1 < 5) {
@@ -211,17 +196,11 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         )}
       </button>
       <LoginModal />
-      <dialog
-        id={post ? `post-modal-${post.id}` : "post-modal"}
-        className="modal"
-      >
+      <dialog id={post ? `post-modal-${post.id}` : "post-modal"} className="modal">
         <div className="modal-box max-w-5xl">
           <h3 className="pb-2 text-lg font-bold">{`Poszt ${post ? "módosítás" : "létrehozás"}`}</h3>
           <XButton />
-          <form
-            className="flex w-full flex-col"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form className="flex w-full flex-col" onSubmit={handleSubmit(onSubmit)}>
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text">Képek a lakásról</span>
@@ -239,20 +218,14 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             />
             {errors.images?.message && (
               <div className="label">
-                <span className="label-text-alt text-orange-600">
-                  {errors.images.message}
-                </span>
+                <span className="label-text-alt text-orange-600">{errors.images.message}</span>
               </div>
             )}
             {!!previewImages.length && (
               <div className="relative flex h-24 w-full flex-row gap-4 overflow-x-scroll py-2">
                 {previewImages.map((image, index) => (
                   <div key={index} className="relative flex h-full flex-none">
-                    <img
-                      key={index}
-                      src={image.url}
-                      className="relative h-full rounded-lg"
-                    />
+                    <img key={index} src={image.url} className="relative h-full rounded-lg" />
                     <div
                       onClick={() => removeImage(index)}
                       className="absolute top-0 right-0 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-400"
@@ -300,11 +273,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             </div>
 
             <label className="fieldset-label">Hol</label>
-            <select
-              defaultValue="Budapest"
-              className="select w-full"
-              {...register("location")}
-            >
+            <select defaultValue="Budapest" className="select w-full" {...register("location")}>
               <option disabled={true}>Hol lakni?</option>
               {locationOptions.map((locationOption) => (
                 <option key={locationOption.value} value={locationOption.value}>
@@ -314,10 +283,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             </select>
 
             <label className="fieldset-label">Kor</label>
-            <select
-              className="select w-full"
-              {...register("age", { valueAsNumber: true })}
-            >
+            <select className="select w-full" {...register("age", { valueAsNumber: true })}>
               <option defaultValue={0} disabled={true}>
                 Kor
               </option>
@@ -329,10 +295,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             </select>
 
             <label className="fieldset-label">Nem preferencia</label>
-            <select
-              className="select w-full"
-              {...register("gender", { valueAsNumber: true })}
-            >
+            <select className="select w-full" {...register("gender", { valueAsNumber: true })}>
               <option defaultValue={0} disabled={true}>
                 Nem
               </option>
@@ -397,17 +360,10 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             <div className="form-control py-2">
               <label className="label cursor-pointer justify-start gap-4">
                 <span className="label-text">Én is lakó vagyok</span>
-                <input
-                  type="checkbox"
-                  {...register("isResident")}
-                  className="checkbox"
-                />
+                <input type="checkbox" {...register("isResident")} className="checkbox" />
               </label>
             </div>
-            <button
-              disabled={isSubmitting}
-              className="btn btn-secondary btn-wide mt-4 self-center"
-            >
+            <button disabled={isSubmitting} className="btn btn-secondary btn-wide mt-4 self-center">
               {uploadStatus ? (
                 <>
                   <span className="loading loading-spinner loading-sm"></span>

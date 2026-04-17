@@ -12,9 +12,7 @@ export default async function Page({ params: { id } }: KvizPageProps) {
         {session ? (
           <CompletedKviz userId={id} />
         ) : (
-          <div className="text-center">
-            Jelentkezz be, hogy lásd a kvíz válaszokat
-          </div>
+          <div className="text-center">Jelentkezz be, hogy lásd a kvíz válaszokat</div>
         )}
       </div>
     </HydrateClient>
