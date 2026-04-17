@@ -1,6 +1,7 @@
 "use client";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, HomeIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import Link from "next/link";
 import { api } from "~/trpc/react";
 import { CompletedKviz } from "./CompletedKviz";
 
@@ -109,6 +110,10 @@ const CompletedKvizView = () => (
   <div className="flex flex-col gap-6">
     <SuccessAlert />
     <CompletedKviz />
+    <Link href="/" className="btn btn-secondary self-end">
+      <HomeIcon width={16} />
+      Vissza a főoldalra
+    </Link>
   </div>
 );
 
