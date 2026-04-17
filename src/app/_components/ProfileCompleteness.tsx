@@ -1,17 +1,10 @@
 "use client";
 
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-} from "@heroicons/react/24/outline";
+import { CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { api } from "~/trpc/react";
 
-export const ProfileCompleteness = ({
-  compact = false,
-}: {
-  compact?: boolean;
-}) => {
+export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) => {
   const { data, isLoading } = api.user.getProfileCompleteness.useQuery();
 
   if (isLoading || !data) return null;
@@ -68,9 +61,7 @@ export const ProfileCompleteness = ({
             ) : (
               <ExclamationCircleIcon className="text-warning h-5 w-5" />
             )}
-            <span className={item.done ? "line-through opacity-60" : ""}>
-              {item.label}
-            </span>
+            <span className={item.done ? "line-through opacity-60" : ""}>{item.label}</span>
           </li>
         ))}
       </ul>

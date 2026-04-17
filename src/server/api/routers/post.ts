@@ -1,11 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { formatOrderBy, isUserInPostGroup } from "~/utils/helpers";
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { utapi } from "~/app/api/uploadthing/utapi";
 import { Location } from "@prisma/client";
 
@@ -16,16 +12,11 @@ const imagesValidation = z
     z.object({
       id: z.string().min(5).max(100),
       url: z.string().min(5).max(100),
-    }),
+    })
   )
   .max(4);
 
-export const orderBy = z.enum([
-  "price-asc",
-  "price-desc",
-  "createdAt-desc",
-  "createdAt-asc",
-]);
+export const orderBy = z.enum(["price-asc", "price-desc", "createdAt-desc", "createdAt-asc"]);
 
 export const postRouter = createTRPCRouter({
   create: protectedProcedure
@@ -39,7 +30,7 @@ export const postRouter = createTRPCRouter({
         location: z.nativeEnum(Location),
         age: z.number().min(0).max(4),
         gender: z.number().min(0).max(2),
-      }),
+      })
     )
     .mutation(async ({ ctx, input }) => {
       const postCountPerUser = await ctx.db.post.count({
@@ -89,7 +80,7 @@ export const postRouter = createTRPCRouter({
         location: z.nativeEnum(Location),
         age: z.number().min(0).max(4),
         gender: z.number().min(0).max(2),
-      }),
+      })
     )
     .mutation(async ({ ctx, input }) => {
       const post = await ctx.db.post.findUniqueOrThrow({
@@ -103,10 +94,8 @@ export const postRouter = createTRPCRouter({
           code: "UNAUTHORIZED",
         });
 
-      const addResident =
-        !isUserInPostGroup(post, ctx.session.user.id) && input.isResident;
-      const featuredUsersCount =
-        post.featuredUsers.length + Number(addResident);
+      const addResident = !isUserInPostGroup(post, ctx.session.user.id) && input.isResident;
+      const featuredUsersCount = post.featuredUsers.length + Number(addResident);
 
       if (featuredUsersCount > input.maxPersonCount)
         throw new TRPCError({
@@ -114,9 +103,7 @@ export const postRouter = createTRPCRouter({
           code: "CONFLICT",
         });
 
-      const removableImages = post.images.filter((image) =>
-        input.removeImages.includes(image.id),
-      );
+      const removableImages = post.images.filter((image) => input.removeImages.includes(image.id));
       await utapi.deleteFiles(removableImages.map(({ id }) => id));
 
       return ctx.db.post.update({
@@ -151,7 +138,7 @@ export const postRouter = createTRPCRouter({
           gender: z.number().min(0).max(2).optional(),
         }),
         cursor: z.number().nullish(),
-      }),
+      })
     )
     .query(async ({ ctx, input }) => {
       const posts = await ctx.db.post.findMany({
@@ -161,12 +148,9 @@ export const postRouter = createTRPCRouter({
         include: featuredImageQuery,
         where: {
           maxPersonCount:
-            input.filters.maxPersonCount !== 0
-              ? input.filters.maxPersonCount
-              : undefined,
+            input.filters.maxPersonCount !== 0 ? input.filters.maxPersonCount : undefined,
           price: {
-            lte:
-              input.filters.maxPrice !== 0 ? input.filters.maxPrice : undefined,
+            lte: input.filters.maxPrice !== 0 ? input.filters.maxPrice : undefined,
           },
           location: input.filters.location ? input.filters.location : undefined,
           age: input.filters.age !== 0 ? input.filters.age : undefined,
@@ -196,27 +180,25 @@ export const postRouter = createTRPCRouter({
       where: { createdById: input },
       include: featuredImageQuery,
       orderBy: { createdAt: "desc" },
-    }),
+    })
   ),
 
-  deleteById: protectedProcedure
-    .input(z.number())
-    .mutation(async ({ ctx, input }) => {
-      const post = await ctx.db.post.findUniqueOrThrow({
-        where: { id: input },
-        include: { images: true },
+  deleteById: protectedProcedure.input(z.number()).mutation(async ({ ctx, input }) => {
+    const post = await ctx.db.post.findUniqueOrThrow({
+      where: { id: input },
+      include: { images: true },
+    });
+
+    if (post.createdById !== ctx.session.user.id)
+      throw new TRPCError({
+        message: "Unauthorized to delete this post",
+        code: "UNAUTHORIZED",
       });
 
-      if (post.createdById !== ctx.session.user.id)
-        throw new TRPCError({
-          message: "Unauthorized to delete this post",
-          code: "UNAUTHORIZED",
-        });
-
-      const imageKeys = post.images.map(({ id }) => id);
-      await utapi.deleteFiles(imageKeys);
-      return ctx.db.post.delete({ where: { id: input } });
-    }),
+    const imageKeys = post.images.map(({ id }) => id);
+    await utapi.deleteFiles(imageKeys);
+    return ctx.db.post.delete({ where: { id: input } });
+  }),
 });
 
 const featuredImageQuery = {

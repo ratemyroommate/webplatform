@@ -23,17 +23,13 @@ export const requestRouter = createTRPCRouter({
       },
     });
     const recievedRequests = allRequests.filter(
-      (request) => request.userId !== ctx.session.user.id,
+      (request) => request.userId !== ctx.session.user.id
     );
-    const sentRequests = allRequests.filter(
-      (request) => request.userId === ctx.session.user.id,
-    );
+    const sentRequests = allRequests.filter((request) => request.userId === ctx.session.user.id);
     return { recievedRequests, sentRequests };
   }),
   update: protectedProcedure
-    .input(
-      z.object({ requestId: z.string(), status: z.nativeEnum(RequestStatus) }),
-    )
+    .input(z.object({ requestId: z.string(), status: z.nativeEnum(RequestStatus) }))
     .mutation(async ({ ctx, input }) => {
       const request = await ctx.db.request.findUniqueOrThrow({
         where: { id: input.requestId },

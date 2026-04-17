@@ -36,10 +36,9 @@ const defaultFilters: FormValues = {
 };
 
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
-  const { reset, register, handleSubmit, watch, setValue } =
-    useForm<FormValues>({
-      defaultValues: Object.keys(filters).length ? filters : defaultFilters,
-    });
+  const { reset, register, handleSubmit, watch, setValue } = useForm<FormValues>({
+    defaultValues: Object.keys(filters).length ? filters : defaultFilters,
+  });
 
   const onSubmit = (formValues: FormValues) => {
     handleCloseModal("filters-modal");
@@ -69,10 +68,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
             <XButton />
           </div>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col items-center gap-4 pt-4"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center gap-4 pt-4">
             <div className="form-control w-full">
               <div className="label">
                 <span className="label-text text-lg">Lakótársak száma</span>
@@ -119,26 +115,18 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               </div>
               <select className="select w-full" {...register("location")}>
                 <option disabled={true}>Hol lakni?</option>
-                {[{ value: "", label: "Mindegy" }, ...locationOptions].map(
-                  (locationOption) => (
-                    <option
-                      key={locationOption.value}
-                      value={locationOption.value}
-                    >
-                      {locationOption.label}
-                    </option>
-                  ),
-                )}
+                {[{ value: "", label: "Mindegy" }, ...locationOptions].map((locationOption) => (
+                  <option key={locationOption.value} value={locationOption.value}>
+                    {locationOption.label}
+                  </option>
+                ))}
               </select>
             </label>
             <label className="form-control flex w-full flex-col">
               <div className="label">
                 <span className="label-text text-lg">Kor</span>
               </div>
-              <select
-                className="select w-full"
-                {...register("age", { valueAsNumber: true })}
-              >
+              <select className="select w-full" {...register("age", { valueAsNumber: true })}>
                 <option disabled={true}>Kor intervallum</option>
                 {ageOptions.map((ageOption) => (
                   <option key={ageOption.value} value={ageOption.value}>
@@ -151,10 +139,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               <div className="label">
                 <span className="label-text text-lg">Nem preferencia</span>
               </div>
-              <select
-                className="select w-full"
-                {...register("gender", { valueAsNumber: true })}
-              >
+              <select className="select w-full" {...register("gender", { valueAsNumber: true })}>
                 <option disabled={true}>Nem preferencia</option>
                 {genderOptions.map((genderOption) => (
                   <option key={genderOption.value} value={genderOption.value}>

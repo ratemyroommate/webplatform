@@ -7,21 +7,16 @@ export default async function PrivacyPolicy() {
         <h1 className="mb-6 text-4xl font-bold">Adatvédelmi szabályzat</h1>
 
         <p className="mb-4 leading-relaxed">
-          Jelen adatvédelmi szabályzat célja, hogy tájékoztatást nyújtson arról,
-          hogyan kezeljük a felhasználók személyes adatait a(z){" "}
-          <strong>www.ratemyroommate.hu</strong> weboldalon.
+          Jelen adatvédelmi szabályzat célja, hogy tájékoztatást nyújtson arról, hogyan kezeljük a
+          felhasználók személyes adatait a(z) <strong>www.ratemyroommate.hu</strong> weboldalon.
         </p>
 
-        <h2 className="mt-8 mb-4 text-2xl font-semibold">
-          1. Adatkezelő adatai
-        </h2>
+        <h2 className="mt-8 mb-4 text-2xl font-semibold">1. Adatkezelő adatai</h2>
         <p className="mb-4 leading-relaxed">
           Email: <strong>rmrm.owners@gmail.com</strong>
         </p>
 
-        <h2 className="mt-8 mb-4 text-2xl font-semibold">
-          2. Kezelt személyes adatok köre
-        </h2>
+        <h2 className="mt-8 mb-4 text-2xl font-semibold">2. Kezelt személyes adatok köre</h2>
         <p className="mb-4 leading-relaxed">
           A weboldal használata során az alábbi adatokat gyűjthetjük:
         </p>
@@ -32,18 +27,13 @@ export default async function PrivacyPolicy() {
           <li>Kérdőívre adott válaszok (opcionálisan)</li>
         </ul>
 
-        <h2 className="mt-8 mb-4 text-2xl font-semibold">
-          3. Adatkezelés jogalapja
-        </h2>
+        <h2 className="mt-8 mb-4 text-2xl font-semibold">3. Adatkezelés jogalapja</h2>
         <p className="mb-4 leading-relaxed">
-          Az adatkezelés az érintett hozzájárulásán (pl. bejelentkezéskor), vagy
-          jogos érdekünkön alapul (pl. statisztikai célból történő adatgyűjtés,
-          rendszerbiztonság).
+          Az adatkezelés az érintett hozzájárulásán (pl. bejelentkezéskor), vagy jogos érdekünkön
+          alapul (pl. statisztikai célból történő adatgyűjtés, rendszerbiztonság).
         </p>
 
-        <h2 className="mt-8 mb-4 text-2xl font-semibold">
-          4. Az adatkezelés célja
-        </h2>
+        <h2 className="mt-8 mb-4 text-2xl font-semibold">4. Az adatkezelés célja</h2>
         <ul className="mb-4 list-inside list-disc leading-relaxed">
           <li>A felhasználói fiók létrehozása és kezelése</li>
           <li>A kvíz eredményeinek mentése és megjelenítése</li>
@@ -51,38 +41,27 @@ export default async function PrivacyPolicy() {
           <li>Weboldal működésének biztosítása</li>
         </ul>
 
-        <h2 className="mt-8 mb-4 text-2xl font-semibold">
-          5. Sütik (cookie-k) kezelése
-        </h2>
+        <h2 className="mt-8 mb-4 text-2xl font-semibold">5. Sütik (cookie-k) kezelése</h2>
         <p className="mb-4 leading-relaxed">
-          Weboldalunk a működéshez elengedhetetlen sütiket használ. Ezek a sütik
-          nem igényelnek külön hozzájárulást. Harmadik féltől származó vagy
-          marketing célú sütiket jelenleg nem használunk.
+          Weboldalunk a működéshez elengedhetetlen sütiket használ. Ezek a sütik nem igényelnek
+          külön hozzájárulást. Harmadik féltől származó vagy marketing célú sütiket jelenleg nem
+          használunk.
         </p>
 
-        <h2 className="mt-8 mb-4 text-2xl font-semibold">
-          6. Adattárolás időtartama
-        </h2>
+        <h2 className="mt-8 mb-4 text-2xl font-semibold">6. Adattárolás időtartama</h2>
         <p className="mb-4 leading-relaxed">
-          A személyes adatokat addig őrizzük meg, amíg a felhasználói fiók
-          aktív, vagy amíg a megőrzésre jogszabály kötelez minket. A fiók
-          törlésével az adatok is törlésre kerülnek.
+          A személyes adatokat addig őrizzük meg, amíg a felhasználói fiók aktív, vagy amíg a
+          megőrzésre jogszabály kötelez minket. A fiók törlésével az adatok is törlésre kerülnek.
         </p>
 
-        <h2 className="mt-8 mb-4 text-2xl font-semibold">
-          7. Adattovábbítás és adatfeldolgozók
-        </h2>
-        <p className="mb-4 leading-relaxed">
-          Az adatokat harmadik félnek nem továbbítjuk, kivéve:
-        </p>
+        <h2 className="mt-8 mb-4 text-2xl font-semibold">7. Adattovábbítás és adatfeldolgozók</h2>
+        <p className="mb-4 leading-relaxed">Az adatokat harmadik félnek nem továbbítjuk, kivéve:</p>
         <ul className="mb-4 list-inside list-disc leading-relaxed">
           <li>Szolgáltatók: pl. Supabase (adatbázis), Vercel (hoszting)</li>
           <li>Jogszabályban előírt esetekben hatóságoknak</li>
         </ul>
 
-        <h2 className="mt-8 mb-4 text-2xl font-semibold">
-          8. Felhasználói jogok
-        </h2>
+        <h2 className="mt-8 mb-4 text-2xl font-semibold">8. Felhasználói jogok</h2>
         <p className="mb-4 leading-relaxed">A felhasználók jogosultak:</p>
         <ul className="mb-4 list-inside list-disc leading-relaxed">
           <li>Tájékoztatást kérni az adatkezelésről</li>

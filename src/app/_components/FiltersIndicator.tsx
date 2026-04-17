@@ -5,18 +5,12 @@ type NotificationBellProps = {
   filters: FormValues;
 };
 
-export const FiltersIndicator = ({
-  children,
-  filters,
-}: NotificationBellProps) => {
-  const indicatorCount =
-    Object.values(filters).filter((filter) => !!filter).length - 1;
+export const FiltersIndicator = ({ children, filters }: NotificationBellProps) => {
+  const indicatorCount = Object.values(filters).filter((filter) => !!filter).length - 1;
 
   return indicatorCount > 0 ? (
     <div className="indicator">
-      <span className="badge indicator-item badge-warning">
-        {indicatorCount}
-      </span>
+      <span className="badge indicator-item badge-warning">{indicatorCount}</span>
 
       {children}
     </div>

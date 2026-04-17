@@ -28,8 +28,7 @@ export const RequestModal = ({ postId, userId }: ReviewProps) => {
     },
   });
 
-  const onSubmit = (formValues: FormValues) =>
-    reviewMutation.mutate({ ...formValues, postId });
+  const onSubmit = (formValues: FormValues) => reviewMutation.mutate({ ...formValues, postId });
 
   return (
     <>
@@ -45,10 +44,7 @@ export const RequestModal = ({ postId, userId }: ReviewProps) => {
         <div className="modal-box">
           <h3 className="text-lg font-bold">Csatlakozás kérése</h3>
           <XButton />
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-8 pt-8"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 pt-8">
             <textarea
               className="textarea textarea-bordered w-full"
               placeholder="Írd le a megjegyzésed"

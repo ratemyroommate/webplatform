@@ -35,14 +35,11 @@ export const Kviz = () => {
         <input type="radio" name="my-accordion-2" />
         <div className="collapse-title font-semibold">Kompatibilitás Kviz</div>
         <div className="collapse-content text-sm">
-          Minden kérdésre <b>egyszer</b> lehet válaszolni, nincs módosítási
-          lehetőség. Továbblépés után minden válasz mentésre kerül.
+          Minden kérdésre <b>egyszer</b> lehet válaszolni, nincs módosítási lehetőség. Továbblépés
+          után minden válasz mentésre kerül.
         </div>
       </div>
-      <TimeLine
-        questionIndex={questionIndex}
-        totalQuestionCount={totalQuestionCount}
-      />
+      <TimeLine questionIndex={questionIndex} totalQuestionCount={totalQuestionCount} />
       <div className="flex flex-col gap-4">
         <b className="rounded-lg text-2xl">{question.text}</b>
         <div className="join join-vertical">

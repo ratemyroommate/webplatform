@@ -9,7 +9,7 @@ export const reviewRouter = createTRPCRouter({
         rating: z.number(),
         comment: z.string().nullable(),
         reviewedId: z.string(),
-      }),
+      })
     )
     .mutation(({ ctx, input }) =>
       ctx.db.review.create({
@@ -17,7 +17,7 @@ export const reviewRouter = createTRPCRouter({
           ...input,
           reviewerId: ctx.session.user.id,
         },
-      }),
+      })
     ),
   update: protectedProcedure
     .input(
@@ -25,7 +25,7 @@ export const reviewRouter = createTRPCRouter({
         rating: z.number(),
         comment: z.string().nullable(),
         reviewedId: z.string(),
-      }),
+      })
     )
     .mutation(({ ctx, input }) =>
       ctx.db.review.update({
@@ -39,6 +39,6 @@ export const reviewRouter = createTRPCRouter({
           rating: input.rating,
           comment: input.comment,
         },
-      }),
+      })
     ),
 });
