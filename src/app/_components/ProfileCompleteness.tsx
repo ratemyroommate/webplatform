@@ -41,7 +41,7 @@ export const ProfileCompleteness = ({
           <span className="text-sm font-medium">{percentage}%</span>
         </div>
         <progress
-          className="progress progress-warning w-full"
+          className="progress progress-warning w-full shadow-sm"
           value={percentage}
           max={100}
         />
@@ -56,7 +56,7 @@ export const ProfileCompleteness = ({
         <span className="text-sm font-medium">{percentage}%</span>
       </div>
       <progress
-        className="progress progress-warning mb-4 w-full"
+        className="progress progress-warning mb-4 w-full shadow-sm"
         value={percentage}
         max={100}
       />
