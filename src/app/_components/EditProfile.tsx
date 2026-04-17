@@ -31,17 +31,12 @@ export const EditProfile = (user: User) => {
     updateUser.mutate({
       id: user.id,
       about: formValues.about?.trim() ? formValues.about.trim() : null,
-      socialLink: formValues.socialLink?.trim()
-        ? formValues.socialLink.trim()
-        : null,
+      socialLink: formValues.socialLink?.trim() ? formValues.socialLink.trim() : null,
     });
 
   return (
     <div>
-      <button
-        onClick={() => handleOpenModal("edit-profile-modal")}
-        className="btn"
-      >
+      <button onClick={() => handleOpenModal("edit-profile-modal")} className="btn">
         <PencilSquareIcon width={20} />
         Profil szerkesztése
       </button>
@@ -49,10 +44,7 @@ export const EditProfile = (user: User) => {
         <div className="modal-box">
           <h3 className="text-lg font-bold">Profil szerkesztése</h3>
           <XButton />
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-8 pt-4"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 pt-4">
             <label className="form-control flex w-full flex-col">
               <div className="label">
                 <span className="label-text text-lg">Social link</span>

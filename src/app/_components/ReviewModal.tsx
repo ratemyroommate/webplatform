@@ -17,17 +17,12 @@ type ReviewProps = {
 };
 type FormValues = { rating: number; comment: string | null };
 
-export const ReviewModal = ({
-  review,
-  reviewedId,
-  reviewerId,
-}: ReviewProps) => {
-  const { register, watch, setValue, handleSubmit, formState } =
-    useForm<FormValues>({
-      defaultValues: review
-        ? { rating: review.rating, comment: review.comment }
-        : { rating: 5, comment: "" },
-    });
+export const ReviewModal = ({ review, reviewedId, reviewerId }: ReviewProps) => {
+  const { register, watch, setValue, handleSubmit, formState } = useForm<FormValues>({
+    defaultValues: review
+      ? { rating: review.rating, comment: review.comment }
+      : { rating: 5, comment: "" },
+  });
 
   const router = useRouter();
   const modalId = reviewerId
@@ -44,8 +39,7 @@ export const ReviewModal = ({
     },
   });
 
-  const onSubmit = (formValues: FormValues) =>
-    reviewMutation.mutate({ ...formValues, reviewedId });
+  const onSubmit = (formValues: FormValues) => reviewMutation.mutate({ ...formValues, reviewedId });
   const handleRatingClick = (rating: number) => setValue("rating", rating);
 
   return (
@@ -67,23 +61,12 @@ export const ReviewModal = ({
         )}
       </button>
       <LoginModal />
-      <dialog
-        id={review ? `review-modal-${review.id}` : "review-modal"}
-        className="modal"
-      >
+      <dialog id={review ? `review-modal-${review.id}` : "review-modal"} className="modal">
         <div className="modal-box">
           <h3 className="text-lg font-bold">Adj egy értékelést</h3>
           <XButton />
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-8 pt-8"
-          >
-            <Rating
-              rating={watch("rating")}
-              itemKey={-1}
-              isLarge
-              onClick={handleRatingClick}
-            />
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 pt-8">
+            <Rating rating={watch("rating")} itemKey={-1} isLarge onClick={handleRatingClick} />
             <textarea
               className="textarea textarea-bordered w-full"
               placeholder="Írd le a véleményed"

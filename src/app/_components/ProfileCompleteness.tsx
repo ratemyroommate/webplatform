@@ -1,17 +1,10 @@
 "use client";
 
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-} from "@heroicons/react/24/outline";
+import { CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { api } from "~/trpc/react";
 
-export const ProfileCompleteness = ({
-  compact = false,
-}: {
-  compact?: boolean;
-}) => {
+export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) => {
   const { data, isLoading } = api.user.getProfileCompleteness.useQuery();
 
   if (isLoading || !data) return null;
@@ -40,11 +33,7 @@ export const ProfileCompleteness = ({
           <span className="text-sm">Profil teljessége</span>
           <span className="text-sm font-medium">{percentage}%</span>
         </div>
-        <progress
-          className="progress progress-warning w-full"
-          value={percentage}
-          max={100}
-        />
+        <progress className="progress progress-warning w-full" value={percentage} max={100} />
       </div>
     );
   }
@@ -55,11 +44,7 @@ export const ProfileCompleteness = ({
         <h3 className="font-semibold">Profil teljessége</h3>
         <span className="text-sm font-medium">{percentage}%</span>
       </div>
-      <progress
-        className="progress progress-warning mb-4 w-full"
-        value={percentage}
-        max={100}
-      />
+      <progress className="progress progress-warning mb-4 w-full" value={percentage} max={100} />
       <ul className="flex flex-col gap-2">
         {items.map((item) => (
           <li key={item.label} className="flex items-center gap-2 text-sm">
@@ -68,9 +53,7 @@ export const ProfileCompleteness = ({
             ) : (
               <ExclamationCircleIcon className="text-warning h-5 w-5" />
             )}
-            <span className={item.done ? "line-through opacity-60" : ""}>
-              {item.label}
-            </span>
+            <span className={item.done ? "line-through opacity-60" : ""}>{item.label}</span>
           </li>
         ))}
       </ul>

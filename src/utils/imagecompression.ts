@@ -11,5 +11,5 @@ export const compressImages = async (images: File[]) =>
     images.map(async (image) => {
       const compressedImage = await imageCompression(image, options);
       return compressedImage.size < image.size ? compressedImage : image;
-    }),
+    })
   );

@@ -22,10 +22,7 @@ export const KvizToast = ({ session }: KvizToastProps) => {
   }, [session]);
 
   useEffect(() => {
-    if (
-      data &&
-      data.completedQuestionCountByCurrentUser < data.totalQuestionCount
-    ) {
+    if (data && data.completedQuestionCountByCurrentUser < data.totalQuestionCount) {
       toast(Toast);
     }
   }, [data]);

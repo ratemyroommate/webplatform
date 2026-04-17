@@ -27,27 +27,19 @@ export const PostDelete = ({ id }: PostDeleteProps) => {
 
   return (
     <>
-      <button
-        onClick={() => handleOpenModal(modalId)}
-        className="btn btn-error flex-1"
-      >
+      <button onClick={() => handleOpenModal(modalId)} className="btn btn-error flex-1">
         <TrashIcon width={20} />
         Törlés
       </button>
       <dialog id={modalId} className="modal">
         <div className="modal-box">
           <XButton />
-          <h3 className="py-4 text-lg font-bold">
-            Biztosan törölni szeretné a posztot?
-          </h3>
+          <h3 className="py-4 text-lg font-bold">Biztosan törölni szeretné a posztot?</h3>
           <div className="flex justify-between">
             <button onClick={() => handleCloseModal(modalId)} className="btn">
               Mégsem
             </button>
-            <button
-              onClick={() => deletePost.mutate(id)}
-              className="btn btn-error"
-            >
+            <button onClick={() => deletePost.mutate(id)} className="btn btn-error">
               Igen
             </button>
           </div>
