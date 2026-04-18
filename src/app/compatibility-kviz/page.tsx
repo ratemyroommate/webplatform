@@ -1,7 +1,16 @@
+import { type Metadata } from "next";
 import { HydrateClient } from "~/trpc/server";
 import { Kviz } from "../_components/Kviz";
 import { getServerAuthSession } from "~/server/auth";
 import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  return {
+    title: t("kviz.title"),
+    description: t("kviz.description"),
+  };
+}
 
 export default async function Page() {
   const session = await getServerAuthSession();

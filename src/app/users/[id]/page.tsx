@@ -1,3 +1,4 @@
+import { type Metadata } from "next";
 import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { EditProfile } from "~/app/_components/EditProfile";
@@ -10,6 +11,14 @@ import { ProfileCompleteness } from "~/app/_components/ProfileCompleteness";
 import { getTranslations } from "next-intl/server";
 
 type UserPageProps = { params: { id: string } };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  return {
+    title: t("user.title"),
+    description: t("user.description"),
+  };
+}
 
 export default async function User({ params: { id } }: UserPageProps) {
   const session = await getServerAuthSession();

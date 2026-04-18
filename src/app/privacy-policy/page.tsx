@@ -1,5 +1,14 @@
+import { type Metadata } from "next";
 import { HydrateClient } from "~/trpc/server";
 import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  return {
+    title: t("privacy.title"),
+    description: t("privacy.description"),
+  };
+}
 
 export default async function PrivacyPolicy() {
   const t = await getTranslations("privacy");

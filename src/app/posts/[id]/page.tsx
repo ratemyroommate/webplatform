@@ -1,3 +1,4 @@
+import { type Metadata } from "next";
 import { Images } from "~/app/_components/Images";
 import { FeaturedUsers } from "~/app/_components/FeaturedUsers";
 import { PostDelete } from "~/app/_components/PostDelete";
@@ -12,6 +13,16 @@ import { CompatibilityScore } from "~/app/_components/CompatibilityScore";
 import { getTranslations } from "next-intl/server";
 
 type PostPageProps = { params: { id: string } };
+
+export async function generateMetadata({ params: { id } }: PostPageProps): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  const post = await api.post.getById(id);
+  if (!post) return { title: t("home.title") };
+  return {
+    title: t("post.title", { location: post.location }),
+    description: t("post.description", { location: post.location, price: post.price }),
+  };
+}
 
 export default async function Page({ params: { id } }: PostPageProps) {
   const session = await getServerAuthSession();

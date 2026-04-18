@@ -1,6 +1,15 @@
+import { type Metadata } from "next";
 import { Post } from "~/app/_components/post";
 import { HydrateClient, api } from "~/trpc/server";
 import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  return {
+    title: t("userPosts.title"),
+    description: t("userPosts.description"),
+  };
+}
 
 type FeedPostsProps = { params: { id: string } };
 
