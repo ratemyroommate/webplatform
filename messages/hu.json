@@ -4,7 +4,7 @@
     "delete": "Törlés",
     "cancel": "Mégsem",
     "yes": "Igen",
-    "login": "Login",
+    "login": "Bejelentkezés",
     "publish": "Közzététel",
     "edit": "Módosítás",
     "send": "Küldés",
@@ -18,9 +18,9 @@
     "quiz": "Kvíz",
     "myPosts": "Posztjaim",
     "signOut": "Kijelentkezés",
-    "profilePicture": "profile picture",
-    "contact": "Contact",
-    "privacyPolicy": "Privacy Policy",
+    "profilePicture": "profilkép",
+    "contact": "Kapcsolat",
+    "privacyPolicy": "Adatvédelmi szabályzat",
     "copyright": "© 2025 Ratemyroommate"
   },
   "profile": {
@@ -31,7 +31,7 @@
     "about": "Magadról",
     "aboutPlaceholder": "Írj magadról pár mondatot...",
     "updateSuccess": "Profil sikeresen frissítve",
-    "userNotFound": "User not found",
+    "userNotFound": "Felhasználó nem található",
     "userProfileImage": "user profile image",
     "noReviewComment": "Nincs megjegyzés",
     "noReviews": "Nincs értékelés",
@@ -71,7 +71,7 @@
     "updateSuccess": "Post sikeresen módosítva",
     "deleteSuccess": "Poszt sikeresen törölve",
     "deleteConfirm": "Biztosan törölni szeretné a posztot?",
-    "notFound": "Post not found",
+    "notFound": "Poszt nem található",
     "roommates": "Szobatársak",
     "advertiser": "Hirdető",
     "advertiserAlt": "hirdette",
@@ -104,7 +104,7 @@
     "post": "Poszt",
     "relatedPost": "Kapcsolatos poszt",
     "quizAnswers": "Kvíz válaszok",
-    "updateSuccess": "Request updated successfully"
+    "updateSuccess": "Kérelem sikeresen frissítve"
   },
   "kviz": {
     "title": "Kompatibilitás Kviz",
@@ -143,15 +143,15 @@
     "notIdeal": "Nem ideális",
     "compatible": "Kompatibilis",
     "perfectMatch": "Tökéletes egyezés",
-    "noData": "No data"
+    "noData": "Nincs adat"
   },
   "featuredUsers": {
     "roommate": "szobatárs",
     "freeSlots": "+{count} szabad hely"
   },
   "loginModal": {
-    "message": "Just a quick login before we continue.",
-    "login": "Login"
+    "message": "Egy gyors bejelentkezés, mielőtt folytatnánk.",
+    "login": "Bejelentkezés"
   },
   "userPosts": {
     "title": "Saját posztok",
