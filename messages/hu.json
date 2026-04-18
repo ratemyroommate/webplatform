@@ -1,4 +1,35 @@
 {
+  "metadata": {
+    "siteName": "Rate My Roommate",
+    "home": {
+      "title": "Szobatárs Kereső",
+      "description": "Találd meg az ideális szobatársad! Böngéssz hirdetések között, hasonlítsd össze a kompatibilitást és költözz össze a megfelelő személlyel. Szobatárs keresés egyszerűen."
+    },
+    "contact": {
+      "title": "Kapcsolat",
+      "description": "Lépj velünk kapcsolatba! Kérdésed van a szobatárs kereséssel kapcsolatban? Írj nekünk és segítünk."
+    },
+    "kviz": {
+      "title": "Kompatibilitási Kvíz",
+      "description": "Töltsd ki a kompatibilitási kvízt és tudd meg, mennyire illesz össze leendő szobatársaiddal. Találd meg a tökéletes lakótársat!"
+    },
+    "post": {
+      "title": "Szobatárs hirdetés – {location}",
+      "description": "Szobatárs hirdetés: {location}, {price} ft/hó. Nézd meg a részleteket és jelentkezz lakótársnak!"
+    },
+    "user": {
+      "title": "Felhasználói profil",
+      "description": "Felhasználói profil megtekintése a Rate My Roommate platformon. Nézd meg az értékeléseket és a kompatibilitást."
+    },
+    "userPosts": {
+      "title": "Felhasználó hirdetései",
+      "description": "A felhasználó szobatárs hirdetéseinek listája a Rate My Roommate platformon."
+    },
+    "privacy": {
+      "title": "Adatvédelmi szabályzat",
+      "description": "A Rate My Roommate adatvédelmi szabályzata. Tudj meg többet arról, hogyan kezeljük személyes adataidat."
+    }
+  },
   "common": {
     "save": "Mentés",
     "delete": "Törlés",

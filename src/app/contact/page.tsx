@@ -1,7 +1,16 @@
+import { type Metadata } from "next";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { HydrateClient } from "~/trpc/server";
 import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  return {
+    title: t("contact.title"),
+    description: t("contact.description"),
+  };
+}
 
 export default async function Contact() {
   const t = await getTranslations("contact");

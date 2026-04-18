@@ -19,11 +19,32 @@ import { KvizToast } from "./_components/KvizToast";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Rate My Roommate",
-  description: "A hely ahol megtalálod a helyed",
-  icons: [{ rel: "icon", url: "/R-favicon.png" }],
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  const description = t("home.description");
+  const siteName = t("siteName");
+
+  return {
+    title: {
+      default: siteName,
+      template: `%s | ${siteName}`,
+    },
+    description,
+    icons: [{ rel: "icon", url: "/R-favicon.png" }],
+    openGraph: {
+      type: "website",
+      siteName,
+      title: siteName,
+      description,
+      locale: "hu_HU",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: siteName,
+      description,
+    },
+  };
+}
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const session = await getServerAuthSession();
