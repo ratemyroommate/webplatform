@@ -12,8 +12,11 @@ import { NotificationBell } from "./NotificationBell";
 import { XButton } from "./CloseButton";
 import { Session } from "next-auth";
 import { CompatibilityScore } from "./CompatibilityScore";
+import { useTranslations } from "next-intl";
 
 export const NotificationModal = ({ session }: { session: Session }) => {
+  const t = useTranslations("notification");
+  const tc = useTranslations("common");
   const { data: requests, isLoading } = api.request.getAll.useQuery();
   const recievedRequests = requests?.recievedRequests;
   const sentRequests = requests?.sentRequests;
@@ -24,7 +27,7 @@ export const NotificationModal = ({ session }: { session: Session }) => {
     onSuccess: () => {
       router.refresh();
       void utils.request.getAll.invalidate();
-      toast.success("Request updated successfully");
+      toast.success(t("updateSuccess"));
     },
   });
   useEffect(() => handleCloseModal("notification-modal"), [pathname]);
@@ -46,7 +49,7 @@ export const NotificationModal = ({ session }: { session: Session }) => {
               type="radio"
               name="my_tabs_3"
               className="tab"
-              aria-label="Kapott kérelmek"
+              aria-label={t("receivedTab")}
               defaultChecked
             />
             <div className="tab-content bg-base-100 border-base-300 h-full p-2">
@@ -68,11 +71,11 @@ export const NotificationModal = ({ session }: { session: Session }) => {
                   ))}
                 </div>
               ) : (
-                "Nincs kapott kérelem"
+                t("noReceived")
               )}
             </div>
 
-            <input type="radio" name="my_tabs_3" className="tab" aria-label="Küldött kérelmek" />
+            <input type="radio" name="my_tabs_3" className="tab" aria-label={t("sentTab")} />
             <div className="tab-content bg-base-100 border-base-300 p-2">
               {isLoading ? (
                 <div className="flex flex-col gap-2">
@@ -86,7 +89,7 @@ export const NotificationModal = ({ session }: { session: Session }) => {
                     <div key={request.id} className="card border-base-200 border-2 p-2">
                       <div className="flex flex-row items-center justify-between">
                         <Link href={`/posts/${request.postId}`} className="btn">
-                          Poszt
+                          {t("post")}
                           <EyeIcon width={20} />
                         </Link>
                         <div className="flew-row flex items-center gap-4">
@@ -111,16 +114,16 @@ export const NotificationModal = ({ session }: { session: Session }) => {
                         )}
                       </div>
                       <div tabIndex={0} className="collapse-arrow collapse">
-                        <div className="collapse-title">További adatok</div>
+                        <div className="collapse-title">{tc("moreDetails")}</div>
                         <div className="collapse-content flex flex-col gap-2">
-                          {request.comment === "" ? "Nincs megjegyzés" : request.comment}
+                          {request.comment === "" ? tc("noComment") : request.comment}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="p-4">Nincs küldött kérelem</div>
+                <div className="p-4">{t("noSent")}</div>
               )}
             </div>
           </div>
@@ -153,6 +156,8 @@ const RecievedRequest = ({
   updateRequest: ReturnType<typeof api.request.update.useMutation>;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations("notification");
+  const tc = useTranslations("common");
   return (
     <div
       key={request.id}
@@ -202,16 +207,16 @@ const RecievedRequest = ({
       </div>
       <div className="collapse-arrow collapse">
         <input type="checkbox" />
-        <div className="collapse-title">További adatok</div>
+        <div className="collapse-title">{tc("moreDetails")}</div>
         <div className="collapse-content flex flex-col gap-2">
-          {request.comment === "" ? "Nincs megjegyzés" : request.comment}
+          {request.comment === "" ? tc("noComment") : request.comment}
           {isOpen && <CompatibilityScore compareUserId={request.userId} session={session} />}
           <div className="flex gap-2">
             <Link href={`/posts/${request.postId}`} className="btn btn-sm w-1/2">
-              Kapcsolatos poszt
+              {t("relatedPost")}
             </Link>
             <Link href={`/compatibility-kviz/${request.userId}`} className="btn btn-sm w-1/2">
-              Kvíz válaszok
+              {t("quizAnswers")}
             </Link>
           </div>
         </div>

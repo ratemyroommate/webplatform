@@ -3,9 +3,11 @@ import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import { CompletedKviz } from "./CompletedKviz";
+import { useTranslations } from "next-intl";
 
 export const Kviz = () => {
   const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
+  const t = useTranslations("kviz");
 
   const utils = api.useUtils();
   const saveAnswerMutation = api.kviz.saveAnswer.useMutation({
@@ -33,11 +35,11 @@ export const Kviz = () => {
     <>
       <div className="collapse-arrow bg-base-100 border-base-300 collapse border">
         <input type="radio" name="my-accordion-2" />
-        <div className="collapse-title font-semibold">Kompatibilitás Kviz</div>
-        <div className="collapse-content text-sm">
-          Minden kérdésre <b>egyszer</b> lehet válaszolni, nincs módosítási lehetőség. Továbblépés
-          után minden válasz mentésre kerül.
-        </div>
+        <div className="collapse-title font-semibold">{t("title")}</div>
+        <div
+          className="collapse-content text-sm"
+          dangerouslySetInnerHTML={{ __html: t.raw("description") }}
+        />
       </div>
       <TimeLine questionIndex={questionIndex} totalQuestionCount={totalQuestionCount} />
       <div className="flex flex-col gap-4">
@@ -61,7 +63,7 @@ export const Kviz = () => {
         onClick={handleSubmit}
         className="btn btn-secondary self-end"
       >
-        Mentés és Tovább
+        {t("saveAndNext")}
         <ArrowRightIcon width={16} />
       </button>
     </>
@@ -112,21 +114,24 @@ const CompletedKvizView = () => (
   </div>
 );
 
-const SuccessAlert = () => (
-  <div role="alert" className="alert alert-success">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6 shrink-0 stroke-current"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-    <span>A kvíz sikeresen ki lett töltve.</span>
-  </div>
-);
+const SuccessAlert = () => {
+  const t = useTranslations("kviz");
+  return (
+    <div role="alert" className="alert alert-success">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-6 w-6 shrink-0 stroke-current"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <span>{t("completed")}</span>
+    </div>
+  );
+};

@@ -8,10 +8,13 @@ import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import { toast } from "react-hot-toast";
 import { XButton } from "./CloseButton";
+import { useTranslations } from "next-intl";
 
 type FormValues = { about: string | null; socialLink: string | null };
 
 export const EditProfile = (user: User) => {
+  const t = useTranslations("profile");
+  const tc = useTranslations("common");
   const { register, handleSubmit, formState } = useForm<FormValues>({
     defaultValues: { about: user.about, socialLink: user.socialLink },
   });
@@ -22,7 +25,7 @@ export const EditProfile = (user: User) => {
     onSuccess: async () => {
       router.refresh();
       handleCloseModal("edit-profile-modal");
-      toast.success("Profil sikeresen frissítve");
+      toast.success(t("updateSuccess"));
       void utils.user.getProfileCompleteness.invalidate();
     },
   });
@@ -38,26 +41,24 @@ export const EditProfile = (user: User) => {
     <div>
       <button onClick={() => handleOpenModal("edit-profile-modal")} className="btn">
         <PencilSquareIcon width={20} />
-        Profil szerkesztése
+        {t("editProfile")}
       </button>
       <dialog id="edit-profile-modal" className="modal">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Profil szerkesztése</h3>
+          <h3 className="text-lg font-bold">{t("editProfile")}</h3>
           <XButton />
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 pt-4">
             <label className="form-control flex w-full flex-col">
               <div className="label">
-                <span className="label-text text-lg">Social link</span>
+                <span className="label-text text-lg">{t("socialLink")}</span>
               </div>
               <input
                 className="input input-bordered w-full"
-                placeholder="https://facebook.com/..."
+                placeholder={t("socialLinkPlaceholder")}
                 {...register("socialLink", {
-                  required: "Kötelező mező",
+                  required: tc("required"),
                   validate: (value) =>
-                    !value ||
-                    /^https?:\/\/.+/.test(value.trim()) ||
-                    "Érvényes URL-t adj meg (https://...)",
+                    !value || /^https?:\/\/.+/.test(value.trim()) || t("socialLinkInvalid"),
                 })}
               />
               {formState.errors.socialLink && (
@@ -70,13 +71,13 @@ export const EditProfile = (user: User) => {
             </label>
             <label className="form-control flex w-full flex-col">
               <div className="label">
-                <span className="label-text text-lg">Magadról</span>
+                <span className="label-text text-lg">{t("about")}</span>
               </div>
               <textarea
                 className="textarea textarea-bordered w-full"
-                placeholder="Írj magadról pár mondatot..."
+                placeholder={t("aboutPlaceholder")}
                 {...register("about", {
-                  required: "Kötelező mező",
+                  required: tc("required"),
                 })}
               />
               {formState.errors.about && (
@@ -91,7 +92,7 @@ export const EditProfile = (user: User) => {
               disabled={formState.isSubmitting || updateUser.isPending}
               className="btn btn-secondary"
             >
-              Mentés
+              {tc("save")}
             </button>
           </form>
         </div>

@@ -7,14 +7,16 @@ import { getServerAuthSession } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
 import { getAverageRating } from "~/utils/helpers";
 import { ProfileCompleteness } from "~/app/_components/ProfileCompleteness";
+import { getTranslations } from "next-intl/server";
 
 type UserPageProps = { params: { id: string } };
 
 export default async function User({ params: { id } }: UserPageProps) {
   const session = await getServerAuthSession();
   const user = await api.user.getById(id);
+  const t = await getTranslations("profile");
 
-  if (!user) return "User not found";
+  if (!user) return t("userNotFound");
 
   const canEdit = id === session?.user.id;
   const canReview = user.reviewsReceived.every((review) => review.reviewer.id !== session?.user.id);
@@ -23,7 +25,7 @@ export default async function User({ params: { id } }: UserPageProps) {
     <HydrateClient>
       <div className="card bg-base-100 flex w-full flex-col gap-8 p-6 shadow-xl">
         <div className="flex justify-between">
-          <img className="w-20 rounded-2xl" src={user.image ?? ""} alt="user profile image" />
+          <img className="w-20 rounded-2xl" src={user.image ?? ""} alt={t("userProfileImage")} />
           {canEdit && <EditProfile {...user} />}
         </div>
         {canEdit && <ProfileCompleteness />}
@@ -67,10 +69,10 @@ export default async function User({ params: { id } }: UserPageProps) {
                 )}
               </div>
               <Rating rating={review.rating} itemKey={index} />
-              <p>{review.comment ?? "Nincs megjegyzés"}</p>
+              <p>{review.comment ?? t("noReviewComment")}</p>
             </div>
           ))
-        : "Nincs értékelés"}
+        : t("noReviews")}
     </HydrateClient>
   );
 }

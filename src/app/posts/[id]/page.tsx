@@ -9,14 +9,16 @@ import { PostInfo } from "~/app/_components/PostInfo";
 import Image from "next/image";
 import Link from "next/link";
 import { CompatibilityScore } from "~/app/_components/CompatibilityScore";
+import { getTranslations } from "next-intl/server";
 
 type PostPageProps = { params: { id: string } };
 
 export default async function Page({ params: { id } }: PostPageProps) {
   const session = await getServerAuthSession();
   const post = await api.post.getById(id);
+  const t = await getTranslations("post");
 
-  if (!post) return "Post not found";
+  if (!post) return t("notFound");
   const canEdit = session?.user.id === post.createdById;
   const canRequest =
     !session?.user.id ||
@@ -41,7 +43,7 @@ export default async function Page({ params: { id } }: PostPageProps) {
           {/* Roommates section */}
           <div className="flex flex-col gap-3">
             <h3 className="flex items-center gap-2 text-sm font-semibold tracking-wide uppercase opacity-60">
-              <span>Szobatársak</span>
+              <span>{t("roommates")}</span>
               <span className="badge badge-outline badge-sm">
                 {post.featuredUsers.length}/{post.maxPersonCount}
               </span>
@@ -54,7 +56,9 @@ export default async function Page({ params: { id } }: PostPageProps) {
             <>
               <div className="divider my-0" />
               <div className="flex flex-col gap-2">
-                <h3 className="text-sm font-semibold tracking-wide uppercase opacity-60">Leírás</h3>
+                <h3 className="text-sm font-semibold tracking-wide uppercase opacity-60">
+                  {t("description")}
+                </h3>
                 <p className="leading-relaxed opacity-80">{post.description}</p>
               </div>
             </>
@@ -69,11 +73,16 @@ export default async function Page({ params: { id } }: PostPageProps) {
           >
             <div className="avatar w-12">
               <div className="ring-primary ring-offset-base-100 w-full rounded-full shadow-md ring-2 ring-offset-2">
-                <Image width={100} height={100} src={post.createdBy.image ?? ""} alt="hirdette" />
+                <Image
+                  width={100}
+                  height={100}
+                  src={post.createdBy.image ?? ""}
+                  alt={t("advertiserAlt")}
+                />
               </div>
             </div>
             <div className="flex flex-col gap-0.5">
-              <span className="badge badge-primary badge-sm">Hirdető</span>
+              <span className="badge badge-primary badge-sm">{t("advertiser")}</span>
               <span className="text-lg font-semibold">{post.createdBy.name}</span>
             </div>
           </Link>

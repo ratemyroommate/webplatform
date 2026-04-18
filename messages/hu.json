@@ -1,0 +1,187 @@
+{
+  "common": {
+    "save": "Mentés",
+    "delete": "Törlés",
+    "cancel": "Mégsem",
+    "yes": "Igen",
+    "login": "Login",
+    "publish": "Közzététel",
+    "edit": "Módosítás",
+    "send": "Küldés",
+    "required": "Kötelező mező",
+    "noComment": "Nincs megjegyzés",
+    "moreDetails": "További adatok",
+    "fillQuiz": "Kvíz kitöltése"
+  },
+  "layout": {
+    "profile": "Profil",
+    "quiz": "Kvíz",
+    "myPosts": "Posztjaim",
+    "signOut": "Kijelentkezés",
+    "profilePicture": "profile picture",
+    "contact": "Contact",
+    "privacyPolicy": "Privacy Policy",
+    "copyright": "© 2025 Ratemyroommate"
+  },
+  "profile": {
+    "editProfile": "Profil szerkesztése",
+    "socialLink": "Social link",
+    "socialLinkPlaceholder": "https://facebook.com/...",
+    "socialLinkInvalid": "Érvényes URL-t adj meg (https://...)",
+    "about": "Magadról",
+    "aboutPlaceholder": "Írj magadról pár mondatot...",
+    "updateSuccess": "Profil sikeresen frissítve",
+    "userNotFound": "User not found",
+    "userProfileImage": "user profile image",
+    "noReviewComment": "Nincs megjegyzés",
+    "noReviews": "Nincs értékelés",
+    "completeness": {
+      "title": "Profil teljessége",
+      "introduction": "Bemutatkozás",
+      "socialLink": "Közösségi link",
+      "quiz": "Kompatibilitási kvíz ({answered}/{total})"
+    }
+  },
+  "post": {
+    "newPost": "Új poszt",
+    "createTitle": "Poszt létrehozás",
+    "editTitle": "Poszt módosítás",
+    "images": "Képek a lakásról",
+    "maxImages": "Maximum 4 képet lehet feltölteni jelenleg",
+    "rent": "Bérleti díj",
+    "rentUnit": "K ft/fő/hónap",
+    "rentTooltip": "Bérleti díj",
+    "priceUnit": "ft/hónap",
+    "priceShort": "ft/hó",
+    "where": "Hol",
+    "wherePlaceholder": "Hol lakni?",
+    "age": "Kor",
+    "genderPreference": "Nem preferencia",
+    "gender": "Nem",
+    "description": "Leírás",
+    "descriptionPlaceholder": "Keresünk egy hozzánk hasonló...",
+    "descriptionRequired": "A leírás kötelező",
+    "personCount": "Személyek száma",
+    "isResident": "Én is lakó vagyok",
+    "uploadCompressing": "Képek tömörítése...",
+    "uploadUploading": "Képek feltöltése...",
+    "uploadSaving": "Mentés...",
+    "uploadError": "Hiba történt a feltöltés során",
+    "createSuccess": "Post sikeresen létrehozva",
+    "updateSuccess": "Post sikeresen módosítva",
+    "deleteSuccess": "Poszt sikeresen törölve",
+    "deleteConfirm": "Biztosan törölni szeretné a posztot?",
+    "notFound": "Post not found",
+    "roommates": "Szobatársak",
+    "advertiser": "Hirdető",
+    "advertiserAlt": "hirdette",
+    "allPostsShown": "Minden elérhető posztot megjelenítettünk.",
+    "max": "max"
+  },
+  "filter": {
+    "title": "Szűrés",
+    "roommates": "Lakótársak száma",
+    "maxPrice": "Maximum ár",
+    "maxPriceUnit": "k ft/fő/hónap",
+    "location": "Hely",
+    "locationPlaceholder": "Hol lakni?",
+    "anyLocation": "Mindegy",
+    "ageLabel": "Kor",
+    "agePlaceholder": "Kor intervallum",
+    "genderPreference": "Nem preferencia",
+    "genderPlaceholder": "Nem preferencia",
+    "sort": "Rendezés",
+    "price": "Ár",
+    "date": "Dátum",
+    "reset": "Törlés",
+    "apply": "Szűrés"
+  },
+  "notification": {
+    "receivedTab": "Kapott kérelmek",
+    "sentTab": "Küldött kérelmek",
+    "noReceived": "Nincs kapott kérelem",
+    "noSent": "Nincs küldött kérelem",
+    "post": "Poszt",
+    "relatedPost": "Kapcsolatos poszt",
+    "quizAnswers": "Kvíz válaszok",
+    "updateSuccess": "Request updated successfully"
+  },
+  "kviz": {
+    "title": "Kompatibilitás Kviz",
+    "description": "Minden kérdésre <b>egyszer</b> lehet válaszolni, nincs módosítási lehetőség. Továbblépés után minden válasz mentésre kerül.",
+    "saveAndNext": "Mentés és Tovább",
+    "completed": "A kvíz sikeresen ki lett töltve.",
+    "loginRequired": "Jelentkezz be, hogy lásd a kvízt",
+    "loginRequiredAnswers": "Jelentkezz be, hogy lásd a kvíz válaszokat",
+    "toastLoggedOut": "Jelentkezz be, és töltsd ki a kompatibilitás kvízt",
+    "toastIncomplete": "Töltsd ki a kompatibilitás kvízt",
+    "toastAction": "Kitöltés"
+  },
+  "request": {
+    "apply": "Jelentkezés",
+    "title": "Csatlakozás kérése",
+    "commentPlaceholder": "Írd le a megjegyzésed",
+    "success": "Kérés sikeresen elküldve",
+    "send": "Küldés"
+  },
+  "review": {
+    "newReview": "Új értékelés",
+    "title": "Adj egy értékelést",
+    "commentPlaceholder": "Írd le a véleményed",
+    "createSuccess": "Értékelés sikeresen létrehozva",
+    "updateSuccess": "Értékelés sikeresen módosítva"
+  },
+  "compatibility": {
+    "quizBased": "Kompatibilitás kvíz alapján",
+    "fillQuiz": "Töltsd ki a kvízt, hogy lásd mennyire vagytok kompatibilisak",
+    "fillAll": "Töltsd ki az összes kérdést pontosabb eredményért",
+    "otherNotCompleted": "A másik felhasználó nem töltötte ki a kvízt, kérlek nézz vissza később.",
+    "fillAction": "Kitöltöm",
+    "exact": "Egyező: {count}",
+    "close": "Hasonló: {count}",
+    "opposite": "Ellentét: {count}",
+    "notIdeal": "Nem ideális",
+    "compatible": "Kompatibilis",
+    "perfectMatch": "Tökéletes egyezés",
+    "noData": "No data"
+  },
+  "featuredUsers": {
+    "roommate": "szobatárs",
+    "freeSlots": "+{count} szabad hely"
+  },
+  "loginModal": {
+    "message": "Just a quick login before we continue.",
+    "login": "Login"
+  },
+  "userPosts": {
+    "title": "Saját posztok",
+    "noPosts": "Nem találtunk posztot a megadott felhasználótól."
+  },
+  "contact": {
+    "title": "Lépj velünk kapcsolatba",
+    "body": "Elérhetőek vagyunk az <b>rmrm.owners@gmail.com</b> email címen. Örömmel fogadjuk a feedbacket, valamint bármilyen megkeresést.",
+    "sendEmail": "Küldj emailt"
+  },
+  "privacy": {
+    "content": "<h1>Adatvédelmi szabályzat</h1><p>Jelen adatvédelmi szabályzat célja, hogy tájékoztatást nyújtson arról, hogyan kezeljük a felhasználók személyes adatait a(z) <strong>www.ratemyroommate.hu</strong> weboldalon.</p><h2>1. Adatkezelő adatai</h2><p>Email: <strong>rmrm.owners@gmail.com</strong></p><h2>2. Kezelt személyes adatok köre</h2><p>A weboldal használata során az alábbi adatokat gyűjthetjük:</p><ul><li>Felhasználónév, email cím (Google Auth által)</li><li>IP-cím és böngészőinformációk</li><li>Cookie-k által tárolt adatok (pl. bejelentkezés állapota)</li><li>Kérdőívre adott válaszok (opcionálisan)</li></ul><h2>3. Adatkezelés jogalapja</h2><p>Az adatkezelés az érintett hozzájárulásán (pl. bejelentkezéskor), vagy jogos érdekünkön alapul (pl. statisztikai célból történő adatgyűjtés, rendszerbiztonság).</p><h2>4. Az adatkezelés célja</h2><ul><li>A felhasználói fiók létrehozása és kezelése</li><li>A kvíz eredményeinek mentése és megjelenítése</li><li>A felhasználói élmény javítása</li><li>Weboldal működésének biztosítása</li></ul><h2>5. Sütik (cookie-k) kezelése</h2><p>Weboldalunk a működéshez elengedhetetlen sütiket használ. Ezek a sütik nem igényelnek külön hozzájárulást. Harmadik féltől származó vagy marketing célú sütiket jelenleg nem használunk.</p><h2>6. Adattárolás időtartama</h2><p>A személyes adatokat addig őrizzük meg, amíg a felhasználói fiók aktív, vagy amíg a megőrzésre jogszabály kötelez minket. A fiók törlésével az adatok is törlésre kerülnek.</p><h2>7. Adattovábbítás és adatfeldolgozók</h2><p>Az adatokat harmadik félnek nem továbbítjuk, kivéve:</p><ul><li>Szolgáltatók: pl. Supabase (adatbázis), Vercel (hoszting)</li><li>Jogszabályban előírt esetekben hatóságoknak</li></ul><h2>8. Felhasználói jogok</h2><p>A felhasználók jogosultak:</p><ul><li>Tájékoztatást kérni az adatkezelésről</li><li>Hozzáférni a saját adataikhoz</li><li>Adataik helyesbítését vagy törlését kérni</li><li>Az adatkezelés korlátozását kérni</li><li>Adathordozhatóságot kérni</li></ul><h2>9. Kapcsolat</h2><p>Bármilyen adatkezeléssel kapcsolatos kérdés esetén fordulj hozzánk:<br />Email: <strong>rmrm.owners@gmail.com</strong></p><p>Utolsó frissítés dátuma: <strong>2025.09.28</strong></p>"
+  },
+  "enums": {
+    "location": {
+      "BUDAPEST": "Budapest",
+      "DEBRECEN": "Debrecen",
+      "SZEGED": "Szeged"
+    },
+    "age": {
+      "0": "Mindegy",
+      "1": "18 - 24",
+      "2": "25 - 34",
+      "3": "35 - 44",
+      "4": "45+"
+    },
+    "gender": {
+      "0": "Fiú és Lány",
+      "1": "Csak Fiú",
+      "2": "Csak Lány"
+    }
+  }
+}

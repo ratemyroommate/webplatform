@@ -9,6 +9,7 @@ import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
 import { Review } from "@prisma/client";
 import { toast } from "react-hot-toast";
 import { XButton } from "./CloseButton";
+import { useTranslations } from "next-intl";
 
 type ReviewProps = {
   review?: Review;
@@ -18,6 +19,8 @@ type ReviewProps = {
 type FormValues = { rating: number; comment: string | null };
 
 export const ReviewModal = ({ review, reviewedId, reviewerId }: ReviewProps) => {
+  const t = useTranslations("review");
+  const tc = useTranslations("common");
   const { register, watch, setValue, handleSubmit, formState } = useForm<FormValues>({
     defaultValues: review
       ? { rating: review.rating, comment: review.comment }
@@ -30,7 +33,7 @@ export const ReviewModal = ({ review, reviewedId, reviewerId }: ReviewProps) => 
       ? `review-modal-${review.id}`
       : "review-modal"
     : "login-modal";
-  const successMessage = `Értékelés sikeresen ${review ? "módosítva" : "létrehozva"}`;
+  const successMessage = review ? t("updateSuccess") : t("createSuccess");
   const reviewMutation = api.review[review ? "update" : "create"].useMutation({
     onSuccess: () => {
       router.refresh();
@@ -51,32 +54,32 @@ export const ReviewModal = ({ review, reviewedId, reviewerId }: ReviewProps) => 
         {review ? (
           <>
             <PencilSquareIcon width={20} />
-            Módosítás
+            {tc("edit")}
           </>
         ) : (
           <>
             <PlusIcon width={20} />
-            Új értékelés
+            {t("newReview")}
           </>
         )}
       </button>
       <LoginModal />
       <dialog id={review ? `review-modal-${review.id}` : "review-modal"} className="modal">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Adj egy értékelést</h3>
+          <h3 className="text-lg font-bold">{t("title")}</h3>
           <XButton />
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 pt-8">
             <Rating rating={watch("rating")} itemKey={-1} isLarge onClick={handleRatingClick} />
             <textarea
               className="textarea textarea-bordered w-full"
-              placeholder="Írd le a véleményed"
+              placeholder={t("commentPlaceholder")}
               {...register("comment")}
             />
             <button
               disabled={formState.isSubmitting || reviewMutation.isPending}
               className="btn btn-secondary"
             >
-              Közzététel
+              {tc("publish")}
             </button>
           </form>
         </div>
