@@ -3,9 +3,12 @@
 import { CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { api } from "~/trpc/react";
+import { useTranslations } from "next-intl";
 
 export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) => {
   const { data, isLoading } = api.user.getProfileCompleteness.useQuery();
+  const t = useTranslations("profile.completeness");
+  const tc = useTranslations("common");
 
   if (isLoading || !data) return null;
 
@@ -13,10 +16,10 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
   const kvizComplete = kvizTotal > 0 && kvizAnswered >= kvizTotal;
 
   const items = [
-    { label: "Bemutatkozás", done: hasAbout },
-    { label: "Közösségi link", done: hasSocialLink },
+    { label: t("introduction"), done: hasAbout },
+    { label: t("socialLink"), done: hasSocialLink },
     {
-      label: `Kompatibilitási kvíz (${kvizAnswered}/${kvizTotal})`,
+      label: t("quiz", { answered: kvizAnswered, total: kvizTotal }),
       done: kvizComplete,
     },
   ];
@@ -30,7 +33,7 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
     return (
       <div className="w-full">
         <div className="mb-1 flex w-full items-center justify-between">
-          <span className="text-sm">Profil teljessége</span>
+          <span className="text-sm">{t("title")}</span>
           <span className="text-sm font-medium">{percentage}%</span>
         </div>
         <progress
@@ -45,7 +48,7 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
   return (
     <div className="card bg-base-100 border-base-300 border p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="font-semibold">Profil teljessége</h3>
+        <h3 className="font-semibold">{t("title")}</h3>
         <span className="text-sm font-medium">{percentage}%</span>
       </div>
       <progress
@@ -68,7 +71,7 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
       {!kvizComplete && (
         <div className="mt-3">
           <Link href="/compatibility-kviz" className="btn btn-sm btn-outline">
-            Kvíz kitöltése
+            {tc("fillQuiz")}
           </Link>
         </div>
       )}

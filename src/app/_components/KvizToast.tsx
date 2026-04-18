@@ -5,36 +5,36 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { api } from "~/trpc/react";
+import { useTranslations } from "next-intl";
 
 type KvizToastProps = {
   session: Session | null;
 };
 
 export const KvizToast = ({ session }: KvizToastProps) => {
+  const t = useTranslations("kviz");
   const { data } = api.kviz.getCurrentUserAnswerCount.useQuery(undefined, {
     enabled: !!session,
   });
 
   useEffect(() => {
     if (!session) {
-      toast.success("Jelentkezz be, és töltsd ki a kompatibilitás kvízt");
+      toast.success(t("toastLoggedOut"));
     }
   }, [session]);
 
   useEffect(() => {
     if (data && data.completedQuestionCountByCurrentUser < data.totalQuestionCount) {
-      toast(Toast);
+      toast(() => (
+        <span className="flex items-center gap-2">
+          {t("toastIncomplete")}
+          <Link className="btn btn-secondary" href="/compatibility-kviz">
+            {t("toastAction")}
+          </Link>
+        </span>
+      ));
     }
   }, [data]);
 
   return null;
 };
-
-const Toast = () => (
-  <span className="flex items-center gap-2">
-    Töltsd ki a kompatibilitás kvízt
-    <Link className="btn btn-secondary" href="/compatibility-kviz">
-      Kitöltés
-    </Link>
-  </span>
-);

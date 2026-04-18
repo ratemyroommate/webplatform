@@ -14,6 +14,7 @@ import { Dispatch } from "react";
 import { XButton } from "./CloseButton";
 import { ageOptions, genderOptions, locationOptions } from "~/utils/helpers";
 import { Location } from "@prisma/client";
+import { useTranslations } from "next-intl";
 
 type FiltersProps = { filters: FormValues; setFilters: Dispatch<FormValues> };
 export type FormValues = {
@@ -36,6 +37,8 @@ const defaultFilters: FormValues = {
 };
 
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
+  const t = useTranslations("filter");
+  const te = useTranslations("enums");
   const { reset, register, handleSubmit, watch, setValue } = useForm<FormValues>({
     defaultValues: Object.keys(filters).length ? filters : defaultFilters,
   });
@@ -64,14 +67,14 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
       <dialog id="filters-modal" className="modal">
         <div className="modal-box">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold">Szűrés</h3>
+            <h3 className="text-lg font-bold">{t("title")}</h3>
             <XButton />
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center gap-4 pt-4">
             <div className="form-control w-full">
               <div className="label">
-                <span className="label-text text-lg">Lakótársak száma</span>
+                <span className="label-text text-lg">{t("roommates")}</span>
               </div>
               <div className="join flex">
                 {Array.from({ length: 4 }, (_, i) => i + 2).map((n) => (
@@ -89,9 +92,10 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text text-lg">
-                  Maximum ár{" "}
+                  {t("maxPrice")}{" "}
                   <span className="text-sm text-gray-500">
-                    ( {watch("maxPrice")}k ft/fő/hónap )
+                    ( {watch("maxPrice")}
+                    {t("maxPriceUnit")} )
                   </span>
                 </span>
               </div>
@@ -111,49 +115,53 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
             </label>
             <label className="form-control flex w-full flex-col">
               <div className="label">
-                <span className="label-text text-lg">Hely</span>
+                <span className="label-text text-lg">{t("location")}</span>
               </div>
               <select className="select w-full" {...register("location")}>
-                <option disabled={true}>Hol lakni?</option>
-                {[{ value: "", label: "Mindegy" }, ...locationOptions].map((locationOption) => (
-                  <option key={locationOption.value} value={locationOption.value}>
-                    {locationOption.label}
-                  </option>
-                ))}
+                <option disabled={true}>{t("locationPlaceholder")}</option>
+                {[{ value: "", label: t("anyLocation") }, ...locationOptions].map(
+                  (locationOption) => (
+                    <option key={locationOption.value} value={locationOption.value}>
+                      {locationOption.value
+                        ? te(`location.${locationOption.value}`)
+                        : locationOption.label}
+                    </option>
+                  )
+                )}
               </select>
             </label>
             <label className="form-control flex w-full flex-col">
               <div className="label">
-                <span className="label-text text-lg">Kor</span>
+                <span className="label-text text-lg">{t("ageLabel")}</span>
               </div>
               <select className="select w-full" {...register("age", { valueAsNumber: true })}>
-                <option disabled={true}>Kor intervallum</option>
+                <option disabled={true}>{t("agePlaceholder")}</option>
                 {ageOptions.map((ageOption) => (
                   <option key={ageOption.value} value={ageOption.value}>
-                    {ageOption.label}
+                    {te(`age.${ageOption.value}`)}
                   </option>
                 ))}
               </select>
             </label>
             <label className="form-control flex w-full flex-col">
               <div className="label">
-                <span className="label-text text-lg">Nem preferencia</span>
+                <span className="label-text text-lg">{t("genderPreference")}</span>
               </div>
               <select className="select w-full" {...register("gender", { valueAsNumber: true })}>
-                <option disabled={true}>Nem preferencia</option>
+                <option disabled={true}>{t("genderPlaceholder")}</option>
                 {genderOptions.map((genderOption) => (
                   <option key={genderOption.value} value={genderOption.value}>
-                    {genderOption.label}
+                    {te(`gender.${genderOption.value}`)}
                   </option>
                 ))}
               </select>
             </label>
-            <h3 className="self-start text-lg font-bold">Rendezés</h3>
+            <h3 className="self-start text-lg font-bold">{t("sort")}</h3>
             <div className="flex w-full gap-4">
               <div className="form-control w-1/4">
                 <label className="label flex cursor-pointer flex-col gap-2">
                   <span className="label-text flex items-center gap-1">
-                    Ár <ArrowTrendingUpIcon width={20} color="green" />
+                    {t("price")} <ArrowTrendingUpIcon width={20} color="green" />
                   </span>
                   <input
                     type="radio"
@@ -166,7 +174,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               <div className="form-control w-1/4">
                 <label className="label flex cursor-pointer flex-col gap-2">
                   <span className="label-text flex items-center gap-1">
-                    Ár <ArrowTrendingDownIcon width={20} color="red" />
+                    {t("price")} <ArrowTrendingDownIcon width={20} color="red" />
                   </span>
                   <input
                     type="radio"
@@ -179,7 +187,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               <div className="form-control w-1/4">
                 <label className="label flex cursor-pointer flex-col gap-2">
                   <span className="label-text flex items-center gap-1">
-                    Dátum <ArrowTrendingUpIcon width={20} color="green" />
+                    {t("date")} <ArrowTrendingUpIcon width={20} color="green" />
                   </span>
                   <input
                     type="radio"
@@ -192,7 +200,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               <div className="form-control w-1/4">
                 <label className="label flex cursor-pointer flex-col gap-2">
                   <span className="label-text flex items-center gap-1">
-                    Dátum <ArrowTrendingDownIcon width={20} color="red" />
+                    {t("date")} <ArrowTrendingDownIcon width={20} color="red" />
                   </span>
                   <input
                     type="radio"
@@ -209,10 +217,10 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                 onClick={resetFilters}
                 className="btn btn-outline btn-error flex-1"
               >
-                <TrashIcon width={18} /> Törlés
+                <TrashIcon width={18} /> {t("reset")}
               </button>
               <button type="submit" className="btn btn-secondary flex-1">
-                <FunnelIcon width={18} /> Szűrés
+                <FunnelIcon width={18} /> {t("apply")}
               </button>
             </div>
           </form>

@@ -3,6 +3,7 @@ import { Rating } from "./Rating";
 import { getAverageRating } from "~/utils/helpers";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const defaultImage =
   "https://static.vecteezy.com/system/resources/previews/020/765/399/large_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
@@ -11,6 +12,7 @@ type FeaturedUsersProps = PostExtended & { compact?: boolean };
 
 export const FeaturedUsers = ({ compact, ...post }: FeaturedUsersProps) => {
   const router = useRouter();
+  const t = useTranslations("featuredUsers");
   const emptySlots = post.maxPersonCount - post.featuredUsers.length;
 
   // ── Compact mode: overlapping avatar row + "+N" badge ──
@@ -25,7 +27,7 @@ export const FeaturedUsers = ({ compact, ...post }: FeaturedUsersProps) => {
                   width={64}
                   height={64}
                   src={user.image ?? defaultImage}
-                  alt={user.name ?? "szobatárs"}
+                  alt={user.name ?? t("roommate")}
                 />
               </div>
             </div>
@@ -33,7 +35,7 @@ export const FeaturedUsers = ({ compact, ...post }: FeaturedUsersProps) => {
         </div>
         {emptySlots > 0 && (
           <span className="badge badge-outline badge-sm ml-2 font-medium">
-            +{emptySlots} szabad hely
+            {t("freeSlots", { count: emptySlots })}
           </span>
         )}
       </div>
@@ -60,7 +62,7 @@ export const FeaturedUsers = ({ compact, ...post }: FeaturedUsersProps) => {
                 width={100}
                 height={100}
                 src={post.featuredUsers?.[index]?.image ?? defaultImage}
-                alt="szobatárs"
+                alt={t("roommate")}
               />
             </div>
           </div>

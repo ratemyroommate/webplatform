@@ -14,6 +14,7 @@ import { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
 import { XButton } from "./CloseButton";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export const { uploadFiles } = genUploader({ package: "uploadthing/client" });
 
@@ -70,8 +71,11 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   });
 
   const router = useRouter();
+  const t = useTranslations("post");
+  const tc = useTranslations("common");
+  const te = useTranslations("enums");
   const modalId = userId ? (post ? `post-modal-${post.id}` : "post-modal") : "login-modal";
-  const successMessage = `Post sikeresen ${post ? "módosítva" : "létrehozva"}`;
+  const successMessage = post ? t("updateSuccess") : t("createSuccess");
   const utils = api.useUtils();
   const createPost = api.post.create.useMutation({
     onSuccess: () => {
@@ -113,10 +117,10 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
 
   const onSubmit = async (formValues: FormValues) => {
     try {
-      setUploadStatus("Képek tömörítése...");
+      setUploadStatus(t("uploadCompressing"));
       const files = await compressImages(images);
 
-      setUploadStatus("Képek feltöltése...");
+      setUploadStatus(t("uploadUploading"));
       const response = await uploadFiles("imageUploader", { files });
 
       const imageInfos = response.map(({ key, url }) => ({
@@ -124,7 +128,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         url,
       }));
 
-      setUploadStatus("Mentés...");
+      setUploadStatus(t("uploadSaving"));
       if (post)
         await updatePost.mutateAsync({
           ...formValues,
@@ -134,7 +138,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         });
       else await createPost.mutateAsync({ ...formValues, images: imageInfos });
     } catch (error) {
-      toast.error("Hiba történt a feltöltés során");
+      toast.error(t("uploadError"));
     } finally {
       setUploadStatus(null);
     }
@@ -148,7 +152,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
 
     if (previewImages.length + files.length > 4) {
       setError("images", {
-        message: "Maximum 4 képet lehet feltölteni jelenleg",
+        message: t("maxImages"),
       });
     }
   };
@@ -186,24 +190,24 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
         {post ? (
           <>
             <PencilSquareIcon width={20} />
-            Módosítás
+            {tc("edit")}
           </>
         ) : (
           <>
             <PlusIcon width={20} />
-            Új poszt
+            {t("newPost")}
           </>
         )}
       </button>
       <LoginModal />
       <dialog id={post ? `post-modal-${post.id}` : "post-modal"} className="modal">
         <div className="modal-box max-w-5xl">
-          <h3 className="pb-2 text-lg font-bold">{`Poszt ${post ? "módosítás" : "létrehozás"}`}</h3>
+          <h3 className="pb-2 text-lg font-bold">{post ? t("editTitle") : t("createTitle")}</h3>
           <XButton />
           <form className="flex w-full flex-col" onSubmit={handleSubmit(onSubmit)}>
             <label className="form-control w-full">
               <div className="label">
-                <span className="label-text">Képek a lakásról</span>
+                <span className="label-text">{t("images")}</span>
               </div>
             </label>
 
@@ -238,7 +242,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             )}
             <div className="form-control w-full">
               <div className="label">
-                <span className="label-text">Bérleti díj</span>
+                <span className="label-text">{t("rent")}</span>
               </div>
               <div className="flex gap-4">
                 <button
@@ -260,7 +264,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                       max: 999,
                     })}
                   />
-                  <span>K ft/fő/hónap</span>
+                  <span>{t("rentUnit")}</span>
                 </label>
                 <button
                   className="btn btn-square md:btn-wide"
@@ -272,48 +276,48 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               </div>
             </div>
 
-            <label className="fieldset-label">Hol</label>
+            <label className="fieldset-label">{t("where")}</label>
             <select defaultValue="Budapest" className="select w-full" {...register("location")}>
-              <option disabled={true}>Hol lakni?</option>
+              <option disabled={true}>{t("wherePlaceholder")}</option>
               {locationOptions.map((locationOption) => (
                 <option key={locationOption.value} value={locationOption.value}>
-                  {locationOption.label}
+                  {te(`location.${locationOption.value}`)}
                 </option>
               ))}
             </select>
 
-            <label className="fieldset-label">Kor</label>
+            <label className="fieldset-label">{t("age")}</label>
             <select className="select w-full" {...register("age", { valueAsNumber: true })}>
               <option defaultValue={0} disabled={true}>
-                Kor
+                {t("age")}
               </option>
               {ageOptions.map((ageOption) => (
                 <option key={ageOption.value} value={ageOption.value}>
-                  {ageOption.label}
+                  {te(`age.${ageOption.value}`)}
                 </option>
               ))}
             </select>
 
-            <label className="fieldset-label">Nem preferencia</label>
+            <label className="fieldset-label">{t("genderPreference")}</label>
             <select className="select w-full" {...register("gender", { valueAsNumber: true })}>
               <option defaultValue={0} disabled={true}>
-                Nem
+                {t("gender")}
               </option>
               {genderOptions.map((gender) => (
                 <option key={gender.value} value={gender.value}>
-                  {gender.label}
+                  {te(`gender.${gender.value}`)}
                 </option>
               ))}
             </select>
 
             <label className="form-control w-full">
               <div className="label">
-                <span className="label-text">Leírás</span>
+                <span className="label-text">{t("description")}</span>
               </div>
               <textarea
-                placeholder="Keresünk egy hozzánk hasonló..."
+                placeholder={t("descriptionPlaceholder")}
                 className="textarea textarea-bordered textarea-lg w-full"
-                {...register("description", { required: "A leírás kötelező" })}
+                {...register("description", { required: t("descriptionRequired") })}
               ></textarea>
               {errors.description && (
                 <div className="label">
@@ -325,7 +329,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             </label>
             <div className="form-control w-full">
               <div className="label">
-                <span className="label-text">Személyek száma</span>
+                <span className="label-text">{t("personCount")}</span>
               </div>
               <div className="flex gap-4">
                 <button
@@ -359,7 +363,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
             </div>
             <div className="form-control py-2">
               <label className="label cursor-pointer justify-start gap-4">
-                <span className="label-text">Én is lakó vagyok</span>
+                <span className="label-text">{t("isResident")}</span>
                 <input type="checkbox" {...register("isResident")} className="checkbox" />
               </label>
             </div>
@@ -370,9 +374,9 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                   {uploadStatus}
                 </>
               ) : post ? (
-                "Mentés"
+                tc("save")
               ) : (
-                "Közzététel"
+                tc("publish")
               )}
             </button>
           </form>

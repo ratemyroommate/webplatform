@@ -8,12 +8,13 @@ import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
 import { toast } from "react-hot-toast";
 import { XButton } from "./CloseButton";
 
-const successMessage = `Kérés sikeresen elküldve`;
+import { useTranslations } from "next-intl";
 
 type ReviewProps = { postId: number; userId?: string };
 type FormValues = { comment: string | null };
 
 export const RequestModal = ({ postId, userId }: ReviewProps) => {
+  const t = useTranslations("request");
   const { register, handleSubmit, formState } = useForm<FormValues>({
     defaultValues: { comment: "" },
   });
@@ -24,7 +25,7 @@ export const RequestModal = ({ postId, userId }: ReviewProps) => {
     onSuccess: () => {
       router.refresh();
       handleCloseModal(modalId);
-      toast.success(successMessage);
+      toast.success(t("success"));
     },
   });
 
@@ -37,24 +38,24 @@ export const RequestModal = ({ postId, userId }: ReviewProps) => {
         onClick={() => handleOpenModal(modalId)}
       >
         <UserGroupIcon width={20} />
-        Jelentkezés
+        {t("apply")}
       </button>
       <LoginModal />
       <dialog id={"request-modal"} className="modal">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Csatlakozás kérése</h3>
+          <h3 className="text-lg font-bold">{t("title")}</h3>
           <XButton />
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 pt-8">
             <textarea
               className="textarea textarea-bordered w-full"
-              placeholder="Írd le a megjegyzésed"
+              placeholder={t("commentPlaceholder")}
               {...register("comment")}
             />
             <button
               disabled={formState.isSubmitting || reviewMutation.isPending}
               className="btn btn-secondary"
             >
-              Küldés
+              {t("send")}
             </button>
           </form>
         </div>
