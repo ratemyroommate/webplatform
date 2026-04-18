@@ -38,7 +38,7 @@ export const Kviz = () => {
         <div className="collapse-title font-semibold">{t("title")}</div>
         <div
           className="collapse-content text-sm"
-          dangerouslySetInnerHTML={{ __html: t.raw("description") }}
+          dangerouslySetInnerHTML={{ __html: t.raw("description") as string }}
         />
       </div>
       <TimeLine questionIndex={questionIndex} totalQuestionCount={totalQuestionCount} />
