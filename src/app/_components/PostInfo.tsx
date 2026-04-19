@@ -1,5 +1,6 @@
 import type { Post } from "@prisma/client";
 import { MapPinIcon, UserIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 type PostInfoProps = {
@@ -28,7 +29,7 @@ export const PostInfo = ({ post, compact }: PostInfoProps) => {
           {t(`age.${post.age}`)}
         </div>
         <div className="badge badge-secondary gap-1.5 py-3 font-medium shadow-sm">
-          <img src="/gender-fluid.png" width={14} />
+          <Image src="/gender-fluid.png" width={14} height={14} alt="" />
           {t(`gender.${post.gender}`)}
         </div>
       </div>

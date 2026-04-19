@@ -1,6 +1,6 @@
 "use client";
 
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import Link from "next/link";
 import { api } from "~/trpc/react";
 import { useTranslations } from "next-intl";

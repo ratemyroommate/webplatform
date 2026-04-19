@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
-import { Review } from "@prisma/client";
+import type { Review } from "@prisma/client";
 import { toast } from "react-hot-toast";
 import { XButton } from "./CloseButton";
 import { useTranslations } from "next-intl";

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { api } from "~/trpc/react";
 import { Post } from "./post";
 import { PostSkeletons } from "./PostSkeletons";
-import { FormValues } from "./Filters";
+import type { FormValues } from "./Filters";
 import { useTranslations } from "next-intl";
 
 type FeedPostsProps = { filters: FormValues };
@@ -18,10 +18,11 @@ export const FeedPosts = ({ filters }: FeedPostsProps) => {
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0]?.isIntersecting) void fetchNextPage();
+      if (entries[0]?.isIntersecting && hasNextPage) void fetchNextPage();
     });
     if (bottom.current) observer.observe(bottom.current);
-  }, []);
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage]);
 
   return (
     <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">

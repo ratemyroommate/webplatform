@@ -1,7 +1,8 @@
 "use client";
 
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid";
-import { Post, Location } from "@prisma/client";
+import type { Post } from "@prisma/client";
+import { Location } from "@prisma/client";
 import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
@@ -10,7 +11,7 @@ import { toast } from "react-hot-toast";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { ageOptions, genderOptions, isUserInPostGroup, locationOptions } from "~/utils/helpers";
 import { genUploader } from "uploadthing/client";
-import { ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
 import { XButton } from "./CloseButton";
 import { useState } from "react";
@@ -137,7 +138,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
           id: post.id,
         });
       else await createPost.mutateAsync({ ...formValues, images: imageInfos });
-    } catch (error) {
+    } catch {
       toast.error(t("uploadError"));
     } finally {
       setUploadStatus(null);
@@ -229,7 +230,8 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
               <div className="relative flex h-24 w-full flex-row gap-4 overflow-x-scroll py-2">
                 {previewImages.map((image, index) => (
                   <div key={index} className="relative flex h-full flex-none">
-                    <img key={index} src={image.url} className="relative h-full rounded-lg" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img key={index} src={image.url} alt="" className="relative h-full rounded-lg" />
                     <div
                       onClick={() => removeImage(index)}
                       className="absolute top-0 right-0 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-400"

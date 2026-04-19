@@ -16,6 +16,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { KvizToast } from "./_components/KvizToast";
+import { LanguagePicker } from "./_components/LanguagePicker";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 
@@ -63,11 +64,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <div className="container flex max-w-4xl flex-col items-center justify-center gap-4 px-4 py-4">
                 <div className="navbar bg-base-100 justify-between rounded-2xl shadow-xl">
                   <Link href="/" className="btn btn-ghost text-xl">
-                    <img src="/R.png" className="w-16" />
+                    <Image src="/R.png" width={64} height={64} alt="RateMyRoommate" />
                   </Link>
 
                   {session?.user ? (
                     <div className="flex items-center gap-6">
+                      <LanguagePicker currentLocale={locale} />
                       <NotificationModal session={session} />
                       <div className="dropdown dropdown-end mr-4 w-10 hover:cursor-pointer">
                         <div role="button" tabIndex={0} className="avatar">
@@ -116,16 +118,19 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                       </div>
                     </div>
                   ) : (
-                    <Link href="/api/auth/signin" className="btn">
-                      {t("login")}
-                    </Link>
+                    <div className="flex items-center gap-3 mr-2">
+                      <LanguagePicker currentLocale={locale} />
+                      <Link href="/api/auth/signin" className="btn">
+                        {t("login")}
+                      </Link>
+                    </div>
                   )}
                 </div>
                 {children}
               </div>
             </main>
             <div className="bg-neutral text-base-300 flex h-48 flex-col items-center justify-center">
-              <img src="/R-white.png" className="w-16" />
+              <Image src="/R-white.png" width={64} height={64} alt="RateMyRoommate" />
               <ul className="flex flex-col items-center">
                 <li>
                   <Link href="/contact" className="link">
