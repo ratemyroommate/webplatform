@@ -133,7 +133,9 @@ export const EditProfile = (user: User) => {
                       !phoneValue?.trim() || value === true || t("phoneNumberConsentRequired"),
                   })}
                 />
-                <span className="text-warning text-sm">{t("phoneNumberConsent")}</span>
+                <span className="text-sm font-medium text-orange-500">
+                  {t("phoneNumberConsent")}
+                </span>
               </label>
             )}
             {formState.errors.phoneNumberConsent && (
