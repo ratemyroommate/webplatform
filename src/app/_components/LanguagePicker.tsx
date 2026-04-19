@@ -15,6 +15,7 @@ export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
 
   function handleSelect(code: string) {
     if (code === currentLocale) return;
+    (document.activeElement as HTMLElement)?.blur();
     startTransition(async () => {
       await setLocale(code);
       router.refresh();

@@ -8,6 +8,7 @@ import {
 import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
 import type { Dispatch } from "react";
