@@ -18,10 +18,11 @@ export const FeedPosts = ({ filters }: FeedPostsProps) => {
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0]?.isIntersecting) void fetchNextPage();
+      if (entries[0]?.isIntersecting && hasNextPage) void fetchNextPage();
     });
     if (bottom.current) observer.observe(bottom.current);
-  }, [fetchNextPage]);
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage]);
 
   return (
     <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">

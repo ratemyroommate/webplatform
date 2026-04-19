@@ -53,7 +53,8 @@
     "contact": "Contact",
     "privacyPolicy": "Privacy Policy",
     "copyright": "© 2025 Ratemyroommate",
-    "login": "Log in"
+    "login": "Log in",
+    "selectLanguage": "Select language"
   },
   "profile": {
     "editProfile": "Edit profile",

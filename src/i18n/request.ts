@@ -1,21 +1,18 @@
 import { getRequestConfig } from "next-intl/server";
 import { cookies } from "next/headers";
+import { isSupported, type Locale } from "./locales";
 
-const SUPPORTED_LOCALES = ["hu", "en"] as const;
-type Locale = (typeof SUPPORTED_LOCALES)[number];
-
-function isSupported(locale: string): locale is Locale {
-  return SUPPORTED_LOCALES.includes(locale as Locale);
-}
+const messageLoaders: Record<Locale, () => Promise<{ default: Record<string, unknown> }>> = {
+  hu: () => import("../../messages/hu.json"),
+  en: () => import("../../messages/en.json"),
+};
 
 export default getRequestConfig(async () => {
   const cookieStore = cookies();
   const raw = cookieStore.get("locale")?.value ?? "hu";
   const locale: Locale = isSupported(raw) ? raw : "hu";
 
-  return {
-    locale,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    messages: (await import(`../../messages/${locale}.json`)).default,
-  };
+  const messages = (await messageLoaders[locale]()).default;
+
+  return { locale, messages };
 });

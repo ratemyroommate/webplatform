@@ -170,7 +170,18 @@ const RecievedRequest = ({
           <Link className="h-10 w-10" href={`/users/${request.user.id}`}>
             <div className="avatar">
               <div className="rounded-full">
-                <Image src={request.user.image ?? ""} width={40} height={40} alt="" />
+                {request.user.image ? (
+                  <Image
+                    src={request.user.image}
+                    width={40}
+                    height={40}
+                    alt={request.user.name ? `${request.user.name}'s profile image` : "Profile image"}
+                  />
+                ) : (
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-base-300 text-sm font-semibold">
+                    {request.user.name?.charAt(0).toUpperCase() ?? "?"}
+                  </div>
+                )}
               </div>
             </div>
           </Link>

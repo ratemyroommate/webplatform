@@ -8,7 +8,7 @@ import {
 import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import type { orderBy } from "~/server/api/routers/post";
+import { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
 import type { Dispatch } from "react";
 import { XButton } from "./CloseButton";
