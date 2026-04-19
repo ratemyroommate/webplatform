@@ -1,6 +1,7 @@
 import { type Metadata } from "next";
 import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import Image from "next/image";
 import { EditProfile } from "~/app/_components/EditProfile";
 import { Rating } from "~/app/_components/Rating";
 import { ReviewModal } from "~/app/_components/ReviewModal";
@@ -34,7 +35,7 @@ export default async function User({ params: { id } }: UserPageProps) {
     <HydrateClient>
       <div className="card bg-base-100 flex w-full flex-col gap-8 p-6 shadow-xl">
         <div className="flex justify-between">
-          <img className="w-20 rounded-2xl" src={user.image ?? ""} alt={t("userProfileImage")} />
+          <Image className="w-20 rounded-2xl" src={user.image ?? ""} width={80} height={80} alt={t("userProfileImage")} />
           {canEdit && <EditProfile {...user} />}
         </div>
         {canEdit && <ProfileCompleteness />}
@@ -65,10 +66,12 @@ export default async function User({ params: { id } }: UserPageProps) {
               <div className="flex justify-between">
                 <div className="flex gap-6">
                   <Link href={`/users/${review.reviewer.id}`}>
-                    <img
+                    <Image
                       alt="user profile image"
                       className="w-12 rounded-full"
                       src={review.reviewer.image ?? ""}
+                      width={48}
+                      height={48}
                     />
                   </Link>
                   <span className="text-sm">{review.reviewer.name}</span>

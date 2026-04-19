@@ -1,6 +1,6 @@
 "use client";
 
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import Link from "next/link";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
@@ -21,7 +21,7 @@ export const KvizToast = ({ session }: KvizToastProps) => {
     if (!session) {
       toast.success(t("toastLoggedOut"));
     }
-  }, [session]);
+  }, [session, t]);
 
   useEffect(() => {
     if (data && data.completedQuestionCountByCurrentUser < data.totalQuestionCount) {
@@ -34,7 +34,7 @@ export const KvizToast = ({ session }: KvizToastProps) => {
         </span>
       ));
     }
-  }, [data]);
+  }, [data, t]);
 
   return null;
 };

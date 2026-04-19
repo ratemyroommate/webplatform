@@ -8,7 +8,7 @@ const SUPPORTED_LOCALES = ["hu", "en"];
 export async function setLocale(locale: string) {
   if (!SUPPORTED_LOCALES.includes(locale)) return;
 
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
   cookieStore.set("locale", locale, {
     path: "/",
     maxAge: 60 * 60 * 24 * 365,

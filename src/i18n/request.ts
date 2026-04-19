@@ -9,12 +9,13 @@ function isSupported(locale: string): locale is Locale {
 }
 
 export default getRequestConfig(async () => {
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
   const raw = cookieStore.get("locale")?.value ?? "hu";
   const locale: Locale = isSupported(raw) ? raw : "hu";
 
   return {
     locale,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     messages: (await import(`../../messages/${locale}.json`)).default,
   };
 });

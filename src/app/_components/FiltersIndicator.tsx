@@ -1,4 +1,4 @@
-import { FormValues } from "./Filters";
+import type { FormValues } from "./Filters";
 
 type NotificationBellProps = {
   children: React.ReactNode;

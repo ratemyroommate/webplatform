@@ -1,16 +1,17 @@
 "use client";
 
 import { BellIcon, CheckIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { api } from "~/trpc/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Request, RequestStatus } from "@prisma/client";
+import type { Request, RequestStatus } from "@prisma/client";
 import { toast } from "react-hot-toast";
 import { NotificationBell } from "./NotificationBell";
 import { XButton } from "./CloseButton";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import { CompatibilityScore } from "./CompatibilityScore";
 import { useTranslations } from "next-intl";
 
@@ -169,7 +170,7 @@ const RecievedRequest = ({
           <Link className="h-10 w-10" href={`/users/${request.user.id}`}>
             <div className="avatar">
               <div className="rounded-full">
-                <img src={request.user.image ?? ""} />
+                <Image src={request.user.image ?? ""} width={40} height={40} alt="" />
               </div>
             </div>
           </Link>

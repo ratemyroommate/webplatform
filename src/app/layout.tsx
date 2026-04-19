@@ -64,7 +64,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <div className="container flex max-w-4xl flex-col items-center justify-center gap-4 px-4 py-4">
                 <div className="navbar bg-base-100 justify-between rounded-2xl shadow-xl">
                   <Link href="/" className="btn btn-ghost text-xl">
-                    <img src="/R.png" className="w-16" />
+                    <Image src="/R.png" width={64} height={64} alt="RateMyRoommate" />
                   </Link>
 
                   {session?.user ? (
@@ -130,7 +130,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               </div>
             </main>
             <div className="bg-neutral text-base-300 flex h-48 flex-col items-center justify-center">
-              <img src="/R-white.png" className="w-16" />
+              <Image src="/R-white.png" width={64} height={64} alt="RateMyRoommate" />
               <ul className="flex flex-col items-center">
                 <li>
                   <Link href="/contact" className="link">

@@ -13,7 +13,7 @@ export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const current = LOCALES.find((l) => l.code === currentLocale) ?? LOCALES[0]!;
+  const current = LOCALES.find((l) => l.code === currentLocale) ?? LOCALES[0];
 
   function handleSelect(code: string) {
     if (code === currentLocale) return;

@@ -7,13 +7,13 @@ import {
 } from "@heroicons/react/24/outline";
 import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { orderBy } from "~/server/api/routers/post";
+import type { z } from "zod";
+import type { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
-import { Dispatch } from "react";
+import type { Dispatch } from "react";
 import { XButton } from "./CloseButton";
 import { ageOptions, genderOptions, locationOptions } from "~/utils/helpers";
-import { Location } from "@prisma/client";
+import type { Location } from "@prisma/client";
 import { useTranslations } from "next-intl";
 
 type FiltersProps = { filters: FormValues; setFilters: Dispatch<FormValues> };
@@ -39,7 +39,7 @@ const defaultFilters: FormValues = {
 export const Filters = ({ filters, setFilters }: FiltersProps) => {
   const t = useTranslations("filter");
   const te = useTranslations("enums");
-  const { reset, register, handleSubmit, watch, setValue } = useForm<FormValues>({
+  const { reset, register, handleSubmit, watch } = useForm<FormValues>({
     defaultValues: Object.keys(filters).length ? filters : defaultFilters,
   });
 

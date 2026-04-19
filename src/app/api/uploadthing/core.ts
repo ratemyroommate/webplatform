@@ -15,7 +15,7 @@ export const ourFileRouter = {
       maxFileCount: 4,
     },
   })
-    .middleware(async ({ req }) => {
+    .middleware(async ({ req: _req }) => {
       const session = await getServerAuthSession();
 
       // eslint-disable-next-line @typescript-eslint/only-throw-error

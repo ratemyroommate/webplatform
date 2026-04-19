@@ -1,4 +1,4 @@
-import { Request } from "@prisma/client";
+import type { Request } from "@prisma/client";
 
 type NotificationBellProps = {
   children: React.ReactElement;
