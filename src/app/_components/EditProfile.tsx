@@ -10,14 +10,26 @@ import { toast } from "react-hot-toast";
 import { XButton } from "./CloseButton";
 import { useTranslations } from "next-intl";
 
-type FormValues = { about: string | null; socialLink: string | null };
+type FormValues = {
+  about: string | null;
+  socialLink: string | null;
+  phoneNumber: string | null;
+  phoneNumberConsent: boolean;
+};
 
 export const EditProfile = (user: User) => {
   const t = useTranslations("profile");
   const tc = useTranslations("common");
-  const { register, handleSubmit, formState } = useForm<FormValues>({
-    defaultValues: { about: user.about, socialLink: user.socialLink },
+  const { register, handleSubmit, formState, watch } = useForm<FormValues>({
+    defaultValues: {
+      about: user.about,
+      socialLink: user.socialLink,
+      phoneNumber: user.phoneNumber,
+      phoneNumberConsent: !!user.phoneNumber,
+    },
   });
+
+  const phoneValue = watch("phoneNumber");
 
   const router = useRouter();
   const utils = api.useUtils();
@@ -35,6 +47,7 @@ export const EditProfile = (user: User) => {
       id: user.id,
       about: formValues.about?.trim() ? formValues.about.trim() : null,
       socialLink: formValues.socialLink?.trim() ? formValues.socialLink.trim() : null,
+      phoneNumber: formValues.phoneNumber?.trim() ? formValues.phoneNumber.trim() : null,
     });
 
   return (
@@ -88,6 +101,48 @@ export const EditProfile = (user: User) => {
                 </div>
               )}
             </label>
+            <label className="form-control flex w-full flex-col">
+              <div className="label">
+                <span className="label-text text-lg">{t("phoneNumber")}</span>
+              </div>
+              <input
+                className="input input-bordered w-full"
+                placeholder={t("phoneNumberPlaceholder")}
+                {...register("phoneNumber", {
+                  validate: (value) =>
+                    !value?.trim() ||
+                    /^\+?[\d\s\-()]{6,20}$/.test(value.trim()) ||
+                    t("phoneNumberInvalid"),
+                })}
+              />
+              {formState.errors.phoneNumber && (
+                <div className="label">
+                  <span className="label-text-alt text-orange-600">
+                    {formState.errors.phoneNumber?.message}
+                  </span>
+                </div>
+              )}
+            </label>
+            {phoneValue?.trim() && (
+              <label className="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  className="checkbox checkbox-warning mt-1"
+                  {...register("phoneNumberConsent", {
+                    validate: (value) =>
+                      !phoneValue?.trim() || value === true || t("phoneNumberConsentRequired"),
+                  })}
+                />
+                <span className="text-sm font-medium">{t("phoneNumberConsent")}</span>
+              </label>
+            )}
+            {formState.errors.phoneNumberConsent && (
+              <div className="label">
+                <span className="label-text-alt text-orange-600">
+                  {formState.errors.phoneNumberConsent?.message}
+                </span>
+              </div>
+            )}
             <button
               disabled={formState.isSubmitting || updateUser.isPending}
               className="btn btn-secondary"

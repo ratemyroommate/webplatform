@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { DocumentMagnifyingGlassIcon, PhoneIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
 import { EditProfile } from "~/app/_components/EditProfile";
@@ -36,9 +36,15 @@ export default async function User({ params: { id } }: UserPageProps) {
       <div className="card bg-base-100 flex w-full flex-col gap-8 p-6 shadow-xl">
         <div className="flex justify-between">
           {user.image ? (
-            <Image className="w-20 rounded-2xl" src={user.image} width={80} height={80} alt={t("userProfileImage")} />
+            <Image
+              className="w-20 rounded-2xl"
+              src={user.image}
+              width={80}
+              height={80}
+              alt={t("userProfileImage")}
+            />
           ) : (
-            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-base-300 text-2xl font-semibold">
+            <div className="bg-base-300 flex h-20 w-20 items-center justify-center rounded-2xl text-2xl font-semibold">
               {user.name?.charAt(0).toUpperCase() ?? "?"}
             </div>
           )}
@@ -62,6 +68,14 @@ export default async function User({ params: { id } }: UserPageProps) {
               </Link>
             </div>
           )}
+          {user.phoneNumber && (
+            <div className="flex items-center gap-2">
+              <PhoneIcon width={20} />
+              <a href={`tel:${user.phoneNumber}`} className="link link-primary">
+                {user.phoneNumber}
+              </a>
+            </div>
+          )}
         </div>
         <p>{user.about}</p>
       </div>
@@ -81,7 +95,7 @@ export default async function User({ params: { id } }: UserPageProps) {
                         height={48}
                       />
                     ) : (
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-base-300 text-sm font-semibold">
+                      <div className="bg-base-300 flex h-12 w-12 items-center justify-center rounded-full text-sm font-semibold">
                         {review.reviewer.name?.charAt(0).toUpperCase() ?? "?"}
                       </div>
                     )}

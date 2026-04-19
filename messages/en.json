@@ -63,6 +63,11 @@
     "socialLinkInvalid": "Please enter a valid URL (https://...)",
     "about": "About you",
     "aboutPlaceholder": "Write a few sentences about yourself...",
+    "phoneNumber": "Phone number",
+    "phoneNumberPlaceholder": "+36 20 123 4567",
+    "phoneNumberInvalid": "Please enter a valid phone number",
+    "phoneNumberConsent": "I understand my phone number will be publicly visible on my profile",
+    "phoneNumberConsentRequired": "You must agree to make your phone number public",
     "updateSuccess": "Profile updated successfully",
     "userNotFound": "User not found",
     "userProfileImage": "user profile image",
@@ -72,6 +77,7 @@
       "title": "Profile completeness",
       "introduction": "Introduction",
       "socialLink": "Social link",
+      "phoneNumber": "Phone number",
       "quiz": "Compatibility quiz ({answered}/{total})"
     }
   },
@@ -196,7 +202,7 @@
     "sendEmail": "Send an email"
   },
   "privacy": {
-    "content": "<h1>Privacy Policy</h1><p>This privacy policy aims to inform you about how we handle users' personal data on the <strong>www.ratemyroommate.hu</strong> website.</p><h2>1. Data Controller</h2><p>Email: <strong>rmrm.owners@gmail.com</strong></p><h2>2. Personal Data Collected</h2><p>During use of the website, we may collect the following data:</p><ul><li>Username, email address (via Google Auth)</li><li>IP address and browser information</li><li>Data stored by cookies (e.g. login state)</li><li>Quiz responses (optional)</li></ul><h2>3. Legal Basis for Processing</h2><p>Data processing is based on the user's consent (e.g. when logging in) or our legitimate interest (e.g. statistical data collection, system security).</p><h2>4. Purpose of Data Processing</h2><ul><li>Creating and managing user accounts</li><li>Saving and displaying quiz results</li><li>Improving user experience</li><li>Ensuring website functionality</li></ul><h2>5. Cookie Management</h2><p>Our website uses cookies essential for operation. These cookies do not require separate consent. We do not currently use third-party or marketing cookies.</p><h2>6. Data Retention</h2><p>Personal data is retained as long as the user account is active, or as required by law. Data is deleted when the account is deleted.</p><h2>7. Data Transfers and Processors</h2><p>We do not transfer data to third parties, except:</p><ul><li>Service providers: e.g. Supabase (database), Vercel (hosting)</li><li>Authorities when required by law</li></ul><h2>8. User Rights</h2><p>Users have the right to:</p><ul><li>Request information about data processing</li><li>Access their own data</li><li>Request correction or deletion of their data</li><li>Request restriction of processing</li><li>Request data portability</li></ul><h2>9. Contact</h2><p>For any data protection related questions, please contact us:<br />Email: <strong>rmrm.owners@gmail.com</strong></p><p>Last updated: <strong>2025-09-28</strong></p>"
+    "content": "<h1>Privacy Policy</h1><p>This privacy policy aims to inform you about how we handle users' personal data on the <strong>www.ratemyroommate.hu</strong> website.</p><h2>1. Data Controller</h2><p>Email: <strong>rmrm.owners@gmail.com</strong></p><h2>2. Personal Data Collected</h2><p>During use of the website, we may collect the following data:</p><ul><li>Username, email address (via Google Auth)</li><li>IP address and browser information</li><li>Data stored by cookies (e.g. login state)</li><li>Phone number (optional, publicly visible if provided)</li><li>Quiz responses (optional)</li></ul><h2>3. Legal Basis for Processing</h2><p>Data processing is based on the user's consent (e.g. when logging in) or our legitimate interest (e.g. statistical data collection, system security).</p><h2>4. Purpose of Data Processing</h2><ul><li>Creating and managing user accounts</li><li>Saving and displaying quiz results</li><li>Improving user experience</li><li>Ensuring website functionality</li></ul><h2>5. Cookie Management</h2><p>Our website uses cookies essential for operation. These cookies do not require separate consent. We do not currently use third-party or marketing cookies.</p><h2>6. Data Retention</h2><p>Personal data is retained as long as the user account is active, or as required by law. Data is deleted when the account is deleted.</p><h2>7. Data Transfers and Processors</h2><p>We do not transfer data to third parties, except:</p><ul><li>Service providers: e.g. Supabase (database), Vercel (hosting)</li><li>Authorities when required by law</li></ul><h2>8. User Rights</h2><p>Users have the right to:</p><ul><li>Request information about data processing</li><li>Access their own data</li><li>Request correction or deletion of their data</li><li>Request restriction of processing</li><li>Request data portability</li></ul><h2>9. Contact</h2><p>For any data protection related questions, please contact us:<br />Email: <strong>rmrm.owners@gmail.com</strong></p><p>Last updated: <strong>2025-09-28</strong></p>"
   },
   "enums": {
     "location": {
