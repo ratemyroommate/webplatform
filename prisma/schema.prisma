@@ -76,6 +76,7 @@ model User {
     image                String?
     socialLink           String?
     about                String?
+    phoneNumber          String?
     accounts             Account[]
     sessions             Session[]
     posts                Post[]

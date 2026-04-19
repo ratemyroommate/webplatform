@@ -16,6 +16,10 @@ export const userRouter = createTRPCRouter({
         id: z.string(),
         about: z.string().nullable(),
         socialLink: z.string().min(1).nullable(),
+        phoneNumber: z
+          .string()
+          .regex(/^\+?[\d\s\-()]{6,20}$/)
+          .nullable(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -27,14 +31,14 @@ export const userRouter = createTRPCRouter({
       }
       return ctx.db.user.update({
         where: { id: input.id },
-        data: { about: input.about, socialLink: input.socialLink },
+        data: { about: input.about, socialLink: input.socialLink, phoneNumber: input.phoneNumber },
       });
     }),
 
   getProfileCompleteness: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: ctx.session.user.id },
-      select: { about: true, socialLink: true },
+      select: { about: true, socialLink: true, phoneNumber: true },
     });
 
     const kvizTotal = await ctx.db.compatibilityQuestionOption.count({
@@ -53,6 +57,7 @@ export const userRouter = createTRPCRouter({
     return {
       hasAbout: !!user?.about?.trim(),
       hasSocialLink: !!user?.socialLink?.trim(),
+      hasPhoneNumber: !!user?.phoneNumber?.trim(),
       kvizAnswered,
       kvizTotal,
     };
