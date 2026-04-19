@@ -16,6 +16,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { KvizToast } from "./_components/KvizToast";
+import { LanguagePicker } from "./_components/LanguagePicker";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 
@@ -68,6 +69,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
                   {session?.user ? (
                     <div className="flex items-center gap-6">
+                      <LanguagePicker currentLocale={locale} />
                       <NotificationModal session={session} />
                       <div className="dropdown dropdown-end mr-4 w-10 hover:cursor-pointer">
                         <div role="button" tabIndex={0} className="avatar">
@@ -116,9 +118,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                       </div>
                     </div>
                   ) : (
-                    <Link href="/api/auth/signin" className="btn">
-                      {t("login")}
-                    </Link>
+                    <div className="flex items-center gap-3 mr-2">
+                      <LanguagePicker currentLocale={locale} />
+                      <Link href="/api/auth/signin" className="btn">
+                        {t("login")}
+                      </Link>
+                    </div>
                   )}
                 </div>
                 {children}

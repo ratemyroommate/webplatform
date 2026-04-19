@@ -1,0 +1,219 @@
+{
+  "metadata": {
+    "siteName": "Rate My Roommate",
+    "home": {
+      "title": "Roommate Finder",
+      "description": "Find your ideal roommate! Browse listings, compare compatibility, and move in with the right person. Roommate search made easy."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Get in touch with us! Have questions about finding a roommate? Write to us and we'll help."
+    },
+    "kviz": {
+      "title": "Compatibility Quiz",
+      "description": "Take the compatibility quiz and find out how well you match with potential roommates. Find your perfect housemate!"
+    },
+    "post": {
+      "title": "Roommate listing – {location}",
+      "description": "Roommate listing: {location}, {price} HUF/month. Check the details and apply as a housemate!"
+    },
+    "user": {
+      "title": "User profile",
+      "description": "View user profile on Rate My Roommate. See reviews and compatibility."
+    },
+    "userPosts": {
+      "title": "User listings",
+      "description": "List of the user's roommate listings on Rate My Roommate."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "description": "Rate My Roommate privacy policy. Learn more about how we handle your personal data."
+    }
+  },
+  "common": {
+    "save": "Save",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "login": "Log in",
+    "publish": "Publish",
+    "edit": "Edit",
+    "send": "Send",
+    "required": "Required field",
+    "noComment": "No comment",
+    "moreDetails": "More details",
+    "fillQuiz": "Take quiz"
+  },
+  "layout": {
+    "profile": "Profile",
+    "quiz": "Quiz",
+    "myPosts": "My Posts",
+    "signOut": "Sign out",
+    "profilePicture": "profile picture",
+    "contact": "Contact",
+    "privacyPolicy": "Privacy Policy",
+    "copyright": "© 2025 Ratemyroommate",
+    "login": "Log in"
+  },
+  "profile": {
+    "editProfile": "Edit profile",
+    "socialLink": "Social link",
+    "socialLinkPlaceholder": "https://facebook.com/...",
+    "socialLinkInvalid": "Please enter a valid URL (https://...)",
+    "about": "About you",
+    "aboutPlaceholder": "Write a few sentences about yourself...",
+    "updateSuccess": "Profile updated successfully",
+    "userNotFound": "User not found",
+    "userProfileImage": "user profile image",
+    "noReviewComment": "No comment",
+    "noReviews": "No reviews",
+    "completeness": {
+      "title": "Profile completeness",
+      "introduction": "Introduction",
+      "socialLink": "Social link",
+      "quiz": "Compatibility quiz ({answered}/{total})"
+    }
+  },
+  "post": {
+    "newPost": "New post",
+    "createTitle": "Create post",
+    "editTitle": "Edit post",
+    "images": "Photos of the apartment",
+    "maxImages": "Maximum 4 images can be uploaded at the moment",
+    "rent": "Rent",
+    "rentUnit": "K HUF/person/month",
+    "rentTooltip": "Rent",
+    "priceUnit": "HUF/month",
+    "priceShort": "HUF/mo",
+    "where": "Location",
+    "wherePlaceholder": "Where to live?",
+    "age": "Age",
+    "genderPreference": "Gender preference",
+    "gender": "Gender",
+    "description": "Description",
+    "descriptionPlaceholder": "We're looking for someone like us...",
+    "descriptionRequired": "Description is required",
+    "personCount": "Number of people",
+    "isResident": "I am also a resident",
+    "uploadCompressing": "Compressing images...",
+    "uploadUploading": "Uploading images...",
+    "uploadSaving": "Saving...",
+    "uploadError": "An error occurred during upload",
+    "createSuccess": "Post created successfully",
+    "updateSuccess": "Post updated successfully",
+    "deleteSuccess": "Post deleted successfully",
+    "deleteConfirm": "Are you sure you want to delete this post?",
+    "notFound": "Post not found",
+    "roommates": "Roommates",
+    "advertiser": "Advertiser",
+    "advertiserAlt": "advertised",
+    "allPostsShown": "All available posts have been displayed.",
+    "max": "max"
+  },
+  "filter": {
+    "title": "Filter",
+    "roommates": "Number of housemates",
+    "maxPrice": "Maximum price",
+    "maxPriceUnit": "K HUF/person/month",
+    "location": "Location",
+    "locationPlaceholder": "Where to live?",
+    "anyLocation": "Anywhere",
+    "ageLabel": "Age",
+    "agePlaceholder": "Age range",
+    "genderPreference": "Gender preference",
+    "genderPlaceholder": "Gender preference",
+    "sort": "Sort",
+    "price": "Price",
+    "date": "Date",
+    "reset": "Reset",
+    "apply": "Apply"
+  },
+  "notification": {
+    "receivedTab": "Received requests",
+    "sentTab": "Sent requests",
+    "noReceived": "No received requests",
+    "noSent": "No sent requests",
+    "post": "Post",
+    "relatedPost": "Related post",
+    "quizAnswers": "Quiz answers",
+    "updateSuccess": "Request updated successfully"
+  },
+  "kviz": {
+    "title": "Compatibility Quiz",
+    "description": "Each question can be answered <b>once</b>, with no option to change. All answers are saved when you proceed.",
+    "saveAndNext": "Save and Next",
+    "completed": "The quiz has been completed successfully.",
+    "loginRequired": "Log in to see the quiz",
+    "loginRequiredAnswers": "Log in to see the quiz answers",
+    "toastLoggedOut": "Log in and take the compatibility quiz",
+    "toastIncomplete": "Complete the compatibility quiz",
+    "toastAction": "Take quiz"
+  },
+  "request": {
+    "apply": "Apply",
+    "title": "Request to join",
+    "commentPlaceholder": "Write your message",
+    "success": "Request sent successfully",
+    "send": "Send"
+  },
+  "review": {
+    "newReview": "New review",
+    "title": "Leave a review",
+    "commentPlaceholder": "Write your opinion",
+    "createSuccess": "Review created successfully",
+    "updateSuccess": "Review updated successfully"
+  },
+  "compatibility": {
+    "quizBased": "Based on compatibility quiz",
+    "fillQuiz": "Take the quiz to see how compatible you are",
+    "fillAll": "Answer all questions for a more accurate result",
+    "otherNotCompleted": "The other user hasn't completed the quiz yet, please check back later.",
+    "fillAction": "Take quiz",
+    "exact": "Exact match: {count}",
+    "close": "Similar: {count}",
+    "opposite": "Opposite: {count}",
+    "notIdeal": "Not ideal",
+    "compatible": "Compatible",
+    "perfectMatch": "Perfect match",
+    "noData": "No data"
+  },
+  "featuredUsers": {
+    "roommate": "roommate",
+    "freeSlots": "+{count} free spots"
+  },
+  "loginModal": {
+    "message": "A quick login before we continue.",
+    "login": "Log in"
+  },
+  "userPosts": {
+    "title": "My posts",
+    "noPosts": "No posts found for this user."
+  },
+  "contact": {
+    "title": "Get in touch",
+    "body": "You can reach us at <b>rmrm.owners@gmail.com</b>. We welcome feedback and any kind of inquiry.",
+    "sendEmail": "Send an email"
+  },
+  "privacy": {
+    "content": "<h1>Privacy Policy</h1><p>This privacy policy aims to inform you about how we handle users' personal data on the <strong>www.ratemyroommate.hu</strong> website.</p><h2>1. Data Controller</h2><p>Email: <strong>rmrm.owners@gmail.com</strong></p><h2>2. Personal Data Collected</h2><p>During use of the website, we may collect the following data:</p><ul><li>Username, email address (via Google Auth)</li><li>IP address and browser information</li><li>Data stored by cookies (e.g. login state)</li><li>Quiz responses (optional)</li></ul><h2>3. Legal Basis for Processing</h2><p>Data processing is based on the user's consent (e.g. when logging in) or our legitimate interest (e.g. statistical data collection, system security).</p><h2>4. Purpose of Data Processing</h2><ul><li>Creating and managing user accounts</li><li>Saving and displaying quiz results</li><li>Improving user experience</li><li>Ensuring website functionality</li></ul><h2>5. Cookie Management</h2><p>Our website uses cookies essential for operation. These cookies do not require separate consent. We do not currently use third-party or marketing cookies.</p><h2>6. Data Retention</h2><p>Personal data is retained as long as the user account is active, or as required by law. Data is deleted when the account is deleted.</p><h2>7. Data Transfers and Processors</h2><p>We do not transfer data to third parties, except:</p><ul><li>Service providers: e.g. Supabase (database), Vercel (hosting)</li><li>Authorities when required by law</li></ul><h2>8. User Rights</h2><p>Users have the right to:</p><ul><li>Request information about data processing</li><li>Access their own data</li><li>Request correction or deletion of their data</li><li>Request restriction of processing</li><li>Request data portability</li></ul><h2>9. Contact</h2><p>For any data protection related questions, please contact us:<br />Email: <strong>rmrm.owners@gmail.com</strong></p><p>Last updated: <strong>2025-09-28</strong></p>"
+  },
+  "enums": {
+    "location": {
+      "BUDAPEST": "Budapest",
+      "DEBRECEN": "Debrecen",
+      "SZEGED": "Szeged"
+    },
+    "age": {
+      "0": "Any",
+      "1": "18 - 24",
+      "2": "25 - 34",
+      "3": "35 - 44",
+      "4": "45+"
+    },
+    "gender": {
+      "0": "Male and Female",
+      "1": "Male only",
+      "2": "Female only"
+    }
+  }
+}
