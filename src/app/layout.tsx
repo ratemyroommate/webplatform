@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 
+import { Analytics } from "@vercel/analytics/next";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import Image from "next/image";
@@ -77,6 +78,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             </div>
           </NextIntlClientProvider>
         </TRPCReactProvider>
+        <Analytics />
       </body>
     </html>
   );
