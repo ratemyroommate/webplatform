@@ -63,6 +63,11 @@
     "socialLinkInvalid": "Érvényes URL-t adj meg (https://...)",
     "about": "Magadról",
     "aboutPlaceholder": "Írj magadról pár mondatot...",
+    "phoneNumber": "Telefonszám",
+    "phoneNumberPlaceholder": "+36 20 123 4567",
+    "phoneNumberInvalid": "Érvényes telefonszámot adj meg",
+    "phoneNumberConsent": "Tudomásul veszem, hogy a telefonszámom mindenki számára látható lesz a profilomon",
+    "phoneNumberConsentRequired": "El kell fogadnod, hogy a telefonszámod nyilvános lesz",
     "updateSuccess": "Profil sikeresen frissítve",
     "userNotFound": "Felhasználó nem található",
     "userProfileImage": "user profile image",
@@ -72,6 +77,7 @@
       "title": "Profil teljessége",
       "introduction": "Bemutatkozás",
       "socialLink": "Közösségi link",
+      "phoneNumber": "Telefonszám",
       "quiz": "Kompatibilitási kvíz ({answered}/{total})"
     }
   },
@@ -196,7 +202,7 @@
     "sendEmail": "Küldj emailt"
   },
   "privacy": {
-    "content": "<h1>Adatvédelmi szabályzat</h1><p>Jelen adatvédelmi szabályzat célja, hogy tájékoztatást nyújtson arról, hogyan kezeljük a felhasználók személyes adatait a(z) <strong>www.ratemyroommate.hu</strong> weboldalon.</p><h2>1. Adatkezelő adatai</h2><p>Email: <strong>rmrm.owners@gmail.com</strong></p><h2>2. Kezelt személyes adatok köre</h2><p>A weboldal használata során az alábbi adatokat gyűjthetjük:</p><ul><li>Felhasználónév, email cím (Google Auth által)</li><li>IP-cím és böngészőinformációk</li><li>Cookie-k által tárolt adatok (pl. bejelentkezés állapota)</li><li>Kérdőívre adott válaszok (opcionálisan)</li></ul><h2>3. Adatkezelés jogalapja</h2><p>Az adatkezelés az érintett hozzájárulásán (pl. bejelentkezéskor), vagy jogos érdekünkön alapul (pl. statisztikai célból történő adatgyűjtés, rendszerbiztonság).</p><h2>4. Az adatkezelés célja</h2><ul><li>A felhasználói fiók létrehozása és kezelése</li><li>A kvíz eredményeinek mentése és megjelenítése</li><li>A felhasználói élmény javítása</li><li>Weboldal működésének biztosítása</li></ul><h2>5. Sütik (cookie-k) kezelése</h2><p>Weboldalunk a működéshez elengedhetetlen sütiket használ. Ezek a sütik nem igényelnek külön hozzájárulást. Harmadik féltől származó vagy marketing célú sütiket jelenleg nem használunk.</p><h2>6. Adattárolás időtartama</h2><p>A személyes adatokat addig őrizzük meg, amíg a felhasználói fiók aktív, vagy amíg a megőrzésre jogszabály kötelez minket. A fiók törlésével az adatok is törlésre kerülnek.</p><h2>7. Adattovábbítás és adatfeldolgozók</h2><p>Az adatokat harmadik félnek nem továbbítjuk, kivéve:</p><ul><li>Szolgáltatók: pl. Supabase (adatbázis), Vercel (hoszting)</li><li>Jogszabályban előírt esetekben hatóságoknak</li></ul><h2>8. Felhasználói jogok</h2><p>A felhasználók jogosultak:</p><ul><li>Tájékoztatást kérni az adatkezelésről</li><li>Hozzáférni a saját adataikhoz</li><li>Adataik helyesbítését vagy törlését kérni</li><li>Az adatkezelés korlátozását kérni</li><li>Adathordozhatóságot kérni</li></ul><h2>9. Kapcsolat</h2><p>Bármilyen adatkezeléssel kapcsolatos kérdés esetén fordulj hozzánk:<br />Email: <strong>rmrm.owners@gmail.com</strong></p><p>Utolsó frissítés dátuma: <strong>2025.09.28</strong></p>"
+    "content": "<h1>Adatvédelmi szabályzat</h1><p>Jelen adatvédelmi szabályzat célja, hogy tájékoztatást nyújtson arról, hogyan kezeljük a felhasználók személyes adatait a(z) <strong>www.ratemyroommate.hu</strong> weboldalon.</p><h2>1. Adatkezelő adatai</h2><p>Email: <strong>rmrm.owners@gmail.com</strong></p><h2>2. Kezelt személyes adatok köre</h2><p>A weboldal használata során az alábbi adatokat gyűjthetjük:</p><ul><li>Felhasználónév, email cím (Google Auth által)</li><li>IP-cím és böngészőinformációk</li><li>Cookie-k által tárolt adatok (pl. bejelentkezés állapota)</li><li>Telefonszám (opcionális, nyilvánosan látható, ha megadva)</li><li>Kérdőívre adott válaszok (opcionálisan)</li></ul><h2>3. Adatkezelés jogalapja</h2><p>Az adatkezelés az érintett hozzájárulásán (pl. bejelentkezéskor), vagy jogos érdekünkön alapul (pl. statisztikai célból történő adatgyűjtés, rendszerbiztonság).</p><h2>4. Az adatkezelés célja</h2><ul><li>A felhasználói fiók létrehozása és kezelése</li><li>A kvíz eredményeinek mentése és megjelenítése</li><li>A felhasználói élmény javítása</li><li>Weboldal működésének biztosítása</li></ul><h2>5. Sütik (cookie-k) kezelése</h2><p>Weboldalunk a működéshez elengedhetetlen sütiket használ. Ezek a sütik nem igényelnek külön hozzájárulást. Harmadik féltől származó vagy marketing célú sütiket jelenleg nem használunk.</p><h2>6. Adattárolás időtartama</h2><p>A személyes adatokat addig őrizzük meg, amíg a felhasználói fiók aktív, vagy amíg a megőrzésre jogszabály kötelez minket. A fiók törlésével az adatok is törlésre kerülnek.</p><h2>7. Adattovábbítás és adatfeldolgozók</h2><p>Az adatokat harmadik félnek nem továbbítjuk, kivéve:</p><ul><li>Szolgáltatók: pl. Supabase (adatbázis), Vercel (hoszting)</li><li>Jogszabályban előírt esetekben hatóságoknak</li></ul><h2>8. Felhasználói jogok</h2><p>A felhasználók jogosultak:</p><ul><li>Tájékoztatást kérni az adatkezelésről</li><li>Hozzáférni a saját adataikhoz</li><li>Adataik helyesbítését vagy törlését kérni</li><li>Az adatkezelés korlátozását kérni</li><li>Adathordozhatóságot kérni</li></ul><h2>9. Kapcsolat</h2><p>Bármilyen adatkezeléssel kapcsolatos kérdés esetén fordulj hozzánk:<br />Email: <strong>rmrm.owners@gmail.com</strong></p><p>Utolsó frissítés dátuma: <strong>2025.09.28</strong></p>"
   },
   "enums": {
     "location": {

@@ -9,6 +9,7 @@ import { HydrateClient, api } from "~/trpc/server";
 import { PostInfo } from "~/app/_components/PostInfo";
 import Image from "next/image";
 import Link from "next/link";
+import { PhoneIcon } from "@heroicons/react/24/outline";
 import { CompatibilityScore } from "~/app/_components/CompatibilityScore";
 import { getTranslations } from "next-intl/server";
 
@@ -78,11 +79,8 @@ export default async function Page({ params: { id } }: PostPageProps) {
           <div className="divider my-0" />
 
           {/* Posted by — bordered card style */}
-          <Link
-            href={`/users/${post.createdById}`}
-            className="border-base-300 hover:border-primary/30 hover:bg-base-200/50 flex items-center gap-4 rounded-2xl border p-4 transition-all"
-          >
-            <div className="avatar w-12">
+          <div className="border-base-300 flex items-center gap-4 rounded-2xl border p-4">
+            <Link href={`/users/${post.createdById}`} className="avatar w-12 shrink-0">
               <div className="ring-primary ring-offset-base-100 w-full rounded-full shadow-md ring-2 ring-offset-2">
                 <Image
                   width={100}
@@ -91,12 +89,28 @@ export default async function Page({ params: { id } }: PostPageProps) {
                   alt={t("advertiserAlt")}
                 />
               </div>
-            </div>
+            </Link>
             <div className="flex flex-col gap-0.5">
-              <span className="badge badge-primary badge-sm">{t("advertiser")}</span>
-              <span className="text-lg font-semibold">{post.createdBy.name}</span>
+              <div className="flex items-center gap-2">
+                <span className="badge badge-primary badge-sm">{t("advertiser")}</span>
+                {post.createdBy.phoneNumber && (
+                  <a
+                    href={`tel:${post.createdBy.phoneNumber}`}
+                    className="link link-primary flex items-center gap-1 text-sm"
+                  >
+                    <PhoneIcon width={14} />
+                    {post.createdBy.phoneNumber}
+                  </a>
+                )}
+              </div>
+              <Link
+                href={`/users/${post.createdById}`}
+                className="text-lg font-semibold hover:underline"
+              >
+                {post.createdBy.name}
+              </Link>
             </div>
-          </Link>
+          </div>
 
           {/* Compatibility */}
           <CompatibilityScore compareUserId={post.createdById} session={session} />

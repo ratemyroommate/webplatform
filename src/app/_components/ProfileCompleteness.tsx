@@ -12,12 +12,13 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
 
   if (isLoading || !data) return null;
 
-  const { hasAbout, hasSocialLink, kvizAnswered, kvizTotal } = data;
+  const { hasAbout, hasSocialLink, hasPhoneNumber, kvizAnswered, kvizTotal } = data;
   const kvizComplete = kvizTotal > 0 && kvizAnswered >= kvizTotal;
 
   const items = [
     { label: t("introduction"), done: hasAbout },
     { label: t("socialLink"), done: hasSocialLink },
+    { label: t("phoneNumber"), done: hasPhoneNumber },
     {
       label: t("quiz", { answered: kvizAnswered, total: kvizTotal }),
       done: kvizComplete,

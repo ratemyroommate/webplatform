@@ -170,7 +170,7 @@ export const postRouter = createTRPCRouter({
       include: {
         ...featuredImageQuery,
         requests: true,
-        createdBy: { select: { name: true, image: true } },
+        createdBy: { select: { name: true, image: true, phoneNumber: true } },
       },
     });
   }),
