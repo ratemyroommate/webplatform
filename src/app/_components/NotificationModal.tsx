@@ -54,7 +54,7 @@ export const NotificationModal = ({ session }: { session: Session }) => {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="right" className="w-full overflow-y-auto p-4 sm:max-w-md">
           <SheetHeader className="p-0">
-            <SheetTitle>{t("title", { defaultValue: "Notifications" })}</SheetTitle>
+            <SheetTitle>{t("title")}</SheetTitle>
           </SheetHeader>
           <Tabs defaultValue="received" className="mt-4">
             <TabsList className="w-full">
