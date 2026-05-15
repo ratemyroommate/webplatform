@@ -1,23 +1,34 @@
 "use client";
 
-import { BellIcon, CheckIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
-import { handleCloseModal, handleOpenModal } from "./LoginModal";
+import { Bell, Check, Eye, X } from "lucide-react";
 import { api } from "~/trpc/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { Request, RequestStatus } from "@prisma/client";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { NotificationBell } from "./NotificationBell";
-import { XButton } from "./CloseButton";
 import type { Session } from "next-auth";
 import { CompatibilityScore } from "./CompatibilityScore";
 import { useTranslations } from "next-intl";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "~/components/ui/sheet";
+import { Skeleton } from "~/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 
 export const NotificationModal = ({ session }: { session: Session }) => {
   const t = useTranslations("notification");
   const tc = useTranslations("common");
+  const [open, setOpen] = useState(false);
   const { data: requests, isLoading } = api.request.getAll.useQuery();
   const recievedRequests = requests?.recievedRequests;
   const sentRequests = requests?.sentRequests;
@@ -31,38 +42,36 @@ export const NotificationModal = ({ session }: { session: Session }) => {
       toast.success(t("updateSuccess"));
     },
   });
-  useEffect(() => handleCloseModal("notification-modal"), [pathname]);
+  useEffect(() => setOpen(false), [pathname]);
 
   return (
     <>
       <NotificationBell requests={recievedRequests}>
-        <BellIcon
-          className="hover:cursor-pointer"
-          onClick={() => handleOpenModal("notification-modal")}
-          width={30}
-        />
+        <button aria-label="notifications" onClick={() => setOpen(true)} className="cursor-pointer">
+          <Bell size={26} />
+        </button>
       </NotificationBell>
-      <dialog id="notification-modal" className="modal">
-        <div className="modal-box h-[90%] px-4">
-          <XButton />
-          <div className="tabs tabs-lift">
-            <input
-              type="radio"
-              name="my_tabs_3"
-              className="tab"
-              aria-label={t("receivedTab")}
-              defaultChecked
-            />
-            <div className="tab-content bg-base-100 border-base-300 h-full p-2">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="right" className="w-full overflow-y-auto p-4 sm:max-w-md">
+          <SheetHeader className="p-0">
+            <SheetTitle>{t("title", { defaultValue: "Notifications" })}</SheetTitle>
+          </SheetHeader>
+          <Tabs defaultValue="received" className="mt-4">
+            <TabsList className="w-full">
+              <TabsTrigger value="received" className="flex-1">
+                {t("receivedTab")}
+              </TabsTrigger>
+              <TabsTrigger value="sent" className="flex-1">
+                {t("sentTab")}
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="received" className="mt-4">
               {isLoading ? (
-                <div className="flex flex-col gap-2">
-                  <div className="skeleton h-16 w-full"></div>
-                  <div className="skeleton h-16 w-full"></div>
-                  <div className="skeleton h-16 w-full"></div>
-                </div>
+                <LoadingList />
               ) : recievedRequests?.length ? (
                 <div className="flex flex-col gap-2">
-                  {recievedRequests?.map((request) => (
+                  {recievedRequests.map((request) => (
                     <RecievedRequest
                       key={request.id}
                       session={session}
@@ -72,76 +81,78 @@ export const NotificationModal = ({ session }: { session: Session }) => {
                   ))}
                 </div>
               ) : (
-                t("noReceived")
+                <p className="text-muted-foreground text-sm">{t("noReceived")}</p>
               )}
-            </div>
+            </TabsContent>
 
-            <input type="radio" name="my_tabs_3" className="tab" aria-label={t("sentTab")} />
-            <div className="tab-content bg-base-100 border-base-300 p-2">
+            <TabsContent value="sent" className="mt-4">
               {isLoading ? (
-                <div className="flex flex-col gap-2">
-                  <div className="skeleton h-16 w-full"></div>
-                  <div className="skeleton h-16 w-full"></div>
-                  <div className="skeleton h-16 w-full"></div>
-                </div>
+                <LoadingList />
               ) : sentRequests?.length ? (
                 <div className="flex flex-col gap-2">
-                  {sentRequests?.map((request) => (
-                    <div key={request.id} className="card border-base-200 border-2 p-2">
-                      <div className="flex flex-row items-center justify-between">
-                        <Link href={`/posts/${request.postId}`} className="btn">
-                          {t("post")}
-                          <EyeIcon width={20} />
-                        </Link>
-                        <div className="flew-row flex items-center gap-4">
-                          <div className="w-2/3">
-                            <Badge status={request.status} />
-                          </div>
-                        </div>
+                  {sentRequests.map((request) => (
+                    <Card key={request.id} className="gap-2 p-3">
+                      <div className="flex flex-row items-center justify-between gap-2">
+                        <Button asChild variant="outline" size="sm">
+                          <Link href={`/posts/${request.postId}`}>
+                            {t("post")}
+                            <Eye />
+                          </Link>
+                        </Button>
+                        <StatusBadge status={request.status} />
                         {request.status === "PENDING" && (
-                          <div className="flex gap-2">
-                            <button
-                              className="btn btn-square btn-error"
-                              onClick={() =>
-                                updateRequest.mutate({
-                                  requestId: request.id,
-                                  status: "DENIED",
-                                })
-                              }
-                            >
-                              <XMarkIcon width={20} />
-                            </button>
-                          </div>
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            onClick={() =>
+                              updateRequest.mutate({
+                                requestId: request.id,
+                                status: "DENIED",
+                              })
+                            }
+                          >
+                            <X />
+                          </Button>
                         )}
                       </div>
-                      <div tabIndex={0} className="collapse-arrow collapse">
-                        <div className="collapse-title">{tc("moreDetails")}</div>
-                        <div className="collapse-content flex flex-col gap-2">
-                          {request.comment === "" ? tc("noComment") : request.comment}
-                        </div>
-                      </div>
-                    </div>
+                      <Accordion type="single" collapsible>
+                        <AccordionItem value="details">
+                          <AccordionTrigger>{tc("moreDetails")}</AccordionTrigger>
+                          <AccordionContent>
+                            {request.comment === "" ? tc("noComment") : request.comment}
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    </Card>
                   ))}
                 </div>
               ) : (
-                <div className="p-4">{t("noSent")}</div>
+                <p className="text-muted-foreground text-sm">{t("noSent")}</p>
               )}
-            </div>
-          </div>
-        </div>
-      </dialog>
+            </TabsContent>
+          </Tabs>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };
 
-const Badge = ({ status }: { status: RequestStatus }) => {
+const LoadingList = () => (
+  <div className="flex flex-col gap-2">
+    <Skeleton className="h-16 w-full" />
+    <Skeleton className="h-16 w-full" />
+    <Skeleton className="h-16 w-full" />
+  </div>
+);
+
+const StatusBadge = ({ status }: { status: RequestStatus }) => {
   switch (status) {
     case "ACCEPTED":
-      return <div className="badge badge-success">{status}</div>;
+      return <Badge className="bg-emerald-500 hover:bg-emerald-500">{status}</Badge>;
     case "DENIED":
-      return <div className="badge badge-error">{status}</div>;
+      return <Badge variant="destructive">{status}</Badge>;
     default:
-      return <div className="badge badge-warning">{status}</div>;
+      return <Badge className="bg-amber-500 hover:bg-amber-500">{status}</Badge>;
   }
 };
 
@@ -160,79 +171,64 @@ const RecievedRequest = ({
   const t = useTranslations("notification");
   const tc = useTranslations("common");
   return (
-    <div
-      key={request.id}
-      className="card border-base-200 border-2 p-2"
-      onClick={() => setIsOpen(true)}
-    >
-      <div className="flex flex-row items-center justify-between">
-        <div className="flew-row flex items-center gap-4">
-          <Link className="h-10 w-10" href={`/users/${request.user.id}`}>
-            <div className="avatar">
-              <div className="rounded-full">
-                {request.user.image ? (
-                  <Image
-                    src={request.user.image}
-                    width={40}
-                    height={40}
-                    alt={request.user.name ? `${request.user.name}'s profile image` : "Profile image"}
-                  />
-                ) : (
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-base-300 text-sm font-semibold">
-                    {request.user.name?.charAt(0).toUpperCase() ?? "?"}
-                  </div>
-                )}
-              </div>
-            </div>
+    <Card className="gap-2 p-3" onClick={() => setIsOpen(true)}>
+      <div className="flex flex-row items-center justify-between gap-2">
+        <div className="flex items-center gap-3">
+          <Link href={`/users/${request.user.id}`}>
+            <Avatar className="size-10">
+              {request.user.image && (
+                <AvatarImage src={request.user.image} alt={request.user.name ?? "Profile image"} />
+              )}
+              <AvatarFallback>{request.user.name?.charAt(0).toUpperCase() ?? "?"}</AvatarFallback>
+            </Avatar>
           </Link>
-          <div className="w-2/3">
-            <div className="line-clamp-1 overflow-hidden">{request.user.name}</div>
-            <Badge status={request.status} />
+          <div className="flex flex-col gap-1">
+            <div className="line-clamp-1 text-sm">{request.user.name}</div>
+            <StatusBadge status={request.status} />
           </div>
         </div>
         {request.status === "PENDING" && (
           <div className="flex gap-2">
-            <button
-              className="btn btn-square btn-success"
-              onClick={() =>
-                updateRequest.mutate({
-                  requestId: request.id,
-                  status: "ACCEPTED",
-                })
-              }
+            <Button
+              size="icon"
+              className="bg-emerald-500 hover:bg-emerald-600"
+              onClick={(e) => {
+                e.stopPropagation();
+                updateRequest.mutate({ requestId: request.id, status: "ACCEPTED" });
+              }}
             >
-              <CheckIcon width={20} />
-            </button>
-            <button
-              className="btn btn-square btn-error"
-              onClick={() =>
-                updateRequest.mutate({
-                  requestId: request.id,
-                  status: "DENIED",
-                })
-              }
+              <Check />
+            </Button>
+            <Button
+              size="icon"
+              variant="destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                updateRequest.mutate({ requestId: request.id, status: "DENIED" });
+              }}
             >
-              <XMarkIcon width={20} />
-            </button>
+              <X />
+            </Button>
           </div>
         )}
       </div>
-      <div className="collapse-arrow collapse">
-        <input type="checkbox" />
-        <div className="collapse-title">{tc("moreDetails")}</div>
-        <div className="collapse-content flex flex-col gap-2">
-          {request.comment === "" ? tc("noComment") : request.comment}
-          {isOpen && <CompatibilityScore compareUserId={request.userId} session={session} />}
-          <div className="flex gap-2">
-            <Link href={`/posts/${request.postId}`} className="btn btn-sm w-1/2">
-              {t("relatedPost")}
-            </Link>
-            <Link href={`/compatibility-kviz/${request.userId}`} className="btn btn-sm w-1/2">
-              {t("quizAnswers")}
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+      <Accordion type="single" collapsible>
+        <AccordionItem value="details">
+          <AccordionTrigger>{tc("moreDetails")}</AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-2">
+            {request.comment === "" ? tc("noComment") : request.comment}
+            {isOpen && <CompatibilityScore compareUserId={request.userId} session={session} />}
+            <div className="flex gap-2">
+              <Button asChild variant="outline" size="sm" className="w-1/2">
+                <Link href={`/posts/${request.postId}`}>{t("relatedPost")}</Link>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="w-1/2">
+                <Link href={`/compatibility-kviz/${request.userId}`}>{t("quizAnswers")}</Link>
+              </Button>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </Card>
   );
 };

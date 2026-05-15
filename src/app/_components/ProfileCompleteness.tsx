@@ -1,9 +1,12 @@
 "use client";
 
-import { CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { CheckCircle2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { api } from "~/trpc/react";
 import { useTranslations } from "next-intl";
+import { Card } from "~/components/ui/card";
+import { Progress } from "~/components/ui/progress";
+import { Button } from "~/components/ui/button";
 
 export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) => {
   const { data, isLoading } = api.user.getProfileCompleteness.useQuery();
@@ -37,45 +40,35 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
           <span className="text-sm">{t("title")}</span>
           <span className="text-sm font-medium">{percentage}%</span>
         </div>
-        <progress
-          className="progress progress-warning w-full shadow-sm"
-          value={percentage}
-          max={100}
-        />
+        <Progress value={percentage} className="w-full" />
       </div>
     );
   }
 
   return (
-    <div className="card bg-base-100 border-base-300 border p-4 shadow-sm">
-      <div className="mb-3 flex items-center justify-between">
+    <Card className="gap-3 p-4">
+      <div className="flex items-center justify-between">
         <h3 className="font-semibold">{t("title")}</h3>
         <span className="text-sm font-medium">{percentage}%</span>
       </div>
-      <progress
-        className="progress progress-warning mb-4 w-full shadow-sm"
-        value={percentage}
-        max={100}
-      />
+      <Progress value={percentage} className="w-full" />
       <ul className="flex flex-col gap-2">
         {items.map((item) => (
           <li key={item.label} className="flex items-center gap-2 text-sm">
             {item.done ? (
-              <CheckCircleIcon className="text-success h-5 w-5" />
+              <CheckCircle2 className="text-primary h-5 w-5" />
             ) : (
-              <ExclamationCircleIcon className="text-warning h-5 w-5" />
+              <AlertCircle className="h-5 w-5 text-amber-500" />
             )}
             <span className={item.done ? "line-through opacity-60" : ""}>{item.label}</span>
           </li>
         ))}
       </ul>
       {!kvizComplete && (
-        <div className="mt-3">
-          <Link href="/compatibility-kviz" className="btn btn-sm btn-outline">
-            {tc("fillQuiz")}
-          </Link>
-        </div>
+        <Button asChild variant="outline" size="sm" className="self-start">
+          <Link href="/compatibility-kviz">{tc("fillQuiz")}</Link>
+        </Button>
       )}
-    </div>
+    </Card>
   );
 };

@@ -8,9 +8,11 @@ import Link from "next/link";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { getServerAuthSession } from "~/server/auth";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "~/components/ui/sonner";
+import { TooltipProvider } from "~/components/ui/tooltip";
 import { KvizToast } from "./_components/KvizToast";
 import { Navbar } from "./_components/Navbar";
+import { LoginModalProvider } from "./_components/LoginModal";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 
@@ -52,30 +54,30 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body>
         <TRPCReactProvider>
           <NextIntlClientProvider messages={messages}>
-            <Toaster />
-            <KvizToast session={session} />
-            <main className="bg-base-200 flex min-h-screen flex-col items-center">
-              <div className="container flex max-w-4xl flex-col items-center justify-center gap-4 px-4 py-4">
-                <Navbar session={session} locale={locale} />
-                {children}
-              </div>
-            </main>
-            <div className="bg-neutral text-base-300 flex h-48 flex-col items-center justify-center">
-              <Image src="/R-white.png" width={64} height={64} alt="RateMyRoommate" />
-              <ul className="flex flex-col items-center">
-                <li>
-                  <Link href="/contact" className="link">
-                    {t("contact")}
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/privacy-policy" className="link">
-                    {t("privacyPolicy")}
-                  </Link>
-                </li>
-              </ul>
-              <span className="text-base-300">{t("copyright")}</span>
-            </div>
+            <TooltipProvider>
+              <LoginModalProvider>
+                <Toaster richColors position="top-center" />
+                <KvizToast session={session} />
+                <main className="bg-muted flex min-h-screen flex-col items-center">
+                  <div className="container flex max-w-4xl flex-col items-center justify-center gap-4 px-4 py-4">
+                    <Navbar session={session} locale={locale} />
+                    {children}
+                  </div>
+                </main>
+                <footer className="bg-foreground text-background flex h-48 flex-col items-center justify-center gap-2">
+                  <Image src="/R-white.png" width={64} height={64} alt="RateMyRoommate" />
+                  <nav className="flex flex-col items-center gap-1 text-sm">
+                    <Link href="/contact" className="hover:underline">
+                      {t("contact")}
+                    </Link>
+                    <Link href="/privacy-policy" className="hover:underline">
+                      {t("privacyPolicy")}
+                    </Link>
+                  </nav>
+                  <span className="text-xs opacity-70">{t("copyright")}</span>
+                </footer>
+              </LoginModalProvider>
+            </TooltipProvider>
           </NextIntlClientProvider>
         </TRPCReactProvider>
         <Analytics />

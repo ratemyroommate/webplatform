@@ -1,7 +1,8 @@
 import type { Post } from "@prisma/client";
-import { MapPinIcon, UserIcon } from "@heroicons/react/24/outline";
+import { MapPin, User } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Badge } from "~/components/ui/badge";
 
 type PostInfoProps = {
   post: Post;
@@ -16,22 +17,22 @@ export const PostInfo = ({ post, compact }: PostInfoProps) => {
       {!compact && (
         <div className="flex items-baseline gap-2">
           <span className="text-3xl font-extrabold tracking-tight">{post.price}k</span>
-          <span className="text-sm opacity-50">{tp("priceUnit")}</span>
+          <span className="text-muted-foreground text-sm">{tp("priceUnit")}</span>
         </div>
       )}
       <div className="flex flex-wrap gap-1.5">
-        <div className="badge badge-warning gap-1.5 py-3 font-medium shadow-sm">
-          <MapPinIcon width={14} />
+        <Badge variant="secondary" className="gap-1.5">
+          <MapPin size={14} />
           {t(`location.${post.location}`)}
-        </div>
-        <div className="badge badge-info gap-1.5 py-3 font-medium shadow-sm">
-          <UserIcon width={14} />
+        </Badge>
+        <Badge variant="secondary" className="gap-1.5">
+          <User size={14} />
           {t(`age.${post.age}`)}
-        </div>
-        <div className="badge badge-secondary gap-1.5 py-3 font-medium shadow-sm">
+        </Badge>
+        <Badge variant="secondary" className="gap-1.5">
           <Image src="/gender-fluid.png" width={14} height={14} alt="" />
           {t(`gender.${post.gender}`)}
-        </div>
+        </Badge>
       </div>
     </div>
   );

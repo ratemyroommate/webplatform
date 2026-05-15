@@ -1,21 +1,32 @@
 "use client";
 
-import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { Minus, Plus, Pencil, X } from "lucide-react";
 import type { Post } from "@prisma/client";
 import { Location } from "@prisma/client";
-import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
+import { useLoginModal } from "./LoginModal";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
-import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { useForm, Controller } from "react-hook-form";
+import { toast } from "sonner";
 import { ageOptions, genderOptions, isUserInPostGroup, locationOptions } from "~/utils/helpers";
 import { genUploader } from "uploadthing/client";
 import type { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
-import { XButton } from "./CloseButton";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { Button } from "~/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Label } from "~/components/ui/label";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 
 export const { uploadFiles } = genUploader({ package: "uploadthing/client" });
 
@@ -45,6 +56,8 @@ const max = { maxPersonCount: 6, price: 999 };
 const min = { maxPersonCount: 2, price: 10 };
 
 export const PostModal = ({ post, userId }: PostModalProps) => {
+  const [open, setOpen] = useState(false);
+  const loginModal = useLoginModal();
   const {
     watch,
     reset,
@@ -52,6 +65,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     setError,
     setValue,
     getValues,
+    control,
     handleSubmit,
     clearErrors,
     formState: { isSubmitting, errors },
@@ -75,25 +89,24 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
   const t = useTranslations("post");
   const tc = useTranslations("common");
   const te = useTranslations("enums");
-  const modalId = userId ? (post ? `post-modal-${post.id}` : "post-modal") : "login-modal";
   const successMessage = post ? t("updateSuccess") : t("createSuccess");
   const utils = api.useUtils();
   const createPost = api.post.create.useMutation({
     onSuccess: () => {
       void utils.post.getLatest.invalidate();
-      handleCloseModal(modalId);
+      setOpen(false);
       toast.success(successMessage);
       reset();
     },
     onError: (error) => {
-      handleCloseModal(modalId);
+      setOpen(false);
       toast.error(error.message);
     },
   });
   const updatePost = api.post.update.useMutation({
     onSuccess: () => {
       router.refresh();
-      handleCloseModal(modalId);
+      setOpen(false);
       toast.success(successMessage);
       setValue("images", []);
       setValue("removeImages", []);
@@ -114,6 +127,7 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
 
   const images = watch("images");
   const removeImages = watch("removeImages");
+  const isResidentValue = watch("isResident");
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 
   const onSubmit = async (formValues: FormValues) => {
@@ -182,208 +196,241 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
     }
   };
 
+  const handleTriggerClick = () => {
+    if (!userId) {
+      loginModal.open();
+      return;
+    }
+    setOpen(true);
+  };
+
   return (
     <>
-      <button
-        onClick={() => handleOpenModal(modalId)}
-        className={`btn flex-1 ${!post && "btn-secondary shadow-xl"}`}
+      <Button
+        onClick={handleTriggerClick}
+        variant={post ? "outline" : "default"}
+        className={post ? "flex-1" : "flex-1 shadow-md"}
       >
         {post ? (
           <>
-            <PencilSquareIcon width={20} />
+            <Pencil />
             {tc("edit")}
           </>
         ) : (
           <>
-            <PlusIcon width={20} />
+            <Plus />
             {t("newPost")}
           </>
         )}
-      </button>
-      <LoginModal />
-      <dialog id={post ? `post-modal-${post.id}` : "post-modal"} className="modal">
-        <div className="modal-box max-w-5xl">
-          <h3 className="pb-2 text-lg font-bold">{post ? t("editTitle") : t("createTitle")}</h3>
-          <XButton />
-          <form className="flex w-full flex-col" onSubmit={handleSubmit(onSubmit)}>
-            <label className="form-control w-full">
-              <div className="label">
-                <span className="label-text">{t("images")}</span>
-              </div>
-            </label>
-
-            <input
-              name="images"
-              max={4}
-              multiple
-              type="file"
-              accept="image/*"
-              onChange={handleImagesChange}
-              className="file-input file-input-bordered w-full max-w-xs"
-            />
-            {errors.images?.message && (
-              <div className="label">
-                <span className="label-text-alt text-orange-600">{errors.images.message}</span>
-              </div>
-            )}
-            {!!previewImages.length && (
-              <div className="relative flex h-24 w-full flex-row gap-4 overflow-x-scroll py-2">
-                {previewImages.map((image, index) => (
-                  <div key={index} className="relative flex h-full flex-none">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img key={index} src={image.url} alt="" className="relative h-full rounded-lg" />
-                    <div
-                      onClick={() => removeImage(index)}
-                      className="absolute top-0 right-0 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-400"
-                    >
-                      ✕
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{post ? t("editTitle") : t("createTitle")}</DialogTitle>
+          </DialogHeader>
+          <form className="flex w-full flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-2">
+              <Label>{t("images")}</Label>
+              <Input
+                name="images"
+                max={4}
+                multiple
+                type="file"
+                accept="image/*"
+                onChange={handleImagesChange}
+              />
+              {errors.images?.message && (
+                <span className="text-destructive text-xs">{errors.images.message}</span>
+              )}
+              {!!previewImages.length && (
+                <div className="relative flex h-24 w-full flex-row gap-4 overflow-x-scroll py-2">
+                  {previewImages.map((image, index) => (
+                    <div key={index} className="relative flex h-full flex-none">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        key={index}
+                        src={image.url}
+                        alt=""
+                        className="relative h-full rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="bg-destructive absolute top-0 right-0 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white"
+                      >
+                        <X size={14} />
+                      </button>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="form-control w-full">
-              <div className="label">
-                <span className="label-text">{t("rent")}</span>
-              </div>
-              <div className="flex gap-4">
-                <button
-                  className="btn btn-square md:btn-wide"
-                  onClick={() => handleDecrease("price")}
-                  type="button"
-                >
-                  <MinusIcon width={20} />
-                </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
-                <label className="input input-bordered flex w-full items-center justify-between gap-2">
-                  <input
+            <div className="flex flex-col gap-2">
+              <Label>{t("rent")}</Label>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => handleDecrease("price")}
+                >
+                  <Minus />
+                </Button>
+                <div className="relative flex flex-1 items-center">
+                  <Input
                     min={10}
                     max={999}
                     type="number"
-                    {...register("price", {
-                      valueAsNumber: true,
-                      min: 10,
-                      max: 999,
-                    })}
+                    className="pr-12"
+                    {...register("price", { valueAsNumber: true, min: 10, max: 999 })}
                   />
-                  <span>{t("rentUnit")}</span>
-                </label>
-                <button
-                  className="btn btn-square md:btn-wide"
-                  onClick={() => handleIncrease("price")}
+                  <span className="text-muted-foreground absolute right-3 text-sm">
+                    {t("rentUnit")}
+                  </span>
+                </div>
+                <Button
                   type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => handleIncrease("price")}
                 >
-                  <PlusIcon width={20} />
-                </button>
+                  <Plus />
+                </Button>
               </div>
             </div>
 
-            <label className="fieldset-label">{t("where")}</label>
-            <select defaultValue="Budapest" className="select w-full" {...register("location")}>
-              <option disabled={true}>{t("wherePlaceholder")}</option>
-              {locationOptions.map((locationOption) => (
-                <option key={locationOption.value} value={locationOption.value}>
-                  {te(`location.${locationOption.value}`)}
-                </option>
-              ))}
-            </select>
+            <div className="flex flex-col gap-2">
+              <Label>{t("where")}</Label>
+              <Controller
+                control={control}
+                name="location"
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t("wherePlaceholder")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {locationOptions.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {te(`location.${opt.value}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
 
-            <label className="fieldset-label">{t("age")}</label>
-            <select className="select w-full" {...register("age", { valueAsNumber: true })}>
-              <option defaultValue={0} disabled={true}>
-                {t("age")}
-              </option>
-              {ageOptions.map((ageOption) => (
-                <option key={ageOption.value} value={ageOption.value}>
-                  {te(`age.${ageOption.value}`)}
-                </option>
-              ))}
-            </select>
+            <div className="flex flex-col gap-2">
+              <Label>{t("age")}</Label>
+              <Controller
+                control={control}
+                name="age"
+                render={({ field }) => (
+                  <Select
+                    value={String(field.value)}
+                    onValueChange={(v) => field.onChange(Number(v))}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t("age")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ageOptions.map((opt) => (
+                        <SelectItem key={opt.value} value={String(opt.value)}>
+                          {te(`age.${opt.value}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
 
-            <label className="fieldset-label">{t("genderPreference")}</label>
-            <select className="select w-full" {...register("gender", { valueAsNumber: true })}>
-              <option defaultValue={0} disabled={true}>
-                {t("gender")}
-              </option>
-              {genderOptions.map((gender) => (
-                <option key={gender.value} value={gender.value}>
-                  {te(`gender.${gender.value}`)}
-                </option>
-              ))}
-            </select>
+            <div className="flex flex-col gap-2">
+              <Label>{t("genderPreference")}</Label>
+              <Controller
+                control={control}
+                name="gender"
+                render={({ field }) => (
+                  <Select
+                    value={String(field.value)}
+                    onValueChange={(v) => field.onChange(Number(v))}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t("gender")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {genderOptions.map((opt) => (
+                        <SelectItem key={opt.value} value={String(opt.value)}>
+                          {te(`gender.${opt.value}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
 
-            <label className="form-control w-full">
-              <div className="label">
-                <span className="label-text">{t("description")}</span>
-              </div>
-              <textarea
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="description">{t("description")}</Label>
+              <Textarea
+                id="description"
                 placeholder={t("descriptionPlaceholder")}
-                className="textarea textarea-bordered textarea-lg w-full"
                 {...register("description", { required: t("descriptionRequired") })}
-              ></textarea>
+              />
               {errors.description && (
-                <div className="label">
-                  <span className="label-text-alt text-orange-600">
-                    {errors.description.message}
-                  </span>
-                </div>
+                <span className="text-destructive text-xs">{errors.description.message}</span>
               )}
-            </label>
-            <div className="form-control w-full">
-              <div className="label">
-                <span className="label-text">{t("personCount")}</span>
-              </div>
-              <div className="flex gap-4">
-                <button
-                  className="btn btn-square md:btn-wide"
-                  onClick={() => handleDecrease("maxPersonCount")}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label>{t("personCount")}</Label>
+              <div className="flex gap-2">
+                <Button
                   type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => handleDecrease("maxPersonCount")}
                 >
-                  <MinusIcon width={20} />
-                </button>
-                <label className="input input-bordered flex w-full items-center justify-between gap-2">
-                  <input
+                  <Minus />
+                </Button>
+                <div className="relative flex flex-1 items-center">
+                  <Input
                     min={2}
                     max={6}
                     type="number"
-                    {...register("maxPersonCount", {
-                      valueAsNumber: true,
-                      min: 2,
-                      max: 6,
-                    })}
+                    className="pr-12"
+                    {...register("maxPersonCount", { valueAsNumber: true, min: 2, max: 6 })}
                   />
-                  <span>max</span>
-                </label>
-                <button
-                  className="btn btn-square md:btn-wide"
-                  onClick={() => handleIncrease("maxPersonCount")}
+                  <span className="text-muted-foreground absolute right-3 text-sm">max</span>
+                </div>
+                <Button
                   type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => handleIncrease("maxPersonCount")}
                 >
-                  <PlusIcon width={20} />
-                </button>
+                  <Plus />
+                </Button>
               </div>
             </div>
-            <div className="form-control py-2">
-              <label className="label cursor-pointer justify-start gap-4">
-                <span className="label-text">{t("isResident")}</span>
-                <input type="checkbox" {...register("isResident")} className="checkbox" />
-              </label>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="isResident"
+                checked={isResidentValue}
+                onCheckedChange={(checked) => setValue("isResident", checked === true)}
+              />
+              <Label htmlFor="isResident">{t("isResident")}</Label>
             </div>
-            <button disabled={isSubmitting} className="btn btn-secondary btn-wide mt-4 self-center">
-              {uploadStatus ? (
-                <>
-                  <span className="loading loading-spinner loading-sm"></span>
-                  {uploadStatus}
-                </>
-              ) : post ? (
-                tc("save")
-              ) : (
-                tc("publish")
-              )}
-            </button>
+
+            <Button disabled={isSubmitting} type="submit" className="mt-2 self-center px-12">
+              {uploadStatus ?? (post ? tc("save") : tc("publish"))}
+            </Button>
           </form>
-        </div>
-      </dialog>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

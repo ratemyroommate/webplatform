@@ -1,14 +1,23 @@
 "use client";
 
+import { useState } from "react";
 import { api } from "~/trpc/react";
-import { handleCloseModal, handleOpenModal } from "./LoginModal";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { TrashIcon } from "@heroicons/react/24/outline";
-import { XButton } from "./CloseButton";
+import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-
-const modalId = "post-delete-modal";
+import { Button } from "~/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 
 type PostDeleteProps = { id: number };
 
@@ -16,38 +25,42 @@ export const PostDelete = ({ id }: PostDeleteProps) => {
   const router = useRouter();
   const t = useTranslations("post");
   const tc = useTranslations("common");
+  const [open, setOpen] = useState(false);
   const deletePost = api.post.deleteById.useMutation({
     onSuccess: () => {
-      handleCloseModal(modalId);
+      setOpen(false);
       router.push("/");
       toast.success(t("deleteSuccess"));
     },
     onError: (error) => {
-      handleCloseModal(modalId);
+      setOpen(false);
       toast.error(error.message);
     },
   });
 
   return (
-    <>
-      <button onClick={() => handleOpenModal(modalId)} className="btn btn-error flex-1">
-        <TrashIcon width={20} />
-        {tc("delete")}
-      </button>
-      <dialog id={modalId} className="modal">
-        <div className="modal-box">
-          <XButton />
-          <h3 className="py-4 text-lg font-bold">{t("deleteConfirm")}</h3>
-          <div className="flex justify-between">
-            <button onClick={() => handleCloseModal(modalId)} className="btn">
-              {tc("cancel")}
-            </button>
-            <button onClick={() => deletePost.mutate(id)} className="btn btn-error">
-              {tc("yes")}
-            </button>
-          </div>
-        </div>
-      </dialog>
-    </>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive" className="flex-1">
+          <Trash2 />
+          {tc("delete")}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("deleteConfirm")}</AlertDialogTitle>
+          <AlertDialogDescription className="sr-only">{t("deleteConfirm")}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{tc("cancel")}</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => deletePost.mutate(id)}
+            className="bg-destructive hover:bg-destructive/90 text-white"
+          >
+            {tc("yes")}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };

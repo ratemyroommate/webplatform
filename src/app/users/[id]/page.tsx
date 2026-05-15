@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import { DocumentMagnifyingGlassIcon, PhoneIcon } from "@heroicons/react/24/outline";
+import { FileSearch, Phone } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { EditProfile } from "~/app/_components/EditProfile";
@@ -10,6 +10,8 @@ import { HydrateClient, api } from "~/trpc/server";
 import { getAverageRating } from "~/utils/helpers";
 import { ProfileCompleteness } from "~/app/_components/ProfileCompleteness";
 import { getTranslations } from "next-intl/server";
+import { Card } from "~/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
 type UserPageProps = { params: { id: string } };
 
@@ -33,7 +35,7 @@ export default async function User({ params: { id } }: UserPageProps) {
 
   return (
     <HydrateClient>
-      <div className="card bg-base-100 flex w-full flex-col gap-8 p-6 shadow-xl">
+      <Card className="w-full gap-6 p-6">
         <div className="flex justify-between">
           {user.image ? (
             <Image
@@ -44,7 +46,7 @@ export default async function User({ params: { id } }: UserPageProps) {
               alt={t("userProfileImage")}
             />
           ) : (
-            <div className="bg-base-300 flex h-20 w-20 items-center justify-center rounded-2xl text-2xl font-semibold">
+            <div className="bg-muted flex h-20 w-20 items-center justify-center rounded-2xl text-2xl font-semibold">
               {user.name?.charAt(0).toUpperCase() ?? "?"}
             </div>
           )}
@@ -59,10 +61,10 @@ export default async function User({ params: { id } }: UserPageProps) {
           </div>
           {user.socialLink && (
             <div className="flex items-center gap-2">
-              <DocumentMagnifyingGlassIcon width={20} />
+              <FileSearch size={20} />
               <Link
                 href={user.socialLink ?? "#"}
-                className="link link-primary line-clamp-1 overflow-hidden"
+                className="text-primary line-clamp-1 overflow-hidden hover:underline"
               >
                 {user.socialLink}
               </Link>
@@ -70,35 +72,30 @@ export default async function User({ params: { id } }: UserPageProps) {
           )}
           {user.phoneNumber && (
             <div className="flex items-center gap-2">
-              <PhoneIcon width={20} />
-              <a href={`tel:${user.phoneNumber}`} className="link link-primary">
+              <Phone size={20} />
+              <a href={`tel:${user.phoneNumber}`} className="text-primary hover:underline">
                 {user.phoneNumber}
               </a>
             </div>
           )}
         </div>
         <p>{user.about}</p>
-      </div>
+      </Card>
       {canReview && <ReviewModal reviewedId={id} reviewerId={session?.user.id} />}
       {user.reviewsReceived.length
         ? user.reviewsReceived.map((review, index) => (
-            <div className="card bg-base-100 flex w-full flex-col gap-4 p-6 shadow-xl" key={index}>
+            <Card key={index} className="w-full gap-4 p-6">
               <div className="flex justify-between">
-                <div className="flex gap-6">
+                <div className="flex items-center gap-4">
                   <Link href={`/users/${review.reviewer.id}`}>
-                    {review.reviewer.image ? (
-                      <Image
-                        alt={t("userProfileImage")}
-                        className="w-12 rounded-full"
-                        src={review.reviewer.image}
-                        width={48}
-                        height={48}
-                      />
-                    ) : (
-                      <div className="bg-base-300 flex h-12 w-12 items-center justify-center rounded-full text-sm font-semibold">
+                    <Avatar className="size-12">
+                      {review.reviewer.image && (
+                        <AvatarImage src={review.reviewer.image} alt={t("userProfileImage")} />
+                      )}
+                      <AvatarFallback>
                         {review.reviewer.name?.charAt(0).toUpperCase() ?? "?"}
-                      </div>
-                    )}
+                      </AvatarFallback>
+                    </Avatar>
                   </Link>
                   <span className="text-sm">{review.reviewer.name}</span>
                 </div>
@@ -108,7 +105,7 @@ export default async function User({ params: { id } }: UserPageProps) {
               </div>
               <Rating rating={review.rating} itemKey={index} />
               <p>{review.comment ?? t("noReviewComment")}</p>
-            </div>
+            </Card>
           ))
         : t("noReviews")}
     </HydrateClient>

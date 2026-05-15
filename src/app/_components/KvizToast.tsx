@@ -1,9 +1,9 @@
 "use client";
 
 import type { Session } from "next-auth";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { api } from "~/trpc/react";
 import { useTranslations } from "next-intl";
 
@@ -13,6 +13,7 @@ type KvizToastProps = {
 
 export const KvizToast = ({ session }: KvizToastProps) => {
   const t = useTranslations("kviz");
+  const router = useRouter();
   const { data } = api.kviz.getCurrentUserAnswerCount.useQuery(undefined, {
     enabled: !!session,
   });
@@ -25,16 +26,14 @@ export const KvizToast = ({ session }: KvizToastProps) => {
 
   useEffect(() => {
     if (data && data.completedQuestionCountByCurrentUser < data.totalQuestionCount) {
-      toast(() => (
-        <span className="flex items-center gap-2">
-          {t("toastIncomplete")}
-          <Link className="btn btn-secondary" href="/compatibility-kviz">
-            {t("toastAction")}
-          </Link>
-        </span>
-      ));
+      toast(t("toastIncomplete"), {
+        action: {
+          label: t("toastAction"),
+          onClick: () => router.push("/compatibility-kviz"),
+        },
+      });
     }
-  }, [data, t]);
+  }, [data, t, router]);
 
   return null;
 };

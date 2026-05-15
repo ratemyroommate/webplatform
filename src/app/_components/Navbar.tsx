@@ -2,88 +2,82 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import {
-  ArrowLeftStartOnRectangleIcon,
-  InboxIcon,
-  PresentationChartBarIcon,
-  UserCircleIcon,
-} from "@heroicons/react/24/outline";
+import { Inbox, LogOut, BarChart3, UserCircle } from "lucide-react";
 import type { Session } from "next-auth";
 import { useTranslations } from "next-intl";
 import { LanguagePicker } from "./LanguagePicker";
 import { NotificationModal } from "./NotificationModal";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 
 export function Navbar({ session, locale }: { session: Session | null; locale: string }) {
   const t = useTranslations("layout");
 
   return (
-    <div className="navbar bg-base-100 justify-between rounded-2xl shadow-xl">
-      <Link href="/" className="btn btn-ghost text-xl">
+    <header className="bg-card flex w-full items-center justify-between rounded-2xl border px-4 py-2 shadow-sm">
+      <Link href="/" className="flex items-center">
         <Image src="/R.png" width={64} height={64} alt="RateMyRoommate" />
       </Link>
 
       {session?.user ? (
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <LanguagePicker currentLocale={locale} />
           <NotificationModal session={session} />
-          <div className="dropdown dropdown-end mr-4 w-10 hover:cursor-pointer">
-            <div role="button" tabIndex={0} className="avatar">
-              <div className="ring-primary ring-offset-base-100 w-full rounded-full ring-3 ring-offset-2">
-                {session.user.image ? (
-                  <Image
-                    width={30}
-                    height={30}
-                    src={session.user.image}
-                    alt={t("profilePicture")}
-                    loading="eager"
-                  />
-                ) : (
-                  <div className="skeleton h-full w-full rounded-full"></div>
-                )}
-              </div>
-            </div>
-            <div
-              tabIndex={0}
-              className="dropdown-content"
-              onClick={() => (document.activeElement as HTMLElement)?.blur()}
-            >
-              <ul className="menu rounded-box bg-base-100 z-1 mt-2 w-52 p-2 shadow-sm">
-                <li>
-                  <Link href={`/users/${session.user.id}`}>
-                    <UserCircleIcon width={20} />
-                    {t("profile")}
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/compatibility-kviz">
-                    <PresentationChartBarIcon width={20} />
-                    {t("quiz")}
-                  </Link>
-                </li>
-                <li>
-                  <Link href={`/users/${session.user.id}/posts`}>
-                    <InboxIcon width={20} />
-                    {t("myPosts")}
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/api/auth/signout">
-                    <ArrowLeftStartOnRectangleIcon width={20} />
-                    {t("signOut")}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="ring-primary ring-offset-background rounded-full ring-2 ring-offset-2 outline-none">
+                <Avatar className="size-9">
+                  {session.user.image && (
+                    <AvatarImage src={session.user.image} alt={t("profilePicture")} />
+                  )}
+                  <AvatarFallback>
+                    {session.user.name?.charAt(0).toUpperCase() ?? "?"}
+                  </AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-52">
+              <DropdownMenuItem asChild>
+                <Link href={`/users/${session.user.id}`}>
+                  <UserCircle />
+                  {t("profile")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/compatibility-kviz">
+                  <BarChart3 />
+                  {t("quiz")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/users/${session.user.id}/posts`}>
+                  <Inbox />
+                  {t("myPosts")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/api/auth/signout">
+                  <LogOut />
+                  {t("signOut")}
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       ) : (
-        <div className="flex items-center gap-3 mr-2">
+        <div className="flex items-center gap-3">
           <LanguagePicker currentLocale={locale} />
-          <Link href="/api/auth/signin" className="btn">
-            {t("login")}
-          </Link>
+          <Button asChild>
+            <Link href="/api/auth/signin">{t("login")}</Link>
+          </Button>
         </div>
       )}
-    </div>
+    </header>
   );
 }

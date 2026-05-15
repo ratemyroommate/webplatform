@@ -1,15 +1,18 @@
 "use client";
 
-import { PencilSquareIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { Pencil, Plus } from "lucide-react";
 import { Rating } from "./Rating";
 import { useForm } from "react-hook-form";
-import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
-import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
+import { useState } from "react";
+import { api } from "~/trpc/react";
+import { useLoginModal } from "./LoginModal";
 import type { Review } from "@prisma/client";
-import { toast } from "react-hot-toast";
-import { XButton } from "./CloseButton";
+import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { Button } from "~/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog";
+import { Textarea } from "~/components/ui/textarea";
 
 type ReviewProps = {
   review?: Review;
@@ -21,6 +24,9 @@ type FormValues = { rating: number; comment: string | null };
 export const ReviewModal = ({ review, reviewedId, reviewerId }: ReviewProps) => {
   const t = useTranslations("review");
   const tc = useTranslations("common");
+  const [open, setOpen] = useState(false);
+  const loginModal = useLoginModal();
+
   const { register, watch, setValue, handleSubmit, formState } = useForm<FormValues>({
     defaultValues: review
       ? { rating: review.rating, comment: review.comment }
@@ -28,16 +34,11 @@ export const ReviewModal = ({ review, reviewedId, reviewerId }: ReviewProps) => 
   });
 
   const router = useRouter();
-  const modalId = reviewerId
-    ? review
-      ? `review-modal-${review.id}`
-      : "review-modal"
-    : "login-modal";
   const successMessage = review ? t("updateSuccess") : t("createSuccess");
   const reviewMutation = api.review[review ? "update" : "create"].useMutation({
     onSuccess: () => {
       router.refresh();
-      handleCloseModal(modalId);
+      setOpen(false);
       toast.success(successMessage);
     },
   });
@@ -45,45 +46,47 @@ export const ReviewModal = ({ review, reviewedId, reviewerId }: ReviewProps) => 
   const onSubmit = (formValues: FormValues) => reviewMutation.mutate({ ...formValues, reviewedId });
   const handleRatingClick = (rating: number) => setValue("rating", rating);
 
+  const handleTriggerClick = () => {
+    if (!reviewerId) {
+      loginModal.open();
+      return;
+    }
+    setOpen(true);
+  };
+
   return (
     <>
-      <button
-        className={`btn ${!review && "btn-secondary w-full shadow-xl"}`}
-        onClick={() => handleOpenModal(modalId)}
+      <Button
+        onClick={handleTriggerClick}
+        variant={review ? "outline" : "default"}
+        className={review ? "" : "w-full shadow-md"}
       >
         {review ? (
           <>
-            <PencilSquareIcon width={20} />
+            <Pencil />
             {tc("edit")}
           </>
         ) : (
           <>
-            <PlusIcon width={20} />
+            <Plus />
             {t("newReview")}
           </>
         )}
-      </button>
-      <LoginModal />
-      <dialog id={review ? `review-modal-${review.id}` : "review-modal"} className="modal">
-        <div className="modal-box">
-          <h3 className="text-lg font-bold">{t("title")}</h3>
-          <XButton />
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 pt-8">
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("title")}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
             <Rating rating={watch("rating")} itemKey={-1} isLarge onClick={handleRatingClick} />
-            <textarea
-              className="textarea textarea-bordered w-full"
-              placeholder={t("commentPlaceholder")}
-              {...register("comment")}
-            />
-            <button
-              disabled={formState.isSubmitting || reviewMutation.isPending}
-              className="btn btn-secondary"
-            >
+            <Textarea placeholder={t("commentPlaceholder")} {...register("comment")} />
+            <Button type="submit" disabled={formState.isSubmitting || reviewMutation.isPending}>
               {tc("publish")}
-            </button>
+            </Button>
           </form>
-        </div>
-      </dialog>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

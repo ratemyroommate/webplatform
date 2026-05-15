@@ -1,6 +1,8 @@
 "use client";
 import { api } from "~/trpc/react";
 import { LoadingQuestion } from "./Kviz";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+import { Label } from "~/components/ui/label";
 
 type CompletedKvizProps = {
   userId?: string;
@@ -11,25 +13,27 @@ export const CompletedKviz = ({ userId }: CompletedKvizProps) => {
   if (isLoading) return <LoadingAnswers />;
   return (
     <div className="flex flex-col gap-6">
-      {questions?.map((question) => (
-        <div key={question.id} className="flex flex-col gap-4">
-          <b className="rounded-lg text-2xl">{question.text}</b>
-          <div className="join join-vertical">
-            {question.answers.map((answer, index) => (
-              <input
-                key={index}
-                className="join-item btn h-auto p-4 text-left"
-                type="radio"
-                name={`question-${question.id}`}
-                aria-label={answer.text}
-                value={question.id + answer.id}
-                readOnly
-                checked={answer.id === answer.submittedAnswers[0]?.answerId}
-              />
-            ))}
+      {questions?.map((question) => {
+        const selectedAnswerId = question.answers.find(
+          (a) => a.id === a.submittedAnswers[0]?.answerId
+        )?.id;
+        return (
+          <div key={question.id} className="flex flex-col gap-3">
+            <b className="rounded-lg text-2xl">{question.text}</b>
+            <RadioGroup
+              value={selectedAnswerId ? String(selectedAnswerId) : undefined}
+              className="flex flex-col gap-2"
+            >
+              {question.answers.map((answer) => (
+                <Label key={answer.id} className="flex items-center gap-3 rounded-md border p-4">
+                  <RadioGroupItem value={String(answer.id)} disabled />
+                  <span>{answer.text}</span>
+                </Label>
+              ))}
+            </RadioGroup>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

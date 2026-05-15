@@ -3,6 +3,7 @@ import { HydrateClient } from "~/trpc/server";
 import { getServerAuthSession } from "~/server/auth";
 import { CompletedKviz } from "~/app/_components/CompletedKviz";
 import { getTranslations } from "next-intl/server";
+import { Card } from "~/components/ui/card";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
@@ -19,13 +20,13 @@ export default async function Page({ params: { id } }: KvizPageProps) {
   const t = await getTranslations("kviz");
   return (
     <HydrateClient>
-      <div className="card bg-base-100 flex w-full flex-col gap-6 p-4 shadow-xl">
+      <Card className="w-full gap-6 p-4">
         {session ? (
           <CompletedKviz userId={id} />
         ) : (
           <div className="text-center">{t("loginRequiredAnswers")}</div>
         )}
-      </div>
+      </Card>
     </HydrateClient>
   );
 }
