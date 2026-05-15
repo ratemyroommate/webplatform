@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { setLocale } from "~/app/actions/setLocale";
 import { LOCALE_OPTIONS } from "~/i18n/locales";
-import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,23 +29,19 @@ export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="gap-1.5"
-          disabled={isPending}
-          aria-label={t("selectLanguage")}
-        >
-          <span className="text-base leading-none">{current.flag}</span>
-          <span className="text-xs font-semibold tracking-wide uppercase">{current.code}</span>
-        </Button>
+      <DropdownMenuTrigger
+        disabled={isPending}
+        aria-label={t("selectLanguage")}
+        className="hover:bg-accent inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-sm font-medium transition-colors outline-none disabled:opacity-50"
+      >
+        <span className="text-base leading-none">{current.flag}</span>
+        <span className="text-xs font-semibold tracking-wide uppercase">{current.code}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-36">
         {LOCALE_OPTIONS.map((locale) => (
           <DropdownMenuItem
             key={locale.code}
-            onClick={() => handleSelect(locale.code)}
+            onSelect={() => handleSelect(locale.code)}
             className={locale.code === currentLocale ? "font-semibold" : ""}
           >
             <span>{locale.flag}</span>
