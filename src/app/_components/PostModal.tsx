@@ -283,7 +283,8 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                     max={999}
                     type="number"
                     className="pr-12"
-                    {...register("price", { valueAsNumber: true, min: 10, max: 999 })}
+                    value={watch("price") ?? ""}
+                    onChange={(e) => setValue("price", Number(e.target.value))}
                   />
                   <span className="text-muted-foreground absolute right-3 text-sm">
                     {t("rentUnit")}
@@ -401,7 +402,8 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
                     max={6}
                     type="number"
                     className="pr-12"
-                    {...register("maxPersonCount", { valueAsNumber: true, min: 2, max: 6 })}
+                    value={watch("maxPersonCount") ?? ""}
+                    onChange={(e) => setValue("maxPersonCount", Number(e.target.value))}
                   />
                   <span className="text-muted-foreground absolute right-3 text-sm">max</span>
                 </div>
