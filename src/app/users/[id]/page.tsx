@@ -31,7 +31,8 @@ export default async function User({ params: { id } }: UserPageProps) {
   if (!user) return t("userNotFound");
 
   const canEdit = id === session?.user.id;
-  const canReview = user.reviewsReceived.every((review) => review.reviewer.id !== session?.user.id);
+  const canReview =
+    !canEdit && user.reviewsReceived.every((review) => review.reviewer.id !== session?.user.id);
 
   return (
     <HydrateClient>
