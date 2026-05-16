@@ -24,8 +24,10 @@ export const RequestModal = ({ postId, userId }: ReviewProps) => {
   });
 
   const router = useRouter();
+  const utils = api.useUtils();
   const reviewMutation = api.request.create.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
+      await utils.request.getAll.invalidate();
       router.refresh();
       setOpen(false);
       toast.success(t("success"));
