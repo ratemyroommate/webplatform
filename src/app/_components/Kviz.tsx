@@ -49,10 +49,9 @@ export const Kviz = () => {
       <Accordion type="single" collapsible className="rounded-md border px-4">
         <AccordionItem value="intro" className="border-0">
           <AccordionTrigger className="font-semibold">{t("title")}</AccordionTrigger>
-          <AccordionContent
-            className="text-sm"
-            dangerouslySetInnerHTML={{ __html: t.raw("description") as string }}
-          />
+          <AccordionContent className="text-sm">
+            <div dangerouslySetInnerHTML={{ __html: t.raw("description") as string }} />
+          </AccordionContent>
         </AccordionItem>
       </Accordion>
       <TimeLine questionIndex={questionIndex} totalQuestionCount={totalQuestionCount} />
