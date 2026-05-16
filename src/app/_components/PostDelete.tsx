@@ -26,9 +26,14 @@ export const PostDelete = ({ id }: PostDeleteProps) => {
   const t = useTranslations("post");
   const tc = useTranslations("common");
   const [open, setOpen] = useState(false);
+  const utils = api.useUtils();
   const deletePost = api.post.deleteById.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       setOpen(false);
+      await Promise.all([
+        utils.post.getLatest.invalidate(),
+        utils.post.getAllByUserId.invalidate(),
+      ]);
       router.push("/");
       toast.success(t("deleteSuccess"));
     },
