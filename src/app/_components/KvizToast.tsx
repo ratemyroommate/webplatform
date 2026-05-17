@@ -1,7 +1,7 @@
 "use client";
 
 import type { Session } from "next-auth";
-import { useRouter } from "next/navigation";
+import { useRouter } from "~/i18n/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { api } from "~/trpc/react";

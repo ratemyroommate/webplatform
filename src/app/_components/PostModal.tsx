@@ -4,7 +4,7 @@ import { Minus, Plus, Pencil, X } from "lucide-react";
 import type { Post } from "@prisma/client";
 import { Location } from "@prisma/client";
 import { useLoginModal } from "./LoginModal";
-import { useRouter } from "next/navigation";
+import { useRouter } from "~/i18n/navigation";
 import { api } from "~/trpc/react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";

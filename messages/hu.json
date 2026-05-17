@@ -15,10 +15,12 @@
     },
     "post": {
       "title": "Szobatárs hirdetés – {location}",
+      "titleWithPrice": "Szobatárs {location}-ban – {price} Ft/hó",
       "description": "Szobatárs hirdetés: {location}, {price} ft/hó. Nézd meg a részleteket és jelentkezz lakótársnak!"
     },
     "user": {
       "title": "Felhasználói profil",
+      "titleWithName": "{name} – Felhasználói profil",
       "description": "Felhasználói profil megtekintése a Rate My Roommate platformon. Nézd meg az értékeléseket és a kompatibilitást."
     },
     "userPosts": {

@@ -1,10 +1,10 @@
 "use client";
 
 import { useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { setLocale } from "~/app/actions/setLocale";
-import { LOCALE_OPTIONS } from "~/i18n/locales";
+import { useParams } from "next/navigation";
+import { usePathname, useRouter } from "~/i18n/navigation";
+import { LOCALE_OPTIONS, type Locale } from "~/i18n/locales";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,16 +14,21 @@ import {
 
 export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const params = useParams();
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("layout");
 
   const current = LOCALE_OPTIONS.find((l) => l.code === currentLocale) ?? LOCALE_OPTIONS[0];
 
-  function handleSelect(code: string) {
+  function handleSelect(code: Locale) {
     if (code === currentLocale) return;
-    startTransition(async () => {
-      await setLocale(code);
-      router.refresh();
+    startTransition(() => {
+      router.replace(
+        // @ts-expect-error -- next-intl typed routes are strict; we pass dynamic params verbatim
+        { pathname, params },
+        { locale: code }
+      );
     });
   }
 

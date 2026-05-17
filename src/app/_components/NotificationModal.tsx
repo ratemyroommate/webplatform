@@ -2,9 +2,9 @@
 
 import { Bell, Check, Eye, X } from "lucide-react";
 import { api } from "~/trpc/react";
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import React, { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "~/i18n/navigation";
 import type { Request, RequestStatus } from "@prisma/client";
 import { toast } from "sonner";
 import { NotificationBell } from "./NotificationBell";

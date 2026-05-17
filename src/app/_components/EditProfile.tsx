@@ -3,7 +3,7 @@
 import { Pencil } from "lucide-react";
 import type { User } from "@prisma/client";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter } from "~/i18n/navigation";
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";

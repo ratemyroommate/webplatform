@@ -3,7 +3,7 @@
 import { Pencil, Plus } from "lucide-react";
 import { Rating } from "./Rating";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter } from "~/i18n/navigation";
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import { useLoginModal } from "./LoginModal";

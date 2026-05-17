@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import Image from "next/image";
+import NextLink from "next/link";
 import { Inbox, LogOut, BarChart3, UserCircle } from "lucide-react";
 import type { Session } from "next-auth";
 import { useTranslations } from "next-intl";
@@ -62,10 +63,10 @@ export function Navbar({ session, locale }: { session: Session | null; locale: s
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/api/auth/signout">
+                <NextLink href="/api/auth/signout">
                   <LogOut />
                   {t("signOut")}
-                </Link>
+                </NextLink>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -74,7 +75,7 @@ export function Navbar({ session, locale }: { session: Session | null; locale: s
         <div className="flex items-center gap-3">
           <LanguagePicker currentLocale={locale} />
           <Button asChild>
-            <Link href="/api/auth/signin">{t("login")}</Link>
+            <NextLink href="/api/auth/signin">{t("login")}</NextLink>
           </Button>
         </div>
       )}

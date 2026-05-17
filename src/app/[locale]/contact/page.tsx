@@ -1,20 +1,24 @@
 import { type Metadata } from "next";
 import { Mail } from "lucide-react";
-import Link from "next/link";
 import { HydrateClient } from "~/trpc/server";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
+import { alternatesFor } from "~/i18n/seo";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("metadata");
+type Props = { params: { locale: string } };
+
+export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: "metadata" });
   return {
     title: t("contact.title"),
     description: t("contact.description"),
+    alternates: alternatesFor(locale, "/contact"),
   };
 }
 
-export default async function Contact() {
+export default async function Contact({ params: { locale } }: Props) {
+  setRequestLocale(locale);
   const t = await getTranslations("contact");
   return (
     <HydrateClient>
@@ -22,10 +26,10 @@ export default async function Contact() {
         <h1 className="text-2xl">{t("title")}</h1>
         <p dangerouslySetInnerHTML={{ __html: t.raw("body") as string }} />
         <Button asChild size="lg" className="self-start">
-          <Link href="mailto:rmrm.owners@gmail.com">
+          <a href="mailto:rmrm.owners@gmail.com">
             {t("sendEmail")}
             <Mail />
-          </Link>
+          </a>
         </Button>
       </Card>
     </HydrateClient>

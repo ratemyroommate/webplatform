@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 import { FileSearch, Phone } from "lucide-react";
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import Image from "next/image";
 import { EditProfile } from "~/app/_components/EditProfile";
 import { Rating } from "~/app/_components/Rating";
@@ -12,18 +12,49 @@ import { ProfileCompleteness } from "~/app/_components/ProfileCompleteness";
 import { getTranslations } from "next-intl/server";
 import { Card } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { JsonLd } from "~/app/_components/JsonLd";
+import { env } from "~/env";
+import { alternatesFor } from "~/i18n/seo";
+import { setRequestLocale } from "next-intl/server";
 
-type UserPageProps = { params: { id: string } };
+type UserPageProps = { params: { id: string; locale: string } };
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("metadata");
+export async function generateMetadata({
+  params: { id, locale },
+}: UserPageProps): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  const user = await api.user.getById(id);
+  if (!user) return { title: t("user.title") };
+
+  const name = user.name?.trim() ?? "";
+  const title = name ? t("user.titleWithName", { name }) : t("user.title");
+  const description = user.about?.trim().length
+    ? user.about.slice(0, 200)
+    : t("user.description");
+  const alts = alternatesFor(locale, `/users/${id}`);
+
   return {
-    title: t("user.title"),
-    description: t("user.description"),
+    title,
+    description,
+    alternates: alts,
+    openGraph: {
+      type: "profile",
+      url: alts.canonical,
+      title,
+      description,
+      images: user.image ? [{ url: user.image, alt: name || title }] : undefined,
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+      images: user.image ? [user.image] : undefined,
+    },
   };
 }
 
-export default async function User({ params: { id } }: UserPageProps) {
+export default async function User({ params: { id, locale } }: UserPageProps) {
+  setRequestLocale(locale);
   const session = await getServerAuthSession();
   const user = await api.user.getById(id);
   const t = await getTranslations("profile");
@@ -34,8 +65,45 @@ export default async function User({ params: { id } }: UserPageProps) {
   const canReview =
     !canEdit && user.reviewsReceived.every((review) => review.reviewer.id !== session?.user.id);
 
+  const baseUrl = env.NEXTAUTH_URL.startsWith("http")
+    ? env.NEXTAUTH_URL
+    : `https://${env.NEXTAUTH_URL}`;
+  const ratingValue = getAverageRating(user);
+  const reviewCount = user.reviewsReceived.length;
+  const personLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: user.name ?? undefined,
+    description: user.about ?? undefined,
+    image: user.image ?? undefined,
+    url: `${baseUrl}/users/${id}`,
+    sameAs: user.socialLink ? [user.socialLink] : undefined,
+    aggregateRating:
+      reviewCount > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue,
+            reviewCount,
+            bestRating: 5,
+            worstRating: 1,
+          }
+        : undefined,
+    review: user.reviewsReceived.map((review) => ({
+      "@type": "Review",
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: review.rating,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      author: { "@type": "Person", name: review.reviewer.name ?? undefined },
+      reviewBody: review.comment ?? undefined,
+    })),
+  };
+
   return (
     <HydrateClient>
+      <JsonLd data={personLd} />
       <Card className="w-full gap-6 p-6">
         <div className="flex justify-between">
           {user.image ? (
@@ -55,7 +123,7 @@ export default async function User({ params: { id } }: UserPageProps) {
         </div>
         {canEdit && <ProfileCompleteness />}
         <div className="flex flex-col gap-2">
-          <b>{user.name}</b>
+          <h1 className="text-xl font-bold">{user.name}</h1>
           <div className="flex items-center gap-2">
             <Rating itemKey={Infinity} rating={getAverageRating(user)} readOnly={true} isLarge />
             <span>( {user.reviewsReceived.length} )</span>

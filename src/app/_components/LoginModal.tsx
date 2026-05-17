@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import NextLink from "next/link";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
@@ -44,7 +44,7 @@ export function LoginModalProvider({ children }: { children: React.ReactNode }) 
             <DialogDescription className="sr-only">{t("message")}</DialogDescription>
           </DialogHeader>
           <Button asChild className="w-full">
-            <Link href="/api/auth/signin">{t("login")}</Link>
+            <NextLink href="/api/auth/signin">{t("login")}</NextLink>
           </Button>
         </DialogContent>
       </Dialog>

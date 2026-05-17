@@ -1,7 +1,7 @@
 "use client";
 
 import type { Session } from "next-auth";
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import { api } from "~/trpc/react";
 import { useTranslations } from "next-intl";
 import { Card } from "~/components/ui/card";

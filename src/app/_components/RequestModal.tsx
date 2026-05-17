@@ -3,7 +3,7 @@
 import { Users } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { api } from "~/trpc/react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "~/i18n/navigation";
 import { useState } from "react";
 import { useLoginModal } from "./LoginModal";
 import { toast } from "sonner";
