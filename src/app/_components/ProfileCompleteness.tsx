@@ -8,10 +8,18 @@ import { Card } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
 import { Button } from "~/components/ui/button";
 
+const FillQuizButton = ({ size = "sm", className }: { size?: "xs" | "sm"; className?: string }) => {
+  const tc = useTranslations("common");
+  return (
+    <Button asChild variant="outline" size={size} className={className}>
+      <Link href="/compatibility-kviz">{tc("fillQuiz")}</Link>
+    </Button>
+  );
+};
+
 export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) => {
   const { data, isLoading } = api.user.getProfileCompleteness.useQuery();
   const t = useTranslations("profile.completeness");
-  const tc = useTranslations("common");
 
   if (isLoading || !data) return null;
 
@@ -36,9 +44,12 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
   if (compact) {
     return (
       <div className="w-full">
-        <div className="mb-1 flex w-full items-center justify-between">
+        <div className="mb-1 flex w-full items-center justify-between gap-2">
           <span className="text-sm">{t("title")}</span>
-          <span className="text-sm font-medium">{percentage}%</span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">{percentage}%</span>
+            {!kvizComplete && <FillQuizButton size="xs" />}
+          </div>
         </div>
         <Progress value={percentage} className="w-full" />
       </div>
@@ -64,11 +75,7 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
           </li>
         ))}
       </ul>
-      {!kvizComplete && (
-        <Button asChild variant="outline" size="sm" className="self-start">
-          <Link href="/compatibility-kviz">{tc("fillQuiz")}</Link>
-        </Button>
-      )}
+      {!kvizComplete && <FillQuizButton className="self-start" />}
     </Card>
   );
 };
