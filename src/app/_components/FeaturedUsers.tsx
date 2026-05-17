@@ -1,9 +1,10 @@
 "use client";
 import { Rating } from "./Rating";
 import { getAverageRating } from "~/utils/helpers";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
 
 const defaultImage =
   "https://static.vecteezy.com/system/resources/previews/020/765/399/large_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
@@ -19,24 +20,18 @@ export const FeaturedUsers = ({ compact, ...post }: FeaturedUsersProps) => {
   if (compact) {
     return (
       <div className="flex items-center">
-        <div className="avatar-group -space-x-3">
+        <div className="flex -space-x-3">
           {post.featuredUsers.map((user, index) => (
-            <div className="avatar w-8" key={index}>
-              <div className="w-full rounded-full ring-2 ring-white">
-                <Image
-                  width={64}
-                  height={64}
-                  src={user.image ?? defaultImage}
-                  alt={user.name ?? t("roommate")}
-                />
-              </div>
-            </div>
+            <Avatar key={index} className="ring-background size-8 ring-2">
+              <AvatarImage src={user.image ?? defaultImage} alt={user.name ?? t("roommate")} />
+              <AvatarFallback>{user.name?.charAt(0).toUpperCase() ?? "?"}</AvatarFallback>
+            </Avatar>
           ))}
         </div>
         {emptySlots > 0 && (
-          <span className="badge badge-outline badge-sm ml-2 font-medium">
+          <Badge variant="outline" className="ml-2 font-medium">
             {t("freeSlots", { count: emptySlots })}
-          </span>
+          </Badge>
         )}
       </div>
     );
@@ -56,16 +51,13 @@ export const FeaturedUsers = ({ compact, ...post }: FeaturedUsersProps) => {
           className="flex cursor-pointer flex-col items-center gap-2 transition-transform hover:scale-105"
           key={index}
         >
-          <div className="avatar w-12">
-            <div className="ring-primary ring-offset-base-100 w-full rounded-full shadow-md ring-2 ring-offset-2">
-              <Image
-                width={100}
-                height={100}
-                src={post.featuredUsers?.[index]?.image ?? defaultImage}
-                alt={t("roommate")}
-              />
-            </div>
-          </div>
+          <Avatar className="ring-primary ring-offset-background size-12 shadow-md ring-2 ring-offset-2">
+            <AvatarImage
+              src={post.featuredUsers?.[index]?.image ?? defaultImage}
+              alt={t("roommate")}
+            />
+            <AvatarFallback>?</AvatarFallback>
+          </Avatar>
           <div className="flex flex-col items-center">
             <p className="max-w-[80px] truncate text-xs font-medium">
               {post.featuredUsers[index]?.name ?? "\u200B"}

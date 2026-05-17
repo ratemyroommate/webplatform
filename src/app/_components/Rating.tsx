@@ -1,5 +1,8 @@
 "use client";
 
+import { Star } from "lucide-react";
+import { cn } from "~/lib/utils";
+
 type RatingProps = {
   itemKey: number | string;
   readOnly?: boolean;
@@ -9,19 +12,37 @@ type RatingProps = {
 };
 
 export const Rating = ({ itemKey, readOnly, rating, isLarge, onClick }: RatingProps) => {
+  const size = isLarge ? 28 : 14;
   return (
-    <div className={isLarge ? "rating rating-md" : "rating rating-xs"}>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <input
-          key={index}
-          type="radio"
-          name={`rating-${itemKey}`}
-          className="mask mask-star-2 bg-orange-400"
-          readOnly={readOnly}
-          checked={index === rating - 1}
-          onChange={() => (onClick ? onClick(index + 1) : null)}
-        />
-      ))}
+    <div className="flex items-center gap-0.5" role="radiogroup" aria-label={`rating-${itemKey}`}>
+      {Array.from({ length: 5 }).map((_, index) => {
+        const value = index + 1;
+        const filled = value <= rating;
+        return (
+          <button
+            key={index}
+            type="button"
+            role="radio"
+            aria-checked={filled}
+            disabled={readOnly}
+            onClick={() => onClick?.(value)}
+            className={cn(
+              "rounded-sm transition-transform",
+              !readOnly && "cursor-pointer hover:scale-110",
+              readOnly && "cursor-default"
+            )}
+          >
+            <Star
+              size={size}
+              className={cn(
+                filled
+                  ? "fill-amber-400 stroke-amber-400"
+                  : "stroke-muted-foreground fill-transparent"
+              )}
+            />
+          </button>
+        );
+      })}
     </div>
   );
 };

@@ -1,65 +1,68 @@
 "use client";
 
-import { UserGroupIcon } from "@heroicons/react/24/outline";
+import { Users } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
-import { LoginModal, handleCloseModal, handleOpenModal } from "./LoginModal";
-import { toast } from "react-hot-toast";
-import { XButton } from "./CloseButton";
-
+import { useState } from "react";
+import { useLoginModal } from "./LoginModal";
+import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { Button } from "~/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog";
+import { Textarea } from "~/components/ui/textarea";
 
 type ReviewProps = { postId: number; userId?: string };
 type FormValues = { comment: string | null };
 
 export const RequestModal = ({ postId, userId }: ReviewProps) => {
   const t = useTranslations("request");
+  const [open, setOpen] = useState(false);
+  const loginModal = useLoginModal();
   const { register, handleSubmit, formState } = useForm<FormValues>({
     defaultValues: { comment: "" },
   });
 
   const router = useRouter();
-  const modalId = userId ? "request-modal" : "login-modal";
+  const utils = api.useUtils();
   const reviewMutation = api.request.create.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
+      await utils.request.getAll.invalidate();
       router.refresh();
-      handleCloseModal(modalId);
+      setOpen(false);
       toast.success(t("success"));
     },
   });
 
   const onSubmit = (formValues: FormValues) => reviewMutation.mutate({ ...formValues, postId });
 
+  const handleTriggerClick = () => {
+    if (!userId) {
+      loginModal.open();
+      return;
+    }
+    setOpen(true);
+  };
+
   return (
     <>
-      <button
-        className="btn btn-secondary w-full shadow-xl"
-        onClick={() => handleOpenModal(modalId)}
-      >
-        <UserGroupIcon width={20} />
+      <Button onClick={handleTriggerClick} className="w-full shadow-md">
+        <Users />
         {t("apply")}
-      </button>
-      <LoginModal />
-      <dialog id={"request-modal"} className="modal">
-        <div className="modal-box">
-          <h3 className="text-lg font-bold">{t("title")}</h3>
-          <XButton />
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 pt-8">
-            <textarea
-              className="textarea textarea-bordered w-full"
-              placeholder={t("commentPlaceholder")}
-              {...register("comment")}
-            />
-            <button
-              disabled={formState.isSubmitting || reviewMutation.isPending}
-              className="btn btn-secondary"
-            >
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("title")}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+            <Textarea placeholder={t("commentPlaceholder")} {...register("comment")} />
+            <Button type="submit" disabled={formState.isSubmitting || reviewMutation.isPending}>
               {t("send")}
-            </button>
+            </Button>
           </form>
-        </div>
-      </dialog>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

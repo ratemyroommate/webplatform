@@ -136,6 +136,7 @@
     "apply": "Szűrés"
   },
   "notification": {
+    "title": "Értesítések",
     "receivedTab": "Kapott kérelmek",
     "sentTab": "Küldött kérelmek",
     "noReceived": "Nincs kapott kérelem",

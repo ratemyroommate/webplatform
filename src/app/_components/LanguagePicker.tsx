@@ -5,6 +5,12 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { setLocale } from "~/app/actions/setLocale";
 import { LOCALE_OPTIONS } from "~/i18n/locales";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 
 export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
   const router = useRouter();
@@ -15,10 +21,6 @@ export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
 
   function handleSelect(code: string) {
     if (code === currentLocale) return;
-    const activeElement = document.activeElement;
-    if (activeElement instanceof HTMLElement) {
-      activeElement.blur();
-    }
     startTransition(async () => {
       await setLocale(code);
       router.refresh();
@@ -26,34 +28,27 @@ export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
   }
 
   return (
-    <div className="dropdown dropdown-end">
-      <button
-        tabIndex={0}
-        className="btn btn-ghost btn-sm gap-1.5"
+    <DropdownMenu>
+      <DropdownMenuTrigger
         disabled={isPending}
         aria-label={t("selectLanguage")}
+        className="hover:bg-accent inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-sm font-medium transition-colors outline-none disabled:opacity-50"
       >
         <span className="text-base leading-none">{current.flag}</span>
-        <span className="text-xs font-semibold uppercase tracking-wide">
-          {current.code}
-        </span>
-      </button>
-      <ul
-        tabIndex={0}
-        className="dropdown-content menu rounded-box bg-base-100 z-10 mt-1 w-36 p-1 shadow-lg"
-      >
+        <span className="text-xs font-semibold tracking-wide uppercase">{current.code}</span>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-36">
         {LOCALE_OPTIONS.map((locale) => (
-          <li key={locale.code}>
-            <button
-              onClick={() => handleSelect(locale.code)}
-              className={locale.code === currentLocale ? "active" : ""}
-            >
-              <span>{locale.flag}</span>
-              <span className="text-sm">{locale.label}</span>
-            </button>
-          </li>
+          <DropdownMenuItem
+            key={locale.code}
+            onSelect={() => handleSelect(locale.code)}
+            className={locale.code === currentLocale ? "font-semibold" : ""}
+          >
+            <span>{locale.flag}</span>
+            <span className="text-sm">{locale.label}</span>
+          </DropdownMenuItem>
         ))}
-      </ul>
-    </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

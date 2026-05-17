@@ -1,10 +1,22 @@
 "use client";
-import { ArrowRightIcon, HomeIcon } from "@heroicons/react/24/outline";
+import { ArrowRight, Home, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { api } from "~/trpc/react";
 import { CompletedKviz } from "./CompletedKviz";
 import { useTranslations } from "next-intl";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
+import { Alert, AlertTitle } from "~/components/ui/alert";
+import { Button } from "~/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+import { Label } from "~/components/ui/label";
+import { Skeleton } from "~/components/ui/skeleton";
+import { cn } from "~/lib/utils";
 
 export const Kviz = () => {
   const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
@@ -14,6 +26,8 @@ export const Kviz = () => {
   const saveAnswerMutation = api.kviz.saveAnswer.useMutation({
     onSuccess: () => {
       void utils.kviz.getQuestion.invalidate();
+      void utils.kviz.getStats.invalidate();
+      void utils.kviz.getAnsers.invalidate();
       void utils.user.getProfileCompleteness.invalidate();
     },
   });
@@ -34,49 +48,51 @@ export const Kviz = () => {
 
   return (
     <>
-      <div className="collapse-arrow bg-base-100 border-base-300 collapse border">
-        <input type="radio" name="my-accordion-2" />
-        <div className="collapse-title font-semibold">{t("title")}</div>
-        <div
-          className="collapse-content text-sm"
-          dangerouslySetInnerHTML={{ __html: t.raw("description") as string }}
-        />
-      </div>
+      <Accordion type="single" collapsible className="rounded-md border px-4">
+        <AccordionItem value="intro" className="border-0">
+          <AccordionTrigger className="font-semibold">{t("title")}</AccordionTrigger>
+          <AccordionContent className="text-sm">
+            <div dangerouslySetInnerHTML={{ __html: t.raw("description") as string }} />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
       <TimeLine questionIndex={questionIndex} totalQuestionCount={totalQuestionCount} />
       <div className="flex flex-col gap-4">
         <b className="rounded-lg text-2xl">{question.text}</b>
-        <div className="join join-vertical">
+        <RadioGroup
+          value={selectedAnswerId !== null ? String(selectedAnswerId) : undefined}
+          onValueChange={(v) => setSelectedAnswerId(Number(v))}
+          className="flex flex-col gap-2"
+        >
           {question.answers.map((answer) => (
-            <input
+            <Label
               key={answer.id}
-              className="join-item btn h-auto p-4 text-left"
-              type="radio"
-              name="answer"
-              aria-label={answer.text}
-              value={answer.id}
-              onChange={() => setSelectedAnswerId(answer.id)}
-            />
+              className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-md border p-4"
+            >
+              <RadioGroupItem value={String(answer.id)} />
+              <span>{answer.text}</span>
+            </Label>
           ))}
-        </div>
+        </RadioGroup>
       </div>
-      <button
+      <Button
         disabled={saveAnswerMutation.isPending || selectedAnswerId === null}
         onClick={handleSubmit}
-        className="btn btn-secondary self-end"
+        className="self-end"
       >
         {t("saveAndNext")}
-        <ArrowRightIcon width={16} />
-      </button>
+        <ArrowRight />
+      </Button>
     </>
   );
 };
 
 const LoadingKviz = () => (
   <>
-    <div className="skeleton h-16"></div>
-    <div className="skeleton my-4 h-2 w-2/3 self-center"></div>
+    <Skeleton className="h-16" />
+    <Skeleton className="my-4 h-2 w-2/3 self-center" />
     <LoadingQuestion />
-    <div className="skeleton h-8 w-1/2 self-end"></div>
+    <Skeleton className="h-8 w-1/2 self-end" />
   </>
 );
 
@@ -87,56 +103,44 @@ const TimeLine = ({
   questionIndex: number;
   totalQuestionCount: number;
 }) => (
-  <ul className="steps">
+  <div className="flex w-full items-center gap-1 py-2">
     {Array.from({ length: totalQuestionCount }).map((_, index) => (
-      <li
+      <div
         key={index}
-        className={`step !min-w-auto ${questionIndex >= index ? "step-primary" : ""}`}
-      ></li>
+        className={cn(
+          "h-1.5 flex-1 rounded-full transition-colors",
+          questionIndex >= index ? "bg-primary" : "bg-muted"
+        )}
+      />
     ))}
-  </ul>
+  </div>
 );
 
 export const LoadingQuestion = () => (
   <>
-    <div className="skeleton h-4 w-1/2"></div>
-    <div className="skeleton h-4 w-1/2"></div>
-
-    <div className="skeleton h-6"></div>
-    <div className="skeleton h-6"></div>
-    <div className="skeleton h-6"></div>
+    <Skeleton className="h-4 w-1/2" />
+    <Skeleton className="h-4 w-1/2" />
+    <Skeleton className="h-6" />
+    <Skeleton className="h-6" />
+    <Skeleton className="h-6" />
   </>
 );
 
-const CompletedKvizView = () => (
-  <div className="flex flex-col gap-6">
-    <SuccessAlert />
-    <CompletedKviz />
-    <Link href="/" className="btn btn-secondary self-end">
-      <HomeIcon width={16} />
-      Vissza a főoldalra
-    </Link>
-  </div>
-);
-
-const SuccessAlert = () => {
+const CompletedKvizView = () => {
   const t = useTranslations("kviz");
   return (
-    <div role="alert" className="alert alert-success">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6 shrink-0 stroke-current"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      <span>{t("completed")}</span>
+    <div className="flex flex-col gap-6">
+      <Alert className="border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+        <CheckCircle2 className="h-4 w-4" />
+        <AlertTitle>{t("completed")}</AlertTitle>
+      </Alert>
+      <CompletedKviz />
+      <Button asChild className="self-end">
+        <Link href="/">
+          <Home />
+          Vissza a főoldalra
+        </Link>
+      </Button>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -11,14 +12,17 @@ export const reviewRouter = createTRPCRouter({
         reviewedId: z.string(),
       })
     )
-    .mutation(({ ctx, input }) =>
-      ctx.db.review.create({
+    .mutation(({ ctx, input }) => {
+      if (input.reviewedId === ctx.session.user.id) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Cannot review yourself" });
+      }
+      return ctx.db.review.create({
         data: {
           ...input,
           reviewerId: ctx.session.user.id,
         },
-      })
-    ),
+      });
+    }),
   update: protectedProcedure
     .input(
       z.object({

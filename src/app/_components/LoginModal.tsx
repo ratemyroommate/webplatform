@@ -1,23 +1,53 @@
+"use client";
+
 import Link from "next/link";
-import { XButton } from "./CloseButton";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
 
-export const handleOpenModal = (modalId: string) =>
-  (document.getElementById(modalId) as HTMLDialogElement).showModal();
-export const handleCloseModal = (modalId: string) =>
-  (document.getElementById(modalId) as HTMLDialogElement).close();
-
-export const LoginModal = () => {
-  const t = useTranslations("loginModal");
-  return (
-    <dialog id="login-modal" className="modal">
-      <div className="modal-box py-16">
-        <XButton />
-        <p className="mb-4 text-center text-lg">{t("message")}</p>
-        <Link href="/api/auth/signin" className="btn btn-primary w-full">
-          {t("login")}
-        </Link>
-      </div>
-    </dialog>
-  );
+type LoginModalContextValue = {
+  open: () => void;
+  close: () => void;
 };
+
+const LoginModalContext = createContext<LoginModalContextValue | null>(null);
+
+export function useLoginModal() {
+  const ctx = useContext(LoginModalContext);
+  if (!ctx) throw new Error("useLoginModal must be used inside <LoginModalProvider>");
+  return ctx;
+}
+
+export function LoginModalProvider({ children }: { children: React.ReactNode }) {
+  const t = useTranslations("loginModal");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
+
+  const value = useMemo(() => ({ open, close }), [open, close]);
+
+  return (
+    <LoginModalContext.Provider value={value}>
+      {children}
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-center">{t("message")}</DialogTitle>
+            <DialogDescription className="sr-only">{t("message")}</DialogDescription>
+          </DialogHeader>
+          <Button asChild className="w-full">
+            <Link href="/api/auth/signin">{t("login")}</Link>
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </LoginModalContext.Provider>
+  );
+}

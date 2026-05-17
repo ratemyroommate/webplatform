@@ -4,10 +4,24 @@ import type { Session } from "next-auth";
 import Link from "next/link";
 import { api } from "~/trpc/react";
 import { useTranslations } from "next-intl";
+import { Card } from "~/components/ui/card";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { Skeleton } from "~/components/ui/skeleton";
+import { cn } from "~/lib/utils";
 
 type CompatibilityScoreProps = {
   compareUserId: string;
   session: Session | null;
+};
+
+type Tone = "default" | "success" | "warning" | "error";
+
+const toneClasses: Record<Tone, string> = {
+  default: "bg-muted text-muted-foreground",
+  success: "bg-emerald-500 text-white",
+  warning: "bg-amber-500 text-white",
+  error: "bg-destructive text-white",
 };
 
 export const CompatibilityScore = ({ compareUserId, session }: CompatibilityScoreProps) => {
@@ -17,94 +31,83 @@ export const CompatibilityScore = ({ compareUserId, session }: CompatibilityScor
   });
 
   if (!session?.user.id || session.user.id === compareUserId) return;
-  const { label, color } = getButtonConfig(data?.percentage, t);
+  const { label, tone } = getButtonConfig(data?.percentage, t);
 
   return (
-    <div className="stats bg-base-100 border-base-300 border">
-      <div className="stat">
-        {isLoading || !data ? (
-          <Loading />
-        ) : (
-          <>
-            {data.completedQuestionCountByCurrentUser === 0 && (
-              <KvizCallToAction label={t("fillQuiz")} />
+    <Card className="p-4">
+      {isLoading || !data ? (
+        <Loading />
+      ) : (
+        <>
+          {data.completedQuestionCountByCurrentUser === 0 && (
+            <KvizCallToAction label={t("fillQuiz")} />
+          )}
+
+          {data.completedQuestionCountByCurrentUser > 0 &&
+            data.completedQuestionCountByCurrentUser < data.totalQuestionCount && (
+              <KvizCallToAction label={t("fillAll")} />
             )}
 
-            {data.completedQuestionCountByCurrentUser > 0 &&
-              data.completedQuestionCountByCurrentUser < data.totalQuestionCount && (
-                <KvizCallToAction label={t("fillAll")} />
-              )}
+          {data.completedQuestionCountByPostUser === 0 && (
+            <div className="text-sm">{t("otherNotCompleted")}</div>
+          )}
 
-            {data.completedQuestionCountByPostUser === 0 && (
-              <div className="mb-3 text-sm">{t("otherNotCompleted")}</div>
-            )}
-
-            {data.completedQuestionCountByCurrentUser > 0 &&
-              data.completedQuestionCountByPostUser > 0 && (
-                <div className="flex">
-                  <div className="flex flex-col">
-                    <div className="stat-title">{t("quizBased")}</div>
-                    <div className="stat-value">{data.percentage}%</div>
-                    <div className="stat-actions">
-                      <button className={`btn btn-xs btn-${color}`}>{label}</button>
-                    </div>
+          {data.completedQuestionCountByCurrentUser > 0 &&
+            data.completedQuestionCountByPostUser > 0 && (
+              <div className="flex">
+                <div className="flex flex-col gap-1">
+                  <div className="text-muted-foreground text-xs tracking-wide uppercase">
+                    {t("quizBased")}
                   </div>
-                  <div className="flex flex-1 flex-col items-end justify-between">
-                    <div className="btn btn-xs btn-success">
-                      {t("exact", { count: data.exactMatches })}
-                    </div>
-                    <div className="btn btn-xs btn-warning">
-                      {t("close", { count: data.closeMatches })}
-                    </div>
-                    <div className="btn btn-xs btn-error">
-                      {t("opposite", { count: data.noMatches })}
-                    </div>
-                  </div>
+                  <div className="text-3xl font-bold">{data.percentage}%</div>
+                  <span
+                    className={cn(
+                      "mt-1 inline-flex w-fit items-center rounded px-2 py-0.5 text-xs font-medium",
+                      toneClasses[tone]
+                    )}
+                  >
+                    {label}
+                  </span>
                 </div>
-              )}
-          </>
-        )}
-      </div>
-    </div>
+                <div className="flex flex-1 flex-col items-end justify-between gap-1">
+                  <Badge className="bg-emerald-500 hover:bg-emerald-500">
+                    {t("exact", { count: data.exactMatches })}
+                  </Badge>
+                  <Badge className="bg-amber-500 hover:bg-amber-500">
+                    {t("close", { count: data.closeMatches })}
+                  </Badge>
+                  <Badge variant="destructive">{t("opposite", { count: data.noMatches })}</Badge>
+                </div>
+              </div>
+            )}
+        </>
+      )}
+    </Card>
   );
 };
-const getButtonConfig = (data: number | undefined, t: (key: string) => string) => {
+const getButtonConfig = (
+  data: number | undefined,
+  t: (key: string) => string
+): { label: string; tone: Tone } => {
   if (data == null) {
-    return {
-      label: t("noData"),
-      color: "default",
-    };
+    return { label: t("noData"), tone: "default" };
   }
-
-  if (data < 50) {
-    return {
-      label: t("notIdeal"),
-      color: "error",
-    };
-  } else if (data < 70) {
-    return {
-      label: t("compatible"),
-      color: "warning",
-    };
-  } else {
-    return {
-      label: t("perfectMatch"),
-      color: "success",
-    };
-  }
+  if (data < 50) return { label: t("notIdeal"), tone: "error" };
+  if (data < 70) return { label: t("compatible"), tone: "warning" };
+  return { label: t("perfectMatch"), tone: "success" };
 };
 
 const Loading = () => (
   <div className="flex">
     <div className="flex flex-grow flex-col gap-2">
-      <div className="skeleton h-4"></div>
-      <div className="skeleton h-9 w-1/2"></div>
-      <div className="skeleton h-6 w-2/3"></div>
+      <Skeleton className="h-4" />
+      <Skeleton className="h-9 w-1/2" />
+      <Skeleton className="h-6 w-2/3" />
     </div>
-    <div className="flex flex-1 flex-col items-end justify-between">
-      <div className="skeleton h-6 w-1/2"></div>
-      <div className="skeleton h-6 w-1/2"></div>
-      <div className="skeleton h-6 w-1/2"></div>
+    <div className="flex flex-1 flex-col items-end justify-between gap-1">
+      <Skeleton className="h-6 w-1/2" />
+      <Skeleton className="h-6 w-1/2" />
+      <Skeleton className="h-6 w-1/2" />
     </div>
   </div>
 );
@@ -112,11 +115,11 @@ const Loading = () => (
 const KvizCallToAction = ({ label }: { label: string }) => {
   const t = useTranslations("compatibility");
   return (
-    <div className="mb-3 flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <div className="text-sm">{label}</div>
-      <Link className="btn btn-sm btn-success" href="/compatibility-kviz">
-        {t("fillAction")}
-      </Link>
+      <Button asChild size="sm" className="self-start">
+        <Link href="/compatibility-kviz">{t("fillAction")}</Link>
+      </Button>
     </div>
   );
 };

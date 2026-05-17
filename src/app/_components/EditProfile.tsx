@@ -1,14 +1,25 @@
 "use client";
 
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { Pencil } from "lucide-react";
 import type { User } from "@prisma/client";
 import { useForm } from "react-hook-form";
-import { handleCloseModal, handleOpenModal } from "./LoginModal";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { api } from "~/trpc/react";
-import { toast } from "react-hot-toast";
-import { XButton } from "./CloseButton";
+import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Label } from "~/components/ui/label";
+import { Checkbox } from "~/components/ui/checkbox";
 
 type FormValues = {
   about: string | null;
@@ -20,7 +31,8 @@ type FormValues = {
 export const EditProfile = (user: User) => {
   const t = useTranslations("profile");
   const tc = useTranslations("common");
-  const { register, handleSubmit, formState, watch } = useForm<FormValues>({
+  const [open, setOpen] = useState(false);
+  const { register, handleSubmit, formState, watch, setValue } = useForm<FormValues>({
     defaultValues: {
       about: user.about,
       socialLink: user.socialLink,
@@ -30,13 +42,14 @@ export const EditProfile = (user: User) => {
   });
 
   const phoneValue = watch("phoneNumber");
+  const phoneConsent = watch("phoneNumberConsent");
 
   const router = useRouter();
   const utils = api.useUtils();
   const updateUser = api.user.update.useMutation({
     onSuccess: async () => {
       router.refresh();
-      handleCloseModal("edit-profile-modal");
+      setOpen(false);
       toast.success(t("updateSuccess"));
       void utils.user.getProfileCompleteness.invalidate();
     },
@@ -51,107 +64,89 @@ export const EditProfile = (user: User) => {
     });
 
   return (
-    <div>
-      <button onClick={() => handleOpenModal("edit-profile-modal")} className="btn">
-        <PencilSquareIcon width={20} />
-        {t("editProfile")}
-      </button>
-      <dialog id="edit-profile-modal" className="modal">
-        <div className="modal-box">
-          <h3 className="text-lg font-bold">{t("editProfile")}</h3>
-          <XButton />
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 pt-4">
-            <label className="form-control flex w-full flex-col">
-              <div className="label">
-                <span className="label-text text-lg">{t("socialLink")}</span>
-              </div>
-              <input
-                className="input input-bordered w-full"
-                placeholder={t("socialLinkPlaceholder")}
-                {...register("socialLink", {
-                  required: tc("required"),
-                  validate: (value) =>
-                    !value || /^https?:\/\/.+/.test(value.trim()) || t("socialLinkInvalid"),
-                })}
-              />
-              {formState.errors.socialLink && (
-                <div className="label">
-                  <span className="label-text-alt text-orange-600">
-                    {formState.errors.socialLink?.message}
-                  </span>
-                </div>
-              )}
-            </label>
-            <label className="form-control flex w-full flex-col">
-              <div className="label">
-                <span className="label-text text-lg">{t("about")}</span>
-              </div>
-              <textarea
-                className="textarea textarea-bordered w-full"
-                placeholder={t("aboutPlaceholder")}
-                {...register("about", {
-                  required: tc("required"),
-                })}
-              />
-              {formState.errors.about && (
-                <div className="label">
-                  <span className="label-text-alt text-orange-600">
-                    {formState.errors.about?.message}
-                  </span>
-                </div>
-              )}
-            </label>
-            <label className="form-control flex w-full flex-col">
-              <div className="label">
-                <span className="label-text text-lg">{t("phoneNumber")}</span>
-              </div>
-              <input
-                className="input input-bordered w-full"
-                placeholder={t("phoneNumberPlaceholder")}
-                {...register("phoneNumber", {
-                  validate: (value) =>
-                    !value?.trim() ||
-                    /^\+?[\d\s\-()]{6,20}$/.test(value.trim()) ||
-                    t("phoneNumberInvalid"),
-                })}
-              />
-              {formState.errors.phoneNumber && (
-                <div className="label">
-                  <span className="label-text-alt text-orange-600">
-                    {formState.errors.phoneNumber?.message}
-                  </span>
-                </div>
-              )}
-            </label>
-            {phoneValue?.trim() && (
-              <label className="flex items-start gap-2">
-                <input
-                  type="checkbox"
-                  className="checkbox checkbox-warning mt-1"
-                  {...register("phoneNumberConsent", {
-                    validate: (value) =>
-                      !phoneValue?.trim() || value === true || t("phoneNumberConsentRequired"),
-                  })}
-                />
-                <span className="text-sm font-medium">{t("phoneNumberConsent")}</span>
-              </label>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <Pencil />
+          {t("editProfile")}
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{t("editProfile")}</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="socialLink">{t("socialLink")}</Label>
+            <Input
+              id="socialLink"
+              placeholder={t("socialLinkPlaceholder")}
+              {...register("socialLink", {
+                required: tc("required"),
+                validate: (value) =>
+                  !value || /^https?:\/\/.+/.test(value.trim()) || t("socialLinkInvalid"),
+              })}
+            />
+            {formState.errors.socialLink && (
+              <span className="text-destructive text-xs">
+                {formState.errors.socialLink?.message}
+              </span>
             )}
-            {formState.errors.phoneNumberConsent && (
-              <div className="label">
-                <span className="label-text-alt text-orange-600">
-                  {formState.errors.phoneNumberConsent?.message}
-                </span>
-              </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="about">{t("about")}</Label>
+            <Textarea
+              id="about"
+              placeholder={t("aboutPlaceholder")}
+              {...register("about", { required: tc("required") })}
+            />
+            {formState.errors.about && (
+              <span className="text-destructive text-xs">{formState.errors.about?.message}</span>
             )}
-            <button
-              disabled={formState.isSubmitting || updateUser.isPending}
-              className="btn btn-secondary"
-            >
-              {tc("save")}
-            </button>
-          </form>
-        </div>
-      </dialog>
-    </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="phoneNumber">{t("phoneNumber")}</Label>
+            <Input
+              id="phoneNumber"
+              placeholder={t("phoneNumberPlaceholder")}
+              {...register("phoneNumber", {
+                validate: (value) =>
+                  !value?.trim() ||
+                  /^\+?[\d\s\-()]{6,20}$/.test(value.trim()) ||
+                  t("phoneNumberInvalid"),
+              })}
+            />
+            {formState.errors.phoneNumber && (
+              <span className="text-destructive text-xs">
+                {formState.errors.phoneNumber?.message}
+              </span>
+            )}
+          </div>
+
+          {phoneValue?.trim() && (
+            <div className="flex items-start gap-2">
+              <Checkbox
+                id="phoneNumberConsent"
+                checked={phoneConsent}
+                onCheckedChange={(checked) => setValue("phoneNumberConsent", checked === true)}
+              />
+              <Label htmlFor="phoneNumberConsent" className="text-sm leading-snug font-medium">
+                {t("phoneNumberConsent")}
+              </Label>
+            </div>
+          )}
+          {formState.errors.phoneNumberConsent && (
+            <span className="text-destructive text-xs">
+              {formState.errors.phoneNumberConsent?.message}
+            </span>
+          )}
+          <Button disabled={formState.isSubmitting || updateUser.isPending} type="submit">
+            {tc("save")}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };

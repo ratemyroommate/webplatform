@@ -136,6 +136,7 @@
     "apply": "Apply"
   },
   "notification": {
+    "title": "Notifications",
     "receivedTab": "Received requests",
     "sentTab": "Sent requests",
     "noReceived": "No received requests",
