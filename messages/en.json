@@ -15,10 +15,12 @@
     },
     "post": {
       "title": "Roommate listing – {location}",
+      "titleWithPrice": "Roommate in {location} – {price} HUF/mo",
       "description": "Roommate listing: {location}, {price} HUF/month. Check the details and apply as a housemate!"
     },
     "user": {
       "title": "User profile",
+      "titleWithName": "{name} – User profile",
       "description": "View user profile on Rate My Roommate. See reviews and compatibility."
     },
     "userPosts": {

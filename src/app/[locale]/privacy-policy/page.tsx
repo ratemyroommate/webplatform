@@ -1,16 +1,21 @@
 import { type Metadata } from "next";
 import { HydrateClient } from "~/trpc/server";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { alternatesFor } from "~/i18n/seo";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("metadata");
+type Props = { params: { locale: string } };
+
+export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: "metadata" });
   return {
     title: t("privacy.title"),
     description: t("privacy.description"),
+    alternates: alternatesFor(locale, "/privacy-policy"),
   };
 }
 
-export default async function PrivacyPolicy() {
+export default async function PrivacyPolicy({ params: { locale } }: Props) {
+  setRequestLocale(locale);
   const t = await getTranslations("privacy");
   return (
     <HydrateClient>

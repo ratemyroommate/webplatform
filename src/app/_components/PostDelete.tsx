@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter } from "~/i18n/navigation";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";

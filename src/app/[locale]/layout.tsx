@@ -4,54 +4,113 @@ import { Analytics } from "@vercel/analytics/next";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { getServerAuthSession } from "~/server/auth";
 import { Toaster } from "~/components/ui/sonner";
 import { TooltipProvider } from "~/components/ui/tooltip";
-import { KvizToast } from "./_components/KvizToast";
-import { Navbar } from "./_components/Navbar";
-import { LoginModalProvider } from "./_components/LoginModal";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { KvizToast } from "~/app/_components/KvizToast";
+import { Navbar } from "~/app/_components/Navbar";
+import { LoginModalProvider } from "~/app/_components/LoginModal";
+import { JsonLd } from "~/app/_components/JsonLd";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
+import { env } from "~/env";
+import { routing } from "~/i18n/routing";
+import { Link } from "~/i18n/navigation";
+import { SUPPORTED_LOCALES } from "~/i18n/locales";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("metadata");
-  const description = t("home.description");
-  const siteName = t("siteName");
+type LayoutProps = {
+  children: React.ReactNode;
+  params: { locale: string };
+};
+
+const baseUrl = env.NEXTAUTH_URL.startsWith("http")
+  ? env.NEXTAUTH_URL
+  : `https://${env.NEXTAUTH_URL}`;
+
+export function generateStaticParams() {
+  return SUPPORTED_LOCALES.map((locale) => ({ locale }));
+}
+
+function pathForLocale(locale: string, path: string) {
+  return locale === routing.defaultLocale ? path : `/${locale}${path === "/" ? "" : path}`;
+}
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const tMeta = await getTranslations({ locale, namespace: "metadata" });
+  const description = tMeta("home.description");
+  const siteName = tMeta("siteName");
+
+  const languages = Object.fromEntries(
+    SUPPORTED_LOCALES.map((l) => [l, `${baseUrl}${pathForLocale(l, "/")}`])
+  );
 
   return {
+    metadataBase: new URL(baseUrl),
     title: {
       default: siteName,
       template: `%s | ${siteName}`,
     },
     description,
+    alternates: {
+      canonical: pathForLocale(locale, "/"),
+      languages: { ...languages, "x-default": `${baseUrl}/` },
+    },
     icons: [{ rel: "icon", url: "/R-favicon.png" }],
     openGraph: {
       type: "website",
       siteName,
       title: siteName,
       description,
-      locale: "hu_HU",
+      locale: locale === "hu" ? "hu_HU" : "en_US",
+      url: pathForLocale(locale, "/"),
+      images: [{ url: "/R.png", width: 512, height: 512, alt: siteName }],
     },
     twitter: {
       card: "summary_large_image",
       title: siteName,
       description,
+      images: ["/R.png"],
     },
   };
 }
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children, params: { locale } }: LayoutProps) {
+  if (!hasLocale(routing.locales, locale)) notFound();
+  setRequestLocale(locale);
+
   const session = await getServerAuthSession();
-  const locale = await getLocale();
   const messages = await getMessages();
   const t = await getTranslations("layout");
+  const tMeta = await getTranslations("metadata");
+  const siteName = tMeta("siteName");
+
+  const websiteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteName,
+    url: baseUrl,
+    inLanguage: locale,
+  };
+  const organizationLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteName,
+    url: baseUrl,
+    logo: `${baseUrl}/R.png`,
+    email: "rmrm.owners@gmail.com",
+  };
 
   return (
     <html lang={locale} className={`${GeistSans.variable}`}>
       <body>
+        <JsonLd data={[websiteLd, organizationLd]} />
         <TRPCReactProvider>
           <NextIntlClientProvider messages={messages}>
             <TooltipProvider>

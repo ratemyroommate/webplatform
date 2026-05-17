@@ -1,7 +1,7 @@
 "use client";
 import { ArrowRight, Home, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import { api } from "~/trpc/react";
 import { CompletedKviz } from "./CompletedKviz";
 import { useTranslations } from "next-intl";

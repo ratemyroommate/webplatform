@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import { FeaturedUsers } from "./FeaturedUsers";
 import { Images } from "./Images";
 import { PostInfo } from "./PostInfo";
