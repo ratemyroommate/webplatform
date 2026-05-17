@@ -2,7 +2,9 @@ import type { MetadataRoute } from "next";
 import { env } from "~/env";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = env.NEXTAUTH_URL;
+  const baseUrl = env.NEXTAUTH_URL.startsWith("http")
+    ? env.NEXTAUTH_URL
+    : `https://${env.NEXTAUTH_URL}`;
 
   return {
     rules: [
