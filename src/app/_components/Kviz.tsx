@@ -26,6 +26,8 @@ export const Kviz = () => {
   const saveAnswerMutation = api.kviz.saveAnswer.useMutation({
     onSuccess: () => {
       void utils.kviz.getQuestion.invalidate();
+      void utils.kviz.getStats.invalidate();
+      void utils.kviz.getAnsers.invalidate();
       void utils.user.getProfileCompleteness.invalidate();
     },
   });
