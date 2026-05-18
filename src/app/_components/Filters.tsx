@@ -1,6 +1,14 @@
 "use client";
 
-import { SlidersHorizontal, TrendingDown, TrendingUp, Filter, Trash2 } from "lucide-react";
+import {
+  Filter,
+  SlidersHorizontal,
+  Trash2,
+  TrendingDown,
+  TrendingUp,
+  User,
+  Users,
+} from "lucide-react";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import type { z } from "zod";
@@ -8,12 +16,10 @@ import type { z } from "zod";
 import { orderBy } from "~/server/api/routers/post";
 import { FiltersIndicator } from "./FiltersIndicator";
 import type { Dispatch } from "react";
-import { ageOptions, genderOptions, locationOptions } from "~/utils/helpers";
+import { ageOptions, locationOptions } from "~/utils/helpers";
 import type { Location } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
-import { Label } from "~/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -23,7 +29,7 @@ import {
 } from "~/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "~/components/ui/sheet";
 import { Slider } from "~/components/ui/slider";
-import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
+import { cn } from "~/lib/utils";
 
 type FiltersProps = { filters: FormValues; setFilters: Dispatch<FormValues> };
 export type FormValues = {
@@ -79,175 +85,195 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
         </Button>
       </FiltersIndicator>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="right" className="w-full overflow-y-auto p-4 sm:max-w-md">
-          <SheetHeader className="p-0">
-            <SheetTitle>{t("title")}</SheetTitle>
+        <SheetContent
+          side="right"
+          className="bg-background flex w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-[420px]"
+        >
+          <SheetHeader className="border-b border-[color:var(--ink-10)] px-5 py-4">
+            <SheetTitle className="text-foreground text-[17px] font-extrabold tracking-[-0.01em]">
+              {t("title")}
+            </SheetTitle>
           </SheetHeader>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 pt-4">
-            <div className="flex flex-col gap-2">
-              <Label>{t("roommates")}</Label>
-              <Controller
-                control={control}
-                name="maxPersonCount"
-                render={({ field }) => (
-                  <ToggleGroup
-                    type="single"
-                    variant="outline"
-                    value={field.value ? String(field.value) : ""}
-                    onValueChange={(v) => field.onChange(v ? Number(v) : 0)}
-                    className="w-full"
-                  >
-                    {Array.from({ length: 4 }, (_, i) => i + 2).map((n) => (
-                      <ToggleGroupItem key={n} value={String(n)} className="flex-1">
-                        {n}
-                      </ToggleGroupItem>
-                    ))}
-                  </ToggleGroup>
-                )}
-              />
-            </div>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex min-h-0 flex-1 flex-col"
+          >
+            <div className="flex-1 space-y-7 overflow-y-auto px-5 py-5">
+              {/* Roommates */}
+              <Field label={t("roommates")}>
+                <Controller
+                  control={control}
+                  name="maxPersonCount"
+                  render={({ field }) => (
+                    <Segmented
+                      value={field.value ?? 0}
+                      onChange={field.onChange}
+                      options={[2, 3, 4, 5].map((n) => ({ value: n, label: String(n) }))}
+                      columns={4}
+                    />
+                  )}
+                />
+              </Field>
 
-            <div className="flex flex-col gap-2">
-              <Label>
-                {t("maxPrice")}{" "}
-                <span className="text-muted-foreground text-sm">
-                  ( {watch("maxPrice")}
-                  {t("maxPriceUnit")} )
-                </span>
-              </Label>
-              <Slider
-                min={50}
-                max={500}
-                step={10}
-                value={[watch("maxPrice") ?? 50]}
-                onValueChange={(v) => setValue("maxPrice", v[0])}
-              />
-              <div className="text-muted-foreground flex w-full justify-between px-1 text-xs">
-                {Array.from({ length: 10 }, (_, i) => i * 50 + 50).map((n) => (
-                  <span key={n}>{n}</span>
-                ))}
+              {/* Max price */}
+              <div>
+                <div className="mb-2.5 flex items-baseline justify-between">
+                  <span className="text-[12px] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-60)]">
+                    {t("maxPrice")}
+                  </span>
+                  <span className="text-foreground text-[14px] font-semibold tabular-nums">
+                    {watch("maxPrice") ?? 0}{" "}
+                    <span className="text-[11px] font-normal text-[color:var(--ink-60)]">
+                      {t("maxPriceUnit")}
+                    </span>
+                  </span>
+                </div>
+                <Slider
+                  min={50}
+                  max={500}
+                  step={10}
+                  value={[watch("maxPrice") ?? 50]}
+                  onValueChange={(v) => setValue("maxPrice", v[0])}
+                />
+                <div className="mt-1.5 flex justify-between text-[10.5px] tabular-nums text-[color:var(--ink-50)]">
+                  <span>50</span>
+                  <span>150</span>
+                  <span>250</span>
+                  <span>350</span>
+                  <span>500</span>
+                </div>
               </div>
+
+              {/* Location */}
+              <Field label={t("location")}>
+                <Controller
+                  control={control}
+                  name="location"
+                  render={({ field }) => (
+                    <Select
+                      value={field.value ? field.value : ANY_LOCATION}
+                      onValueChange={(v) =>
+                        field.onChange(v === ANY_LOCATION ? "" : v)
+                      }
+                    >
+                      <SelectTrigger className="h-11 w-full rounded-xl">
+                        <SelectValue placeholder={t("locationPlaceholder")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ANY_LOCATION}>{t("anyLocation")}</SelectItem>
+                        {locationOptions.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>
+                            {te(`location.${opt.value}`)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </Field>
+
+              {/* Age */}
+              <Field label={t("ageLabel")}>
+                <Controller
+                  control={control}
+                  name="age"
+                  render={({ field }) => (
+                    <Select
+                      value={String(field.value ?? 0)}
+                      onValueChange={(v) => field.onChange(Number(v))}
+                    >
+                      <SelectTrigger className="h-11 w-full rounded-xl">
+                        <SelectValue placeholder={t("agePlaceholder")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ageOptions.map((opt) => (
+                          <SelectItem key={opt.value} value={String(opt.value)}>
+                            {te(`age.${opt.value}`)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </Field>
+
+              {/* Gender preference */}
+              <Field label={t("genderPreference")}>
+                <Controller
+                  control={control}
+                  name="gender"
+                  render={({ field }) => (
+                    <Segmented
+                      value={field.value ?? 0}
+                      onChange={field.onChange}
+                      columns={3}
+                      options={[
+                        { value: 0, label: te("gender.0"), icon: <Users size={13} /> },
+                        { value: 1, label: te("gender.1"), icon: <User size={13} /> },
+                        { value: 2, label: te("gender.2"), icon: <User size={13} /> },
+                      ]}
+                    />
+                  )}
+                />
+              </Field>
+
+              {/* Sort */}
+              <Field label={t("sort")}>
+                <Controller
+                  control={control}
+                  name="orderBy"
+                  render={({ field }) => (
+                    <Segmented<OrderBy>
+                      value={field.value ?? "createdAt-desc"}
+                      onChange={field.onChange}
+                      columns={2}
+                      options={[
+                        {
+                          value: "price-asc",
+                          label: t("price"),
+                          icon: (
+                            <TrendingUp
+                              size={13}
+                              className="text-[color:var(--accent-green-hex)]"
+                            />
+                          ),
+                        },
+                        {
+                          value: "price-desc",
+                          label: t("price"),
+                          icon: <TrendingDown size={13} className="text-destructive" />,
+                        },
+                        {
+                          value: "createdAt-asc",
+                          label: t("date"),
+                          icon: (
+                            <TrendingUp
+                              size={13}
+                              className="text-[color:var(--accent-green-hex)]"
+                            />
+                          ),
+                        },
+                        {
+                          value: "createdAt-desc",
+                          label: t("date"),
+                          icon: <TrendingDown size={13} className="text-destructive" />,
+                        },
+                      ]}
+                    />
+                  )}
+                />
+              </Field>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <Label>{t("location")}</Label>
-              <Controller
-                control={control}
-                name="location"
-                render={({ field }) => (
-                  <Select
-                    value={field.value ? field.value : ANY_LOCATION}
-                    onValueChange={(v) => field.onChange(v === ANY_LOCATION ? "" : v)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder={t("locationPlaceholder")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={ANY_LOCATION}>{t("anyLocation")}</SelectItem>
-                      {locationOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value}>
-                          {te(`location.${opt.value}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Label>{t("ageLabel")}</Label>
-              <Controller
-                control={control}
-                name="age"
-                render={({ field }) => (
-                  <Select
-                    value={String(field.value ?? 0)}
-                    onValueChange={(v) => field.onChange(Number(v))}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder={t("agePlaceholder")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ageOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={String(opt.value)}>
-                          {te(`age.${opt.value}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Label>{t("genderPreference")}</Label>
-              <Controller
-                control={control}
-                name="gender"
-                render={({ field }) => (
-                  <Select
-                    value={String(field.value ?? 0)}
-                    onValueChange={(v) => field.onChange(Number(v))}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder={t("genderPlaceholder")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {genderOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={String(opt.value)}>
-                          {te(`gender.${opt.value}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Label>{t("sort")}</Label>
-              <Controller
-                control={control}
-                name="orderBy"
-                render={({ field }) => (
-                  <RadioGroup
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="grid grid-cols-2 gap-2"
-                  >
-                    <Label className="flex cursor-pointer items-center gap-2 rounded-md border p-2">
-                      <RadioGroupItem value="price-asc" />
-                      <span className="flex items-center gap-1 text-sm">
-                        {t("price")} <TrendingUp size={16} className="text-emerald-500" />
-                      </span>
-                    </Label>
-                    <Label className="flex cursor-pointer items-center gap-2 rounded-md border p-2">
-                      <RadioGroupItem value="price-desc" />
-                      <span className="flex items-center gap-1 text-sm">
-                        {t("price")} <TrendingDown size={16} className="text-destructive" />
-                      </span>
-                    </Label>
-                    <Label className="flex cursor-pointer items-center gap-2 rounded-md border p-2">
-                      <RadioGroupItem value="createdAt-asc" />
-                      <span className="flex items-center gap-1 text-sm">
-                        {t("date")} <TrendingUp size={16} className="text-emerald-500" />
-                      </span>
-                    </Label>
-                    <Label className="flex cursor-pointer items-center gap-2 rounded-md border p-2">
-                      <RadioGroupItem value="createdAt-desc" />
-                      <span className="flex items-center gap-1 text-sm">
-                        {t("date")} <TrendingDown size={16} className="text-destructive" />
-                      </span>
-                    </Label>
-                  </RadioGroup>
-                )}
-              />
-            </div>
-
-            <div className="flex gap-2 pt-2">
-              <Button type="button" variant="outline" onClick={resetFilters} className="flex-1">
+            {/* Sticky footer */}
+            <div className="bg-background flex gap-2 border-t border-[color:var(--ink-10)] px-5 py-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={resetFilters}
+                className="flex-1"
+              >
                 <Trash2 /> {t("reset")}
               </Button>
               <Button type="submit" className="flex-1">
@@ -260,3 +286,60 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
     </>
   );
 };
+
+// ─── Helpers ──────────────────────────────────────────────────────────────
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="mb-2.5 block text-[12px] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-60)]">
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+type SegmentedOption<V> = {
+  value: V;
+  label: string;
+  icon?: React.ReactNode;
+};
+
+function Segmented<V extends string | number>({
+  value,
+  onChange,
+  options,
+  columns,
+}: {
+  value: V;
+  onChange: (v: V) => void;
+  options: SegmentedOption<V>[];
+  columns: 2 | 3 | 4;
+}) {
+  const grid =
+    columns === 4 ? "grid-cols-4" : columns === 3 ? "grid-cols-3" : "grid-cols-2";
+  return (
+    <div className={cn("grid gap-2", grid)}>
+      {options.map((o) => {
+        const isActive = o.value === value;
+        return (
+          <button
+            key={String(o.value)}
+            type="button"
+            onClick={() => onChange(o.value)}
+            className={cn(
+              "flex h-11 items-center justify-center gap-1.5 rounded-xl border text-[13px] font-medium transition-all",
+              isActive
+                ? "border-[color:var(--foreground)] bg-[var(--foreground)] text-[color:var(--background)]"
+                : "border-[color:var(--ink-15)] bg-[var(--card)] text-[color:var(--ink-80)] hover:border-[color:var(--ink-40)]"
+            )}
+          >
+            {o.icon}
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}

@@ -1,5 +1,4 @@
 import type { Request } from "@prisma/client";
-import { Badge } from "~/components/ui/badge";
 
 type NotificationBellProps = {
   children: React.ReactElement;
@@ -10,12 +9,12 @@ export const NotificationBell = ({ children, requests }: NotificationBellProps) 
   requests?.length ? (
     <div className="relative inline-flex">
       {children}
-      <Badge
-        variant="destructive"
-        className="pointer-events-none absolute -top-1 -right-1 h-5 min-w-5 rounded-full px-1 text-xs"
+      <span
+        className="pointer-events-none absolute -top-0.5 -right-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--primary)] px-1 text-[10px] font-semibold tabular-nums text-[color:var(--primary-foreground)]"
+        style={{ boxShadow: "0 0 0 2px var(--background)" }}
       >
         {requests.length}
-      </Badge>
+      </span>
     </div>
   ) : (
     children

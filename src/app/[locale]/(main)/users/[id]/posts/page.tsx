@@ -1,5 +1,6 @@
 import { type Metadata } from "next";
 import { Post } from "~/app/_components/post";
+import { BackToFeed } from "~/components/ui/back-to-feed";
 import { HydrateClient, api } from "~/trpc/server";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { alternatesFor } from "~/i18n/seo";
@@ -22,12 +23,28 @@ export default async function UserPosts({ params: { id, locale } }: FeedPostsPro
   const data = await api.post.getAllByUserId(id);
   const t = await getTranslations("userPosts");
 
-  if (!data.length) return t("noPosts");
-
   return (
     <HydrateClient>
-      <div className="text-sm font-bold">{t("title")}</div>
-      {data?.map((post) => <Post post={post} key={post.id} />)}
+      <div className="flex w-full flex-col gap-6">
+        <BackToFeed />
+
+        <h1
+          className="text-foreground font-extrabold tracking-[-0.02em]"
+          style={{ fontSize: 30, lineHeight: 1.15 }}
+        >
+          {t("title")}
+        </h1>
+
+        {data.length ? (
+          <div className="grid w-full grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3">
+            {data.map((post) => (
+              <Post post={post} key={post.id} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted-foreground py-12 text-center text-sm">{t("noPosts")}</p>
+        )}
+      </div>
     </HydrateClient>
   );
 }
