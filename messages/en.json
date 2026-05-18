@@ -195,6 +195,36 @@
     "message": "A quick login before we continue.",
     "login": "Log in"
   },
+  "signin": {
+    "title": "Sign in",
+    "welcome": "Welcome back",
+    "headline": "Find your match, not just a flat.",
+    "subtitle": "Sign in with Google to instantly see homes & roommates matched to you in Budapest.",
+    "continueGoogle": "Continue with Google",
+    "continuing": "Signing you in…",
+    "tagline": "No password. No spam. No ads.",
+    "newHere": "New to RMRM?",
+    "newHereSub": "Your account is created on your first sign-in. No setup.",
+    "termsLead": "By continuing you accept our",
+    "termsLink": "Terms",
+    "and": "and",
+    "privacyLink": "Privacy Policy",
+    "backToFeed": "Back to feed",
+    "verifiedAccounts": "Verified accounts",
+    "madeIn": "Made in Budapest",
+    "stats": {
+      "activePosts": "Active posts",
+      "membersJoined": "Members joined",
+      "matchesThisWeek": "Matches this week"
+    },
+    "quotes": {
+      "first": "Found my dog-loving flatmate in two weeks.",
+      "second": "The compat quiz actually works.",
+      "googleOnly": "Google only",
+      "oneClick": "One click",
+      "matchPct": "{pct}% match"
+    }
+  },
   "userPosts": {
     "title": "My posts",
     "noPosts": "No posts found for this user."

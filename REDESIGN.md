@@ -10,37 +10,16 @@ Each item below has: **What the design shows → What we have → Steps to close
 
 ---
 
-## 0. Critical: design tokens are wrong
+## 0. Palette — intentionally diverges from the design bundle
 
-The biggest divergence. `CLAUDE.md` and `src/styles/globals.css` describe the
-palette as Duolingo green (`#58CC02`). The actual design uses terracotta.
+The Claude Design bundle uses terracotta `#D97757` as `--primary`. **We intentionally keep Duolingo green `#58CC02`** as our brand primary — the terracotta was an exploration we decided against. Everything else in the design's token list (`--bg`, `--card`, `--ink`, `--accent-green`, `--star`, `--danger`, `--radius: 18px`) already matches.
 
-| Token | Design (`RMRM Redesign.html` :26-37) | Current (`globals.css` :51-87) |
-|---|---|---|
-| `--primary` | `#D97757` (terracotta) | `#58CC02` (green) |
-| `--on-primary` / `--primary-foreground` | `#fffaf6` | `#FFFFFF` |
-| `--accent-green` | `#3F7A4E` (used only for success/85%+ compat) | same |
-| `--bg` / `--background` | `#F6F3EE` | same |
-| `--card` | `#FFFCF7` | same |
-| `--ink` / `--foreground` | `#1F1B16` | same |
-| `--star` | `#E8A93C` | same |
-| `--danger` / `--destructive` | `#B84A3A` | same |
-| `--radius` | `18px` | same |
-| `--avatar-me` | `#D97757` | not defined |
+**Minor housekeeping that's still worth doing:**
 
-**Steps**
-1. Swap `--primary-hex` to `#D97757` and `--on-primary-hex` to `#fffaf6` in
-   `src/styles/globals.css` (both `:root` and `.dark`).
-2. Recompute the alpha shades that derive from primary:
-   `--primary-05/-10/-15/-30` (and a new `--primary-shadow` for chunky buttons
-   set to `color-mix(in oklab, var(--primary) 75%, black)`).
-3. Add `--avatar-me: var(--primary)` for the self-avatar background.
-4. Audit `CLAUDE.md` — the "Duolingo green" wording in the Design system section
-   is stale; replace with terracotta and note the chunky offset shadow is now
-   derived from `--primary-shadow`.
-5. Spot-check the components that use primary: `CtaBanner`, `Button` (`chunky`),
-   `FreshBadge`, `PriceChip` overlays, `CompatRing` thresholds — visual
-   regression only; no API changes.
+1. Add a `--primary-shadow: color-mix(in oklab, var(--primary) 75%, black)` CSS var in `globals.css` so `CtaBanner` and `Button[variant=chunky]` can reference it instead of inlining the `color-mix` call (§13).
+2. Add a `--avatar-me: var(--primary)` token if/when we adopt the self-avatar pattern from the design.
+3. When implementing primary-tinted surfaces from the design (e.g. the open-spot card, the "Verify ID" icon chip), use our existing `--primary-05/-10/-15/-30` shades — they're already green-derived and consistent.
+4. Where the design uses primary for things that read as "warm/inviting" (the welcome hero overline `--primary` text, the dark kviz card's puzzle icon chip background), green will read differently — sanity-check the contrast/feel as those components land; substitute `--accent-green` if green-on-green clashes.
 
 ---
 
@@ -299,7 +278,7 @@ across `CtaBanner` + `Button[variant=chunky]` for consistency and theme-ability.
 
 ## Suggested execution order
 
-1. **§0** palette swap (touches everything; do first to avoid double-revisiting components).
+1. **§0** add `--primary-shadow` token (small CSS-only housekeeping; no visual regression).
 2. **§1** navbar dropdown enrichment (already partly done).
 3. **§8** Wishlist schema + tRPC (unblocks card save button + dropdown count + profile stat).
 4. **§11** Post field additions (`neighborhood`) — unblocks PostCard + detail.

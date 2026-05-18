@@ -195,6 +195,36 @@
     "message": "Egy gyors bejelentkezés, mielőtt folytatnánk.",
     "login": "Bejelentkezés"
   },
+  "signin": {
+    "title": "Bejelentkezés",
+    "welcome": "Üdv újra",
+    "headline": "Találd meg a tökéletes lakótársadat.",
+    "subtitle": "Jelentkezz be Google-fiókoddal, és nézd meg azonnal a számodra ideális lakótársakat és otthonokat Budapesten.",
+    "continueGoogle": "Folytatás Google-fiókkal",
+    "continuing": "Bejelentkezés…",
+    "tagline": "Nincs jelszó. Nincs spam. Nincs hirdetés.",
+    "newHere": "Új vagy itt?",
+    "newHereSub": "Az első Google-bejelentkezésnél létrejön a fiókod.",
+    "termsLead": "A folytatással elfogadod a",
+    "termsLink": "Felhasználási feltételeket",
+    "and": "és az",
+    "privacyLink": "Adatvédelmet",
+    "backToFeed": "Vissza a feedhez",
+    "verifiedAccounts": "Igazolt fiókok",
+    "madeIn": "Budapest",
+    "stats": {
+      "activePosts": "Aktív hirdetés",
+      "membersJoined": "Csatlakozott felhasználó",
+      "matchesThisWeek": "Egyezés ezen a héten"
+    },
+    "quotes": {
+      "first": "Két hét alatt megtaláltam a kétkutyás lakótársamat.",
+      "second": "A kompatibilitási kvíz tényleg működik.",
+      "googleOnly": "Csak Google",
+      "oneClick": "Egy kattintás",
+      "matchPct": "{pct}% egyezés"
+    }
+  },
   "userPosts": {
     "title": "Saját posztok",
     "noPosts": "Nem találtunk posztot a megadott felhasználótól."

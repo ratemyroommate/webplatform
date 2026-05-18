@@ -21,7 +21,7 @@ export function CtaBanner({ title, subtitle, icon: Icon, onClick, className }: C
       onClick={onClick}
       className={cn(
         "group flex w-full items-center justify-between gap-3 rounded-2xl bg-primary px-5 py-3.5 text-left text-primary-foreground transition-all hover:brightness-95 active:translate-y-[1px]",
-        "shadow-[0_1px_0_rgba(0,0,0,0.08),0_4px_0_color-mix(in_oklab,var(--primary)_75%,black)] active:shadow-[0_1px_0_rgba(0,0,0,0.08),0_2px_0_color-mix(in_oklab,var(--primary)_75%,black)]",
+        "shadow-[0_1px_0_rgba(0,0,0,0.08),0_4px_0_var(--primary-shadow)] active:shadow-[0_1px_0_rgba(0,0,0,0.08),0_2px_0_var(--primary-shadow)]",
         className
       )}
     >

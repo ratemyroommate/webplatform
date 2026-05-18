@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         // Duolingo-style: primary fill with darker offset shadow giving a "tappable" feel
         chunky:
-          "bg-primary text-primary-foreground font-extrabold rounded-full shadow-[0_1px_0_rgba(0,0,0,0.08),0_3px_0_color-mix(in_oklab,var(--primary)_75%,black)] hover:brightness-95 active:translate-y-[1px] active:shadow-[0_1px_0_rgba(0,0,0,0.08),0_1px_0_color-mix(in_oklab,var(--primary)_75%,black)]",
+          "bg-primary text-primary-foreground font-extrabold rounded-full shadow-[0_1px_0_rgba(0,0,0,0.08),0_3px_0_var(--primary-shadow)] hover:brightness-95 active:translate-y-[1px] active:shadow-[0_1px_0_rgba(0,0,0,0.08),0_1px_0_var(--primary-shadow)]",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

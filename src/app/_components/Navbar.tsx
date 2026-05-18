@@ -76,7 +76,7 @@ export function Navbar({ session, locale }: { session: Session | null; locale: s
           <div className="flex items-center gap-3">
             <LanguagePicker currentLocale={locale} />
             <Button asChild variant="chunky" size="sm">
-              <NextLink href="/api/auth/signin">{t("login")}</NextLink>
+              <Link href="/signin">{t("login")}</Link>
             </Button>
           </div>
         )}

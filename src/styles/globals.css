@@ -72,6 +72,7 @@
   --primary-10: rgba(88, 204, 2, 0.12);
   --primary-15: rgba(88, 204, 2, 0.18);
   --primary-30: rgba(88, 204, 2, 0.32);
+  --primary-shadow: color-mix(in oklab, var(--primary) 75%, black);
   --accent-green-05: rgba(63, 122, 78, 0.08);
   --danger-05: rgba(184, 74, 58, 0.08);
 
