@@ -130,6 +130,8 @@
     "advertiser": "Advertiser",
     "advertiserAlt": "advertised",
     "allPostsShown": "All available posts have been displayed.",
+    "endOfFeedTitle": "You're all caught up",
+    "endOfFeedSubtitle": "That's every post matching your filters.",
     "max": "max",
     "freshToday": "Fresh today",
     "newBadge": "NEW",
@@ -167,7 +169,7 @@
     "noSent": "No sent requests",
     "post": "Post",
     "relatedPost": "Related post",
-    "quizAnswers": "Quiz answers",
+    "quizAnswers": "Answers",
     "updateSuccess": "Request updated successfully"
   },
   "kviz": {
@@ -292,6 +294,11 @@
       "0": "Male and Female",
       "1": "Male only",
       "2": "Female only"
+    },
+    "requestStatus": {
+      "PENDING": "Pending",
+      "ACCEPTED": "Accepted",
+      "DENIED": "Denied"
     }
   }
 }

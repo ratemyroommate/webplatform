@@ -130,6 +130,8 @@
     "advertiser": "Hirdető",
     "advertiserAlt": "hirdette",
     "allPostsShown": "Minden elérhető posztot megjelenítettünk.",
+    "endOfFeedTitle": "Mindent megnéztél",
+    "endOfFeedSubtitle": "Ez minden poszt, ami a szűrőidnek megfelel.",
     "max": "max",
     "freshToday": "Friss ma",
     "newBadge": "ÚJ",
@@ -167,7 +169,7 @@
     "noSent": "Nincs küldött kérelem",
     "post": "Poszt",
     "relatedPost": "Kapcsolatos poszt",
-    "quizAnswers": "Kvíz válaszok",
+    "quizAnswers": "Válaszok",
     "updateSuccess": "Kérelem sikeresen frissítve"
   },
   "kviz": {
@@ -292,6 +294,11 @@
       "0": "Fiú és Lány",
       "1": "Csak Fiú",
       "2": "Csak Lány"
+    },
+    "requestStatus": {
+      "PENDING": "Függőben",
+      "ACCEPTED": "Elfogadva",
+      "DENIED": "Elutasítva"
     }
   }
 }

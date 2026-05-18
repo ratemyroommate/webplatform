@@ -4,6 +4,7 @@ import { Post } from "./post";
 import { PostSkeletons } from "./PostSkeletons";
 import type { FormValues } from "./Filters";
 import { useTranslations } from "next-intl";
+import { EndOfList } from "~/components/ui/end-of-list";
 
 type FeedPostsProps = { filters: FormValues };
 
@@ -29,7 +30,9 @@ export const FeedPosts = ({ filters }: FeedPostsProps) => {
       {data?.pages.map((page) => page.posts.map((post) => <Post post={post} key={post.id} />))}
       {(isLoading || isFetchingNextPage) && <PostSkeletons />}
       {!hasNextPage && (
-        <p className="col-span-full py-6 text-center text-sm opacity-50">{t("allPostsShown")}</p>
+        <div className="col-span-full">
+          <EndOfList title={t("endOfFeedTitle")} subtitle={t("endOfFeedSubtitle")} />
+        </div>
       )}
       <div ref={bottom} className="col-span-full" />
     </div>
