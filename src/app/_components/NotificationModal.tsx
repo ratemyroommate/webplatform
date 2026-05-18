@@ -212,12 +212,16 @@ const RecievedRequest = ({
           <AccordionContent className="flex flex-col gap-2">
             {request.comment === "" ? tc("noComment") : request.comment}
             {isOpen && <CompatibilityScore compareUserId={request.userId} session={session} />}
-            <div className="flex gap-2">
-              <Button asChild variant="outline" size="sm" className="w-1/2">
-                <Link href={`/posts/${request.postId}`}>{t("relatedPost")}</Link>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="outline" size="sm" className="min-w-0 flex-1 basis-0">
+                <Link href={`/posts/${request.postId}`} className="truncate">
+                  {t("relatedPost")}
+                </Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="w-1/2">
-                <Link href={`/compatibility-kviz/${request.userId}`}>{t("quizAnswers")}</Link>
+              <Button asChild variant="outline" size="sm" className="min-w-0 flex-1 basis-0">
+                <Link href={`/compatibility-kviz/${request.userId}`} className="truncate">
+                  {t("quizAnswers")}
+                </Link>
               </Button>
             </div>
           </AccordionContent>
