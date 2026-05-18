@@ -130,6 +130,8 @@
     "advertiser": "Advertiser",
     "advertiserAlt": "advertised",
     "allPostsShown": "All available posts have been displayed.",
+    "endOfFeedTitle": "You're all caught up",
+    "endOfFeedSubtitle": "That's every post matching your filters.",
     "max": "max",
     "freshToday": "Fresh today",
     "newBadge": "NEW",
