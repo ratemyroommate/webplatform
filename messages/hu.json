@@ -292,6 +292,11 @@
       "0": "Fiú és Lány",
       "1": "Csak Fiú",
       "2": "Csak Lány"
+    },
+    "requestStatus": {
+      "PENDING": "Függőben",
+      "ACCEPTED": "Elfogadva",
+      "DENIED": "Elutasítva"
     }
   }
 }

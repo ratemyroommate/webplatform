@@ -5,7 +5,8 @@ import { api } from "~/trpc/react";
 import { Link } from "~/i18n/navigation";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "~/i18n/navigation";
-import type { Request, RequestStatus } from "@prisma/client";
+import type { Request } from "@prisma/client";
+import { RequestStatusBadge } from "./RequestStatusBadge";
 import { toast } from "sonner";
 import { NotificationBell } from "./NotificationBell";
 import type { Session } from "next-auth";
@@ -103,7 +104,7 @@ export const NotificationModal = ({ session }: { session: Session }) => {
                             <Eye />
                           </Link>
                         </Button>
-                        <StatusBadge status={request.status} />
+                        <RequestStatusBadge status={request.status} />
                         {request.status === "PENDING" && (
                           <Button
                             variant="destructive"
@@ -149,17 +150,6 @@ const LoadingList = () => (
   </div>
 );
 
-const StatusBadge = ({ status }: { status: RequestStatus }) => {
-  switch (status) {
-    case "ACCEPTED":
-      return <Badge className="bg-emerald-500 hover:bg-emerald-500">{status}</Badge>;
-    case "DENIED":
-      return <Badge variant="destructive">{status}</Badge>;
-    default:
-      return <Badge className="bg-amber-500 hover:bg-amber-500">{status}</Badge>;
-  }
-};
-
 const RecievedRequest = ({
   session,
   request,
@@ -188,7 +178,7 @@ const RecievedRequest = ({
           </Link>
           <div className="flex flex-col gap-1">
             <div className="line-clamp-1 text-sm">{request.user.name}</div>
-            <StatusBadge status={request.status} />
+            <RequestStatusBadge status={request.status} />
           </div>
         </div>
         {request.status === "PENDING" && (

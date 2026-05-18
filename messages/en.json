@@ -292,6 +292,11 @@
       "0": "Male and Female",
       "1": "Male only",
       "2": "Female only"
+    },
+    "requestStatus": {
+      "PENDING": "Pending",
+      "ACCEPTED": "Accepted",
+      "DENIED": "Denied"
     }
   }
 }
