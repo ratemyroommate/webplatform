@@ -2,11 +2,29 @@
 
 Gap analysis between the Claude Design handoff bundle (`RMRM Redesign.html` +
 `chrome.jsx`, `feed.jsx`, `post-detail.jsx`, `screens.jsx`, `data.js`) and the
-current `webplatform` codebase. The bundle was produced **after** the Duolingo-green
-redesign described in `CLAUDE.md` and supersedes it — the design assistant landed on
-a terracotta-on-warm-cream palette and a richer feature set than what is shipped.
+current `webplatform` codebase. The design bundle used a terracotta palette as
+an exploration; the brand kept Duolingo green. Everything else in the design
+(layout, typography, primitives, interaction patterns) is the target.
 
 Each item below has: **What the design shows → What we have → Steps to close the gap**.
+
+## Status — what's shipped
+
+- ✅ **§0** Palette housekeeping — `--primary-shadow` token, `--primary-foreground: #000000` (black on green), `CtaBanner` + `Button[chunky]` reference the token.
+- ✅ **§1** Navbar partial — bell + language switcher styled as pill controls; **LanguagePicker** is a single-click cycle (no dropdown); **ProfileDropdown** extracted to a 300px design-spec dropdown with header (avatar + name + email), profile-completeness card, nav items, sign-out section. Still missing: center nav links (Discover / Saved / Matches / Help), Saved / Settings menu items (depend on §8 wishlist + a settings page).
+- ✅ **Sign-in** — custom `/signin` page in the design's split layout; NextAuth's default sign-in page replaced via `pages.signIn`. Sign-out is one-click + toast (no NextAuth confirm screen).
+- ✅ **Sign-up flow** — Terms of Service scaffold page (`/terms`) with placeholder content + footer link.
+- ✅ **Footer** — light, top-bordered, centered (`<Logo>` + nav row + © line). Replaced the dark fixed-height footer.
+- ✅ **Route grouping** — `[locale]/(main)/` route group; `[locale]/signin/` lives outside it so it opts out of nav/footer.
+- ✅ **PostModal** — design-spec layout: 600px Dialog, uppercase tracked labels, image dropzone with primary-tinted icon, side-by-side ± steppers for rent + headcount, 3-col Where/Age/Gender row, styled textarea, resident pill-card, right-aligned Cancel + Publish footer.
+- ✅ **Filter Sheet** — 420px Sheet matching `FilterSheet`: uppercase labels, pill-grid selection for roommates / gender / sort, sticky footer with Reset + Apply, custom slider tick row.
+- ✅ **Compatibility quiz** — full restyle: `max-w-3xl` page with `<BackToFeed>` + 30px heading, segmented progress bar + percent overline, card-wrapped question, primary-selected radio options, chunky submit. `CompletedKviz` matches the live quiz visually.
+- ✅ **My Posts page** — feed-style grid (`grid-cols-2 md:grid-cols-3`), 30px section heading, `<BackToFeed>` at top.
+- ✅ **Profile page header** — avatar `relative z-10` over cover (was rendering behind the gradient); `<BackToFeed>` link.
+- ✅ **`<BackToFeed>` primitive** — extracted to `~/components/ui/back-to-feed.tsx`, reads `common.backToFeed`. Used on signin, profile, user posts, quiz, quiz answers.
+- ✅ **`<Logo>`** — added optional `accent` prop so the brand dot can flip color on primary surfaces.
+
+Open items are detailed below.
 
 ---
 
@@ -172,23 +190,11 @@ The Claude Design bundle uses terracotta `#D97757` as `--primary`. **We intentio
 
 ---
 
-## 5. Filter sheet (`screens.jsx` FilterSheet, lines 223-end)
+## 5. Filter sheet — ✅ DONE
 
-| Aspect | Design | Current `Filters.tsx` |
-|---|---|---|
-| Roommate count: 4-button grid `2 / 3 / 4 / 5` | We have a number control |
-| Max price: custom range slider with primary fill + thumb circle + `50k–500k` tick line | Slider exists; verify visual matches |
-| Location: a row of `Pill`s | Possibly a `Select` |
-| Age range: pill row | Possibly missing |
-| Gender preference: pill row | We have male/female/both |
-| Sort by: 4 pills with trending-up/down icons (Price ↑/↓, Date ↑/↓) | We don't have inline sort here (handled in feed sticky bar in §2c) |
-| Reset + Apply at footer | ✅ |
+Implemented in `Filters.tsx`. 420px Sheet, uppercase tracked labels via the local `Field` helper, pill-grid single-select via the local `Segmented<V>` helper (used for roommates, gender, sort), sticky `border-t` footer with Reset + Apply, slider tick row. Location and Age remain shadcn `Select`s (h-11 rounded-xl).
 
-**Steps**
-1. Replace numeric inputs with the pill-grid pattern; reuse shadcn `ToggleGroup` for single-select rows.
-2. Restyle the slider to match (custom track + thumb) — likely a one-off in `Filters.tsx` or extend `components/ui/slider.tsx` with a `chunky` variant.
-3. Add Age range if it's not there.
-4. Drop the sort row from the sheet if §2c added it to the sticky bar; otherwise mirror.
+Possible follow-up if the sort row moves out per §2c, drop it from here.
 
 ---
 
@@ -276,19 +282,16 @@ across `CtaBanner` + `Button[variant=chunky]` for consistency and theme-ability.
 
 ---
 
-## Suggested execution order
+## Suggested execution order (remaining work)
 
-1. **§0** add `--primary-shadow` token (small CSS-only housekeeping; no visual regression).
-2. **§1** navbar dropdown enrichment (already partly done).
-3. **§8** Wishlist schema + tRPC (unblocks card save button + dropdown count + profile stat).
-4. **§11** Post field additions (`neighborhood`) — unblocks PostCard + detail.
-5. **§2e** PostCard redesign with compat chip + save button + neighborhood.
-6. **§2c, §2b, §2a** Feed sticky bar, chip facets, welcome hero.
-7. **§3** Post detail redesign + **§9** Amenities + **§10** ID verification stub.
-8. **§4** Profile redesign (stats, dark kviz card, verify-id card).
-9. **§5** Filter sheet polish.
-10. **§6** Notifications stream rewrite.
-11. **§12** Host messaging — separate epic.
+1. **§8** Wishlist schema + tRPC (unblocks card save button + dropdown count + profile stat + Navbar Saved link).
+2. **§11** Post field additions (`neighborhood`) — unblocks PostCard + detail copy.
+3. **§2e** PostCard redesign: compat chip + save button + neighborhood subtitle.
+4. **§2c, §2b, §2a** Feed sticky bar (sort + filter count badge), chip facets, welcome hero.
+5. **§3** Post detail redesign + **§9** Amenities + **§10** ID verification stub.
+6. **§4** Profile redesign (stats, dark kviz card, verify-id card).
+7. **§6** Notifications stream rewrite (`Notification` model).
+8. **§12** Host messaging — separate epic.
 
 ## Out-of-scope notes
 
