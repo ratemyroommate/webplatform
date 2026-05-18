@@ -12,7 +12,7 @@ import { ageOptions, genderOptions, isUserInPostGroup, locationOptions } from "~
 import { genUploader } from "uploadthing/client";
 import type { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
@@ -274,6 +274,9 @@ export const PostModal = ({
                   value={watch("price") ?? 0}
                   onDecrease={() => handleDecrease("price")}
                   onIncrease={() => handleIncrease("price")}
+                  onChange={(v) => setValue("price", v)}
+                  min={min.price}
+                  max={max.price}
                   unit={t("rentUnit")}
                 />
               </Field>
@@ -282,6 +285,9 @@ export const PostModal = ({
                   value={watch("maxPersonCount") ?? 0}
                   onDecrease={() => handleDecrease("maxPersonCount")}
                   onIncrease={() => handleIncrease("maxPersonCount")}
+                  onChange={(v) => setValue("maxPersonCount", v)}
+                  min={min.maxPersonCount}
+                  max={max.maxPersonCount}
                   unit={t("max")}
                 />
               </Field>
@@ -414,13 +420,25 @@ function StepperField({
   value,
   onDecrease,
   onIncrease,
+  onChange,
+  min,
+  max,
   unit,
 }: {
   value: number;
   onDecrease: () => void;
   onIncrease: () => void;
+  onChange: (value: number) => void;
+  min: number;
+  max: number;
   unit: string;
 }) {
+  const clamp = (n: number) => Math.min(max, Math.max(min, n));
+  const [draft, setDraft] = useState<string>(String(value));
+  const [focused, setFocused] = useState(false);
+  useEffect(() => {
+    if (!focused) setDraft(String(value));
+  }, [value, focused]);
   return (
     <div className="flex h-11 items-center overflow-hidden rounded-xl border border-[color:var(--ink-15)] bg-[var(--card)]">
       <button
@@ -431,9 +449,37 @@ function StepperField({
       >
         <Minus className="mx-auto" size={14} />
       </button>
-      <div className="text-foreground flex-1 text-center text-[14px] font-semibold tabular-nums">
-        {value}
-      </div>
+      <input
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        value={focused ? draft : String(value)}
+        onFocus={() => {
+          setFocused(true);
+          setDraft(String(value));
+        }}
+        onChange={(e) => {
+          const raw = e.target.value.replace(/[^0-9]/g, "");
+          setDraft(raw);
+        }}
+        onBlur={() => {
+          setFocused(false);
+          if (draft === "") {
+            onChange(min);
+            return;
+          }
+          const parsed = Number(draft);
+          if (Number.isNaN(parsed)) onChange(min);
+          else onChange(clamp(Math.trunc(parsed)));
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            (e.target as HTMLInputElement).blur();
+          }
+        }}
+        className="text-foreground w-full min-w-0 flex-1 bg-transparent text-center text-[14px] font-semibold tabular-nums focus:outline-none"
+      />
       <span className="pr-3 text-[11px] text-[color:var(--ink-60)]">{unit}</span>
       <button
         type="button"
