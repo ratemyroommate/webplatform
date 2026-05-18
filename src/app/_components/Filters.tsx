@@ -95,10 +95,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
             </SheetTitle>
           </SheetHeader>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex min-h-0 flex-1 flex-col"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col">
             <div className="flex-1 space-y-7 overflow-y-auto px-5 py-5">
               {/* Roommates */}
               <Field label={t("roommates")}>
@@ -119,7 +116,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
               {/* Max price */}
               <div>
                 <div className="mb-2.5 flex items-baseline justify-between">
-                  <span className="text-[12px] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-60)]">
+                  <span className="text-[12px] font-medium tracking-[0.1em] text-[color:var(--ink-60)] uppercase">
                     {t("maxPrice")}
                   </span>
                   <span className="text-foreground text-[14px] font-semibold tabular-nums">
@@ -136,7 +133,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                   value={[watch("maxPrice") ?? 50]}
                   onValueChange={(v) => setValue("maxPrice", v[0])}
                 />
-                <div className="mt-1.5 flex justify-between text-[10.5px] tabular-nums text-[color:var(--ink-50)]">
+                <div className="mt-1.5 flex justify-between text-[10.5px] text-[color:var(--ink-50)] tabular-nums">
                   <span>50</span>
                   <span>150</span>
                   <span>250</span>
@@ -153,9 +150,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                   render={({ field }) => (
                     <Select
                       value={field.value ? field.value : ANY_LOCATION}
-                      onValueChange={(v) =>
-                        field.onChange(v === ANY_LOCATION ? "" : v)
-                      }
+                      onValueChange={(v) => field.onChange(v === ANY_LOCATION ? "" : v)}
                     >
                       <SelectTrigger className="h-11 w-full rounded-xl">
                         <SelectValue placeholder={t("locationPlaceholder")} />
@@ -268,12 +263,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
 
             {/* Sticky footer */}
             <div className="bg-background flex gap-2 border-t border-[color:var(--ink-10)] px-5 py-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={resetFilters}
-                className="flex-1"
-              >
+              <Button type="button" variant="outline" onClick={resetFilters} className="flex-1">
                 <Trash2 /> {t("reset")}
               </Button>
               <Button type="submit" className="flex-1">
@@ -292,7 +282,7 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-2.5 block text-[12px] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-60)]">
+      <label className="mb-2.5 block text-[12px] font-medium tracking-[0.1em] text-[color:var(--ink-60)] uppercase">
         {label}
       </label>
       {children}
@@ -317,8 +307,7 @@ function Segmented<V extends string | number>({
   options: SegmentedOption<V>[];
   columns: 2 | 3 | 4;
 }) {
-  const grid =
-    columns === 4 ? "grid-cols-4" : columns === 3 ? "grid-cols-3" : "grid-cols-2";
+  const grid = columns === 4 ? "grid-cols-4" : columns === 3 ? "grid-cols-3" : "grid-cols-2";
   return (
     <div className={cn("grid gap-2", grid)}>
       {options.map((o) => {
@@ -329,14 +318,14 @@ function Segmented<V extends string | number>({
             type="button"
             onClick={() => onChange(o.value)}
             className={cn(
-              "flex h-11 items-center justify-center gap-1.5 rounded-xl border text-[13px] font-medium transition-all",
+              "flex min-h-11 min-w-0 items-center justify-center gap-1 rounded-xl border px-2 py-1.5 text-[13px] font-medium transition-all",
               isActive
                 ? "border-[color:var(--foreground)] bg-[var(--foreground)] text-[color:var(--background)]"
                 : "border-[color:var(--ink-15)] bg-[var(--card)] text-[color:var(--ink-80)] hover:border-[color:var(--ink-40)]"
             )}
           >
-            {o.icon}
-            {o.label}
+            {o.icon && <span className="shrink-0">{o.icon}</span>}
+            <span className="line-clamp-2 text-center leading-tight break-words">{o.label}</span>
           </button>
         );
       })}
