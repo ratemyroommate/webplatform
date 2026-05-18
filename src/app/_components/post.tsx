@@ -1,34 +1,108 @@
+import Image from "next/image";
+import { ImageIcon, Star } from "lucide-react";
 import { Link } from "~/i18n/navigation";
-import { FeaturedUsers } from "./FeaturedUsers";
-import { Images } from "./Images";
-import { PostInfo } from "./PostInfo";
 import { useTranslations } from "next-intl";
-import { Badge } from "~/components/ui/badge";
-import { Card } from "~/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { FreshBadge } from "~/components/ui/fresh-badge";
+import { PriceChip } from "~/components/ui/price-chip";
+import { getAverageRating } from "~/utils/helpers";
 
 type PostProps = {
   post: PostExtended;
 };
 
+const FRESH_WINDOW_DAYS = 4;
+
 export const Post = ({ post }: PostProps) => {
   const t = useTranslations("post");
+  const te = useTranslations("enums.location");
+
+  const cover = post.images[0]?.url;
+  const filled = post.featuredUsers.length;
+  const total = post.maxPersonCount;
+  const free = Math.max(0, total - filled);
+  const isFresh = Date.now() - new Date(post.createdAt).getTime() < FRESH_WINDOW_DAYS * 86_400_000;
+
+  const topRated = post.featuredUsers
+    .map((u) => ({ ...u, rating: getAverageRating(u) }))
+    .filter((u) => u.rating > 0)
+    .sort((a, b) => b.rating - a.rating)[0];
+
   return (
     <Link href={`/posts/${post.id}`} className="group block w-full">
-      <Card className="flex w-full flex-col gap-0 overflow-hidden p-0 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
-        {/* Image with price overlay */}
-        <div className="relative">
-          <Images images={post.images} />
-          <Badge className="absolute bottom-3 left-3 z-10 gap-1 font-bold shadow-md">
-            {post.price}k {t("priceShort")}
-          </Badge>
+      {/* Image area */}
+      <div
+        className="bg-muted relative overflow-hidden rounded-[var(--radius)]"
+        style={{ aspectRatio: "3 / 4" }}
+      >
+        {cover ? (
+          <Image
+            src={cover}
+            alt=""
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <ImageIcon size={48} className="opacity-30" />
+          </div>
+        )}
+
+        {isFresh && (
+          <FreshBadge label={t("newPost").split(" ")[0] ?? "NEW"} className="absolute left-3 top-3" />
+        )}
+
+        <PriceChip
+          price={post.price}
+          unit={t("priceShort")}
+          className="absolute bottom-3 right-3"
+        />
+      </div>
+
+      {/* Content row below image */}
+      <div className="pt-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="text-foreground truncate text-[14.5px] font-bold leading-tight">
+              {te(post.location)}
+            </div>
+            {post.description && (
+              <div className="text-muted-foreground mt-0.5 truncate text-[12.5px]">
+                {post.description}
+              </div>
+            )}
+          </div>
+          {topRated && (
+            <div className="flex shrink-0 items-center gap-1 text-[12px] font-semibold text-[color:var(--ink-70)]">
+              <Star size={11} className="fill-[var(--star-hex)] stroke-none" />
+              <span className="tabular-nums">{topRated.rating.toFixed(1)}</span>
+            </div>
+          )}
         </div>
 
-        {/* Content */}
-        <div className="flex flex-col gap-3 p-4">
-          <FeaturedUsers {...post} compact />
-          <PostInfo post={post} compact />
+        {/* Roommate avatars + free spots line */}
+        <div className="mt-2.5 flex items-center gap-2">
+          <div className="flex -space-x-1.5">
+            {post.featuredUsers.slice(0, 3).map((u) => (
+              <Avatar
+                key={u.id}
+                className="ring-background size-6 ring-2"
+                title={u.name ?? undefined}
+              >
+                {u.image && <AvatarImage src={u.image} alt="" />}
+                <AvatarFallback className="text-[9px]">
+                  {(u.name ?? "?").charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            ))}
+          </div>
+          <span className="text-muted-foreground whitespace-nowrap text-[12px]">
+            <span className="text-foreground font-bold">{free}</span>
+            <span> / {total}</span>
+          </span>
         </div>
-      </Card>
+      </div>
     </Link>
   );
 };

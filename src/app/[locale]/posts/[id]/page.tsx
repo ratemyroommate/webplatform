@@ -1,24 +1,23 @@
 import { type Metadata } from "next";
-import { Images } from "~/app/_components/Images";
-import { FeaturedUsers } from "~/app/_components/FeaturedUsers";
+import { ArrowLeft, BedDouble, Phone, Shield, Star, User, Users } from "lucide-react";
+import { PostGallery } from "~/app/_components/PostGallery";
 import { PostDelete } from "~/app/_components/PostDelete";
 import { PostModal } from "~/app/_components/PostModal";
 import { RequestModal } from "~/app/_components/RequestModal";
 import { getServerAuthSession } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
-import { PostInfo } from "~/app/_components/PostInfo";
 import { Link } from "~/i18n/navigation";
-import { Phone } from "lucide-react";
 import { CompatibilityScore } from "~/app/_components/CompatibilityScore";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Card } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
+import { OpenSpotCard } from "~/components/ui/open-spot-card";
 import { JsonLd } from "~/app/_components/JsonLd";
 import { env } from "~/env";
 import { alternatesFor } from "~/i18n/seo";
-import { setRequestLocale } from "next-intl/server";
+import { getAverageRating } from "~/utils/helpers";
 
 type PostPageProps = { params: { id: string; locale: string } };
 
@@ -64,10 +63,14 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
   const session = await getServerAuthSession();
   const post = await api.post.getById(id);
   const t = await getTranslations("post");
+  const tCommon = await getTranslations("common");
   const tMeta = await getTranslations("metadata");
   const tLocation = await getTranslations("enums.location");
+  const tAge = await getTranslations("enums.age");
+  const tGender = await getTranslations("enums.gender");
 
   if (!post) return t("notFound");
+
   const h1 = tMeta("post.titleWithPrice", {
     location: tLocation(post.location),
     price: post.price,
@@ -77,6 +80,10 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
     !session?.user.id ||
     (post.createdById !== session.user.id &&
       !post.requests.map((request) => request.userId).includes(session.user.id));
+
+  const filled = post.featuredUsers.length;
+  const total = post.maxPersonCount;
+  const free = Math.max(0, total - filled);
 
   const baseUrl = env.NEXTAUTH_URL.startsWith("http")
     ? env.NEXTAUTH_URL
@@ -104,94 +111,207 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
   return (
     <HydrateClient>
       <JsonLd data={productLd} />
-      <Card className="w-full gap-0 overflow-hidden p-0">
-        <h1 className="sr-only">{h1}</h1>
-        {/* Accent stripe */}
-        <div className="bg-primary h-1.5 w-full" />
+      <h1 className="sr-only">{h1}</h1>
 
-        {/* Hero image */}
-        <Images images={post.images} />
-
-        <div className="flex flex-col gap-6 p-6">
-          <PostInfo post={post} />
-
-          <Separator />
-
-          {/* Roommates */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
-              <span>{t("roommates")}</span>
-              <Badge variant="outline">
-                {post.featuredUsers.length}/{post.maxPersonCount}
-              </Badge>
-            </h3>
-            <FeaturedUsers {...post} />
-          </div>
-
-          {/* Description */}
-          {post.description && (
-            <>
-              <Separator />
-              <div className="flex flex-col gap-2">
-                <h3 className="text-muted-foreground text-sm font-semibold tracking-wide uppercase">
-                  {t("description")}
-                </h3>
-                <p className="leading-relaxed">{post.description}</p>
-              </div>
-            </>
-          )}
-
-          <Separator />
-
-          {/* Posted by */}
-          <div className="flex items-center gap-4 rounded-2xl border p-4">
-            <Link href={`/users/${post.createdById}`}>
-              <Avatar className="ring-primary ring-offset-background size-12 shadow-md ring-2 ring-offset-2">
-                {post.createdBy.image && (
-                  <AvatarImage src={post.createdBy.image} alt={t("advertiserAlt")} />
-                )}
-                <AvatarFallback>
-                  {post.createdBy.name?.charAt(0).toUpperCase() ?? "?"}
-                </AvatarFallback>
-              </Avatar>
-            </Link>
-            <div className="flex flex-col gap-0.5">
-              <div className="flex items-center gap-2">
-                <Badge>{t("advertiser")}</Badge>
-                {post.createdBy.phoneNumber && (
-                  <a
-                    href={`tel:${post.createdBy.phoneNumber}`}
-                    className="text-primary flex items-center gap-1 text-sm hover:underline"
-                  >
-                    <Phone size={14} />
-                    {post.createdBy.phoneNumber}
-                  </a>
-                )}
-              </div>
-              <Link
-                href={`/users/${post.createdById}`}
-                className="text-lg font-semibold hover:underline"
-              >
-                {post.createdBy.name}
-              </Link>
+      <div className="w-full">
+        {/* Top utility bar */}
+        <div className="mb-6 flex items-center justify-between">
+          <Link
+            href="/"
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 text-[13px] font-medium"
+          >
+            <ArrowLeft size={15} strokeWidth={2} />
+            {tCommon("cancel")}
+          </Link>
+          {canEdit && (
+            <div className="flex items-center gap-2">
+              <PostModal post={post} userId={session?.user.id} />
+              <PostDelete id={post.id} />
             </div>
-          </div>
-
-          {/* Compatibility */}
-          <CompatibilityScore compareUserId={post.createdById} session={session} />
-
-          {/* Actions */}
-          <div className="flex flex-col gap-3">
-            {canEdit && (
-              <div className="flex w-full gap-2">
-                <PostModal post={post} userId={session?.user.id} />
-                <PostDelete id={post.id} />
-              </div>
-            )}
-            {canRequest && <RequestModal postId={post.id} userId={session?.user.id} />}
-          </div>
+          )}
         </div>
-      </Card>
+
+        {/* Gallery */}
+        <PostGallery images={post.images} alt={h1} />
+
+        {/* Two-column body */}
+        <div className="mt-10 grid grid-cols-12 gap-x-10 gap-y-10">
+          {/* Left column */}
+          <div className="col-span-12 space-y-10 lg:col-span-8">
+            {/* Title + meta */}
+            <div>
+              <div className="text-muted-foreground mb-2 text-[12px] font-medium uppercase tracking-[0.14em]">
+                {tLocation(post.location)}
+              </div>
+              <h2
+                className="text-foreground font-extrabold tracking-[-0.025em]"
+                style={{ fontSize: "clamp(28px, 3.4vw, 40px)", lineHeight: 1.1 }}
+              >
+                {post.description ? post.description.split("\n")[0] : tLocation(post.location)}
+              </h2>
+              <div className="text-muted-foreground mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px]">
+                <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <Users size={14} strokeWidth={1.75} />
+                  {total} {locale === "hu" ? "fős lakás" : "person household"}
+                </span>
+                <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <BedDouble size={14} strokeWidth={1.75} />
+                  {free} {locale === "hu" ? "szabad hely" : "free spots"}
+                </span>
+                <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <User size={14} strokeWidth={1.75} />
+                  {tAge(String(post.age))}
+                </span>
+                <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                  {tGender(String(post.gender))}
+                </span>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Roommates */}
+            <section>
+              <div className="mb-6 flex items-baseline justify-between gap-3">
+                <h3
+                  className="text-foreground font-extrabold tracking-[-0.02em]"
+                  style={{ fontSize: 28, lineHeight: 1.15 }}
+                >
+                  {t("roommates")}
+                </h3>
+                <span className="text-muted-foreground whitespace-nowrap text-[12.5px] tabular-nums">
+                  {filled} / {total}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {post.featuredUsers.map((u) => {
+                  const avg = getAverageRating(u);
+                  return (
+                    <Link key={u.id} href={`/users/${u.id}`}>
+                      <Card className="hover:border-foreground/25 gap-2 p-4 transition-colors">
+                        <Avatar className="size-12">
+                          {u.image && <AvatarImage src={u.image} alt={u.name ?? ""} />}
+                          <AvatarFallback>
+                            {(u.name ?? "?").charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="text-foreground truncate text-[13.5px] font-semibold">
+                          {u.name}
+                        </div>
+                        {avg > 0 && (
+                          <div className="text-muted-foreground flex items-center gap-1 text-[11px] tabular-nums">
+                            <Star size={10} className="fill-[var(--star-hex)] stroke-none" />
+                            {avg.toFixed(1)}
+                          </div>
+                        )}
+                        {u.id === post.createdById && (
+                          <Badge variant="secondary" className="bg-[color:var(--primary-10)] text-primary self-start text-[10.5px] uppercase tracking-wider">
+                            {t("advertiser")}
+                          </Badge>
+                        )}
+                      </Card>
+                    </Link>
+                  );
+                })}
+                {Array.from({ length: free }).map((_, i) => (
+                  <OpenSpotCard
+                    key={`free-${i}`}
+                    title={locale === "hu" ? "Szabad hely" : "Open spot"}
+                    subtitle={locale === "hu" ? "Te lehetnél" : "Could be you"}
+                  />
+                ))}
+              </div>
+            </section>
+
+            {post.description && (
+              <>
+                <Separator />
+                <section>
+                  <h3
+                    className="text-foreground mb-3 font-extrabold tracking-[-0.02em]"
+                    style={{ fontSize: 28, lineHeight: 1.15 }}
+                  >
+                    {t("description")}
+                  </h3>
+                  <p className="max-w-[640px] text-[14.5px] leading-[1.7] text-[color:var(--ink-80)]">
+                    {post.description}
+                  </p>
+                </section>
+              </>
+            )}
+
+            <Separator />
+
+            <section>
+              <CompatibilityScore compareUserId={post.createdById} session={session} />
+            </section>
+          </div>
+
+          {/* Right column — sticky booking card */}
+          <aside className="col-span-12 lg:col-span-4">
+            <div className="space-y-4 lg:sticky lg:top-[88px]">
+              <Card className="overflow-hidden rounded-[24px] p-0 shadow-[0_1px_0_var(--ink-05),0_12px_32px_-16px_rgba(0,0,0,0.08)]">
+                <div className="px-6 pt-6">
+                  <div className="flex items-baseline gap-3">
+                    <span
+                      className="text-foreground font-extrabold leading-none tabular-nums tracking-[-0.02em]"
+                      style={{ fontSize: 44 }}
+                    >
+                      {post.price}k
+                    </span>
+                    <span className="text-muted-foreground text-[13px]">{t("priceUnit")}</span>
+                  </div>
+                  <div className="text-muted-foreground mt-2 text-[12px]">{t("rentUnit")}</div>
+                </div>
+
+                <Link
+                  href={`/users/${post.createdById}`}
+                  className="bg-background mx-6 my-5 flex items-center gap-3 rounded-2xl border p-3 transition-colors"
+                >
+                  <Avatar className="size-10">
+                    {post.createdBy.image && (
+                      <AvatarImage src={post.createdBy.image} alt={t("advertiserAlt")} />
+                    )}
+                    <AvatarFallback>
+                      {post.createdBy.name?.charAt(0).toUpperCase() ?? "?"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-foreground truncate text-[13px] font-semibold">
+                      {post.createdBy.name}
+                    </div>
+                    <Badge variant="secondary" className="mt-0.5 text-[10px]">
+                      {t("advertiser")}
+                    </Badge>
+                  </div>
+                  {post.createdBy.phoneNumber && (
+                    <a
+                      href={`tel:${post.createdBy.phoneNumber}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-primary inline-flex h-8 items-center gap-1 rounded-full px-2 text-[11px] font-medium hover:underline"
+                    >
+                      <Phone size={12} />
+                      {post.createdBy.phoneNumber}
+                    </a>
+                  )}
+                </Link>
+
+                <div className="space-y-2 px-6 pb-6">
+                  {canRequest && <RequestModal postId={post.id} userId={session?.user.id} />}
+                </div>
+
+                <div className="text-muted-foreground border-t px-6 py-3.5 text-[11.5px]">
+                  <Shield size={12} strokeWidth={2} className="mr-1.5 inline" />
+                  {locale === "hu"
+                    ? "A jelentkezés nem kötelez semmire"
+                    : "Applying is free and non-binding"}
+                </div>
+              </Card>
+            </div>
+          </aside>
+        </div>
+      </div>
     </HydrateClient>
   );
 }

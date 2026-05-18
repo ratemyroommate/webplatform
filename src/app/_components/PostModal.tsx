@@ -55,7 +55,11 @@ const defaultValues = {
 const max = { maxPersonCount: 6, price: 999 };
 const min = { maxPersonCount: 2, price: 10 };
 
-export const PostModal = ({ post, userId }: PostModalProps) => {
+export const PostModal = ({
+  post,
+  userId,
+  renderTrigger,
+}: PostModalProps & { renderTrigger?: (open: () => void) => React.ReactNode }) => {
   const [open, setOpen] = useState(false);
   const loginModal = useLoginModal();
   const {
@@ -206,23 +210,27 @@ export const PostModal = ({ post, userId }: PostModalProps) => {
 
   return (
     <>
-      <Button
-        onClick={handleTriggerClick}
-        variant={post ? "outline" : "default"}
-        className={post ? "flex-1" : "flex-1 shadow-md"}
-      >
-        {post ? (
-          <>
-            <Pencil />
-            {tc("edit")}
-          </>
-        ) : (
-          <>
-            <Plus />
-            {t("newPost")}
-          </>
-        )}
-      </Button>
+      {renderTrigger ? (
+        renderTrigger(handleTriggerClick)
+      ) : (
+        <Button
+          onClick={handleTriggerClick}
+          variant={post ? "outline" : "default"}
+          className={post ? "flex-1" : "flex-1 shadow-md"}
+        >
+          {post ? (
+            <>
+              <Pencil />
+              {tc("edit")}
+            </>
+          ) : (
+            <>
+              <Plus />
+              {t("newPost")}
+            </>
+          )}
+        </Button>
+      )}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
           <DialogHeader>

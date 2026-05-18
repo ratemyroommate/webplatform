@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { Globe } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { usePathname, useRouter } from "~/i18n/navigation";
@@ -37,10 +38,10 @@ export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
       <DropdownMenuTrigger
         disabled={isPending}
         aria-label={t("selectLanguage")}
-        className="hover:bg-accent inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-sm font-medium transition-colors outline-none disabled:opacity-50"
+        className="inline-flex h-9 items-center gap-1.5 rounded-full border border-[color:var(--ink-10)] bg-[var(--card)] px-3 text-[12px] font-medium text-[color:var(--ink-70)] transition-colors outline-none hover:border-[color:var(--ink-30)] hover:text-[color:var(--foreground)] disabled:opacity-50"
       >
-        <span className="text-base leading-none">{current.flag}</span>
-        <span className="text-xs font-semibold tracking-wide uppercase">{current.code}</span>
+        <Globe size={13} strokeWidth={2} />
+        <span className="tracking-wide uppercase">{current.code}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-36">
         {LOCALE_OPTIONS.map((locale) => (

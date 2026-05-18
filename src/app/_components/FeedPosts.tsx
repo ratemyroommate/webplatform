@@ -25,7 +25,7 @@ export const FeedPosts = ({ filters }: FeedPostsProps) => {
   }, [fetchNextPage, hasNextPage]);
 
   return (
-    <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+    <div className="grid w-full grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3">
       {data?.pages.map((page) => page.posts.map((post) => <Post post={post} key={post.id} />))}
       {(isLoading || isFetchingNextPage) && <PostSkeletons />}
       {!hasNextPage && (

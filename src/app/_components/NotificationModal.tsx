@@ -47,8 +47,12 @@ export const NotificationModal = ({ session }: { session: Session }) => {
   return (
     <>
       <NotificationBell requests={recievedRequests}>
-        <button aria-label="notifications" onClick={() => setOpen(true)} className="cursor-pointer">
-          <Bell size={26} />
+        <button
+          aria-label="notifications"
+          onClick={() => setOpen(true)}
+          className="relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[color:var(--ink-10)] bg-[var(--card)] text-[color:var(--ink-70)] transition-colors hover:border-[color:var(--ink-30)] hover:text-[color:var(--foreground)]"
+        >
+          <Bell size={15} strokeWidth={1.75} />
         </button>
       </NotificationBell>
       <Sheet open={open} onOpenChange={setOpen}>

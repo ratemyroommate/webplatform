@@ -1,7 +1,14 @@
 import "~/styles/globals.css";
 
 import { Analytics } from "@vercel/analytics/next";
-import { GeistSans } from "geist/font/sans";
+import { Plus_Jakarta_Sans } from "next/font/google";
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+});
 import { type Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -108,7 +115,7 @@ export default async function RootLayout({ children, params: { locale } }: Layou
   };
 
   return (
-    <html lang={locale} className={`${GeistSans.variable}`}>
+    <html lang={locale} className={plusJakarta.variable}>
       <body>
         <JsonLd data={[websiteLd, organizationLd]} />
         <TRPCReactProvider>
@@ -117,9 +124,9 @@ export default async function RootLayout({ children, params: { locale } }: Layou
               <LoginModalProvider>
                 <Toaster richColors position="top-center" />
                 <KvizToast session={session} />
-                <main className="bg-muted flex min-h-screen flex-col items-center">
-                  <div className="container flex max-w-4xl flex-col items-center justify-center gap-4 px-4 py-4">
-                    <Navbar session={session} locale={locale} />
+                <main className="bg-background flex min-h-screen flex-col">
+                  <Navbar session={session} locale={locale} />
+                  <div className="mx-auto flex w-full max-w-[1240px] flex-col items-stretch gap-4 px-6 py-6">
                     {children}
                   </div>
                 </main>
