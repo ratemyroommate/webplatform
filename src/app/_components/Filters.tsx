@@ -128,17 +128,18 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
                 </div>
                 <Slider
                   min={50}
-                  max={500}
-                  step={10}
+                  max={300}
+                  step={5}
                   value={[watch("maxPrice") ?? 50]}
                   onValueChange={(v) => setValue("maxPrice", v[0])}
                 />
                 <div className="mt-1.5 flex justify-between text-[10.5px] text-[color:var(--ink-50)] tabular-nums">
                   <span>50</span>
+                  <span>100</span>
                   <span>150</span>
+                  <span>200</span>
                   <span>250</span>
-                  <span>350</span>
-                  <span>500</span>
+                  <span>300</span>
                 </div>
               </div>
 
