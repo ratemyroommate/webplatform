@@ -18,6 +18,7 @@ export const Post = ({ post }: PostProps) => {
   const te = useTranslations("enums.location");
 
   const cover = post.images[0]?.url;
+  const locationLabel = te(post.location);
   const filled = post.featuredUsers.length;
   const total = post.maxPersonCount;
   const free = Math.max(0, total - filled);
@@ -38,7 +39,7 @@ export const Post = ({ post }: PostProps) => {
         {cover ? (
           <Image
             src={cover}
-            alt=""
+            alt={t("coverAlt", { location: locationLabel, price: post.price, unit: t("priceShort") })}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
@@ -50,7 +51,7 @@ export const Post = ({ post }: PostProps) => {
         )}
 
         {isFresh && (
-          <FreshBadge label={t("newPost").split(" ")[0] ?? "NEW"} className="absolute left-3 top-3" />
+          <FreshBadge label={t("newBadge")} className="absolute left-3 top-3" />
         )}
 
         <PriceChip
@@ -65,7 +66,7 @@ export const Post = ({ post }: PostProps) => {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="text-foreground truncate text-[14.5px] font-bold leading-tight">
-              {te(post.location)}
+              {locationLabel}
             </div>
             {post.description && (
               <div className="text-muted-foreground mt-0.5 truncate text-[12.5px]">

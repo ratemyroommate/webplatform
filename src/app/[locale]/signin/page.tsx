@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ShieldCheck, Sparkles, Star } from "lucide-react";
 import { redirect } from "next/navigation";
-import type { useTranslations } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { BackToFeed } from "~/components/ui/back-to-feed";
@@ -15,7 +14,7 @@ type SignInPageProps = {
   params: { locale: string };
 };
 
-type T = ReturnType<typeof useTranslations<"signin">>;
+type SignInTranslations = Awaited<ReturnType<typeof getTranslations>>;
 
 export async function generateMetadata({
   params: { locale },
@@ -50,7 +49,7 @@ export default async function SignInPage({ params: { locale } }: SignInPageProps
   );
 }
 
-function SignInForm({ t }: { t: T }) {
+function SignInForm({ t }: { t: SignInTranslations }) {
   return (
     <div className="flex flex-col justify-center py-8 lg:py-12">
       <div className="mx-auto w-full max-w-[420px]">
@@ -119,7 +118,7 @@ function SignInForm({ t }: { t: T }) {
   );
 }
 
-function DecorativePanel({ t }: { t: T }) {
+function DecorativePanel({ t }: { t: SignInTranslations }) {
   const stats = [
     { value: t("stats.activePostsValue"), label: t("stats.activePosts") },
     { value: t("stats.membersJoinedValue"), label: t("stats.membersJoined") },

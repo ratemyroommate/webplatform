@@ -47,7 +47,6 @@ export const Feed = ({ userId }: FeedProps) => {
             title={t("newPost")}
             subtitle={t("rentTooltip")}
             icon={Plus}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             onClick={open}
           />
         )}

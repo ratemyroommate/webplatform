@@ -152,11 +152,11 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
               <div className="text-muted-foreground mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px]">
                 <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
                   <Users size={14} strokeWidth={1.75} />
-                  {total} {locale === "hu" ? "fős lakás" : "person household"}
+                  {t("personHousehold", { count: total })}
                 </span>
                 <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
                   <BedDouble size={14} strokeWidth={1.75} />
-                  {free} {locale === "hu" ? "szabad hely" : "free spots"}
+                  {t("freeSpots", { count: free })}
                 </span>
                 <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
                   <User size={14} strokeWidth={1.75} />
@@ -217,8 +217,8 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
                 {Array.from({ length: free }).map((_, i) => (
                   <OpenSpotCard
                     key={`free-${i}`}
-                    title={locale === "hu" ? "Szabad hely" : "Open spot"}
-                    subtitle={locale === "hu" ? "Te lehetnél" : "Could be you"}
+                    title={t("openSpotTitle")}
+                    subtitle={t("openSpotSubtitle")}
                   />
                 ))}
               </div>
@@ -303,9 +303,7 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
 
                 <div className="text-muted-foreground border-t px-6 py-3.5 text-[11.5px]">
                   <Shield size={12} strokeWidth={2} className="mr-1.5 inline" />
-                  {locale === "hu"
-                    ? "A jelentkezés nem kötelez semmire"
-                    : "Applying is free and non-binding"}
+                  {t("applyNonBinding")}
                 </div>
               </Card>
             </div>

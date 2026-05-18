@@ -130,7 +130,16 @@
     "advertiser": "Advertiser",
     "advertiserAlt": "advertised",
     "allPostsShown": "All available posts have been displayed.",
-    "max": "max"
+    "max": "max",
+    "freshToday": "Fresh today",
+    "newBadge": "NEW",
+    "coverAlt": "{location} listing, {price}k {unit}",
+    "morePhotos": "{count, plural, one {+# photo} other {+# photos}}",
+    "personHousehold": "{count, plural, one {# person household} other {# person household}}",
+    "freeSpots": "{count, plural, one {# free spot} other {# free spots}}",
+    "openSpotTitle": "Open spot",
+    "openSpotSubtitle": "Could be you",
+    "applyNonBinding": "Applying is free and non-binding"
   },
   "filter": {
     "title": "Filter",

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 import type { Image as TImage } from "@prisma/client";
+import { useTranslations } from "next-intl";
 
 type Props = {
   images: TImage[];
@@ -10,6 +11,8 @@ type Props = {
 };
 
 export function PostGallery({ images, alt = "" }: Props) {
+  const t = useTranslations("post");
+
   if (!images.length) {
     return (
       <div
@@ -58,7 +61,7 @@ export function PostGallery({ images, alt = "" }: Props) {
             <Image src={img.url} alt={alt} fill sizes="(max-width: 1024px) 100vw, 420px" className="object-cover" />
             {i === 1 && images.length > 3 && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-[12px] font-semibold text-white backdrop-blur-sm">
-                +{images.length - 3} photos
+                {t("morePhotos", { count: images.length - 3 })}
               </div>
             )}
           </div>

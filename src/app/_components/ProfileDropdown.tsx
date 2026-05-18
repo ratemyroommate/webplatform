@@ -6,6 +6,7 @@ import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { api } from "~/trpc/react";
+import type { RouterOutputs } from "~/trpc/react";
 import { Link } from "~/i18n/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
@@ -21,6 +22,7 @@ type ProfileDropdownProps = {
 
 export function ProfileDropdown({ user }: ProfileDropdownProps) {
   const t = useTranslations("layout");
+  const { data: profileCompleteness } = api.user.getProfileCompleteness.useQuery();
 
   return (
     <DropdownMenu>
@@ -57,7 +59,7 @@ export function ProfileDropdown({ user }: ProfileDropdownProps) {
         </div>
 
         {/* Profile completeness */}
-        <CompletenessSection userId={user.id} />
+        <CompletenessSection userId={user.id} data={profileCompleteness} />
 
         {/* Nav items */}
         <div className="p-1">
@@ -77,7 +79,7 @@ export function ProfileDropdown({ user }: ProfileDropdownProps) {
             <Link href="/compatibility-kviz">
               <BarChart3 />
               <span className="flex-1">{t("quiz")}</span>
-              <QuizDoneCheck />
+              <QuizDoneCheck data={profileCompleteness} />
             </Link>
           </DropdownMenuItem>
         </div>
@@ -100,9 +102,10 @@ export function ProfileDropdown({ user }: ProfileDropdownProps) {
   );
 }
 
-function CompletenessSection({ userId }: { userId: string }) {
+type ProfileCompletenessData = RouterOutputs["user"]["getProfileCompleteness"] | undefined;
+
+function CompletenessSection({ userId, data }: { userId: string; data: ProfileCompletenessData }) {
   const t = useTranslations("layout");
-  const { data } = api.user.getProfileCompleteness.useQuery();
   if (!data) return null;
 
   const items = [data.hasAbout, data.hasSocialLink, data.hasPhoneNumber];
@@ -140,8 +143,7 @@ function CompletenessSection({ userId }: { userId: string }) {
   );
 }
 
-function QuizDoneCheck() {
-  const { data } = api.user.getProfileCompleteness.useQuery();
+function QuizDoneCheck({ data }: { data: ProfileCompletenessData }) {
   if (!data || data.kvizTotal === 0 || data.kvizAnswered < data.kvizTotal) return null;
   return <Check className="text-[var(--accent-green-hex)]" />;
 }

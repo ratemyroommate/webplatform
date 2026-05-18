@@ -130,7 +130,16 @@
     "advertiser": "Hirdető",
     "advertiserAlt": "hirdette",
     "allPostsShown": "Minden elérhető posztot megjelenítettünk.",
-    "max": "max"
+    "max": "max",
+    "freshToday": "Friss ma",
+    "newBadge": "ÚJ",
+    "coverAlt": "{location} hirdetés, {price}k {unit}",
+    "morePhotos": "{count, plural, one {+# kép} other {+# kép}}",
+    "personHousehold": "{count, plural, one {# fős lakás} other {# fős lakás}}",
+    "freeSpots": "{count, plural, one {# szabad hely} other {# szabad hely}}",
+    "openSpotTitle": "Szabad hely",
+    "openSpotSubtitle": "Te lehetnél",
+    "applyNonBinding": "A jelentkezés nem kötelez semmire"
   },
   "filter": {
     "title": "Szűrés",
