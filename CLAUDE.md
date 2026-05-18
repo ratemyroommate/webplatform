@@ -12,6 +12,7 @@ npm run format       # Prettier (writes in place)
 npm run db:generate  # Generate Prisma client + run migrations
 npm run db:push      # Push schema without migration (dev only)
 npm run db:studio    # Open Prisma Studio GUI
+npm run gen:bones    # Capture Boneyard skeleton bones (dev server must be running)
 ```
 
 No test suite is configured.
@@ -77,6 +78,37 @@ See `.env.example`. Required: `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`,
 - **SuperJSON** — used as tRPC transformer; handles Date serialization automatically
 - **Image uploads** — compress client-side (`src/utils/imagecompression.ts`) before sending to Uploadthing
 - **`noUncheckedIndexedAccess`** is enabled — array/object access returns `T | undefined`
+
+## Skeletons (Boneyard)
+
+Loading states use **`boneyard-js/react`** — bones are extracted from real DOM at build time, not hand-sized.
+
+**Pattern at each loading site:**
+
+```tsx
+import { Skeleton } from "boneyard-js/react";
+import { PostCardFixture } from "./skeleton-fixtures";
+
+<Skeleton name="post-card" loading={isPending} animate="shimmer" fixture={<PostCardFixture />}>
+  <RealComponent data={data} />
+</Skeleton>
+```
+
+- `name` — global key for the bone registry; same name everywhere = same bones.
+- `fixture` — what the CLI snapshots during `boneyard-js build`. Only renders when `window.__BONEYARD_BUILD = true`.
+- `children` — real content shown when not loading.
+
+**Fixtures** live in `src/app/_components/skeleton-fixtures.tsx`. Add one whenever you introduce a new named Skeleton, and mount it on the capture page (`src/app/[locale]/skeleton-capture/page.tsx`) so the CLI can find it.
+
+**Workflow when you change a fixture or loaded layout:**
+
+1. Start dev server: `npm run dev`
+2. Run `npm run gen:bones` — Playwright opens `/skeleton-capture` at each breakpoint (375/768/1280) and writes `src/bones/*.bones.json` + `src/bones/registry.ts`.
+3. Commit the regenerated registry.
+
+The registry is imported once in `src/app/[locale]/layout.tsx` (`import "~/bones/registry"`). Runtime defaults (shimmer, colors, speed) come from `boneyard.config.json` at repo root — match the warm-paper palette.
+
+Currently named skeletons: `post-card`, `compat-score`, `kviz-question`, `notification-list`.
 
 ## Design system
 

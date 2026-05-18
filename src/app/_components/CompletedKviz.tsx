@@ -1,7 +1,8 @@
 "use client";
 import { Check } from "lucide-react";
 import { api } from "~/trpc/react";
-import { LoadingQuestion } from "./Kviz";
+import { Skeleton } from "boneyard-js/react";
+import { KvizQuestionFixture } from "./skeleton-fixtures";
 import { cn } from "~/lib/utils";
 
 type CompletedKvizProps = {
@@ -10,10 +11,15 @@ type CompletedKvizProps = {
 
 export const CompletedKviz = ({ userId }: CompletedKvizProps) => {
   const { data: questions, isLoading } = api.kviz.getAnsers.useQuery(userId);
-  if (isLoading) return <LoadingAnswers />;
   return (
-    <div className="flex flex-col gap-4">
-      {questions?.map((question) => {
+    <Skeleton
+      name="kviz-question"
+      loading={isLoading}
+      animate="shimmer"
+      fixture={<KvizQuestionFixture />}
+    >
+      <div className="flex flex-col gap-4">
+        {questions?.map((question) => {
         const selectedAnswerId = question.answers.find(
           (a) => a.id === a.submittedAnswers[0]?.answerId
         )?.id;
@@ -57,15 +63,9 @@ export const CompletedKviz = ({ userId }: CompletedKvizProps) => {
               })}
             </div>
           </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </Skeleton>
   );
 };
-
-const LoadingAnswers = () => (
-  <>
-    <LoadingQuestion />
-    <LoadingQuestion />
-  </>
-);
