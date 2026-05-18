@@ -32,14 +32,15 @@ export const EditProfile = (user: User) => {
   const t = useTranslations("profile");
   const tc = useTranslations("common");
   const [open, setOpen] = useState(false);
-  const { register, handleSubmit, formState, watch, setValue } = useForm<FormValues>({
-    defaultValues: {
-      about: user.about,
-      socialLink: user.socialLink,
-      phoneNumber: user.phoneNumber,
-      phoneNumberConsent: !!user.phoneNumber,
-    },
-  });
+  const { register, handleSubmit, formState, watch, setValue, setError, clearErrors } =
+    useForm<FormValues>({
+      defaultValues: {
+        about: user.about,
+        socialLink: user.socialLink,
+        phoneNumber: user.phoneNumber,
+        phoneNumberConsent: !!user.phoneNumber,
+      },
+    });
 
   const phoneValue = watch("phoneNumber");
   const phoneConsent = watch("phoneNumberConsent");
@@ -55,13 +56,22 @@ export const EditProfile = (user: User) => {
     },
   });
 
-  const onSubmit = (formValues: FormValues) =>
+  const onSubmit = (formValues: FormValues) => {
+    const phone = formValues.phoneNumber?.trim() ?? "";
+    if (phone && !formValues.phoneNumberConsent) {
+      setError("phoneNumberConsent", {
+        type: "required",
+        message: t("phoneNumberConsentRequired"),
+      });
+      return;
+    }
     updateUser.mutate({
       id: user.id,
       about: formValues.about?.trim() ? formValues.about.trim() : null,
       socialLink: formValues.socialLink?.trim() ? formValues.socialLink.trim() : null,
-      phoneNumber: formValues.phoneNumber?.trim() ? formValues.phoneNumber.trim() : null,
+      phoneNumber: phone || null,
     });
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -130,7 +140,11 @@ export const EditProfile = (user: User) => {
               <Checkbox
                 id="phoneNumberConsent"
                 checked={phoneConsent}
-                onCheckedChange={(checked) => setValue("phoneNumberConsent", checked === true)}
+                onCheckedChange={(checked) => {
+                  const value = checked === true;
+                  setValue("phoneNumberConsent", value);
+                  if (value) clearErrors("phoneNumberConsent");
+                }}
               />
               <Label htmlFor="phoneNumberConsent" className="text-sm leading-snug font-medium">
                 {t("phoneNumberConsent")}
