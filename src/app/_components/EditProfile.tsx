@@ -4,7 +4,7 @@ import { Pencil } from "lucide-react";
 import type { User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { useRouter } from "~/i18n/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -32,6 +32,13 @@ export const EditProfile = (user: User) => {
   const t = useTranslations("profile");
   const tc = useTranslations("common");
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setOpen(true);
+    window.addEventListener("rmrm:open-edit-profile", handler);
+    return () => window.removeEventListener("rmrm:open-edit-profile", handler);
+  }, []);
+
   const { register, handleSubmit, formState, watch, setValue, setError, clearErrors } =
     useForm<FormValues>({
       defaultValues: {

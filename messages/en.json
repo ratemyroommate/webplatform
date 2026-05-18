@@ -23,10 +23,6 @@
       "titleWithName": "{name} – User profile",
       "description": "View user profile on Rate My Roommate. See reviews and compatibility."
     },
-    "userPosts": {
-      "title": "User listings",
-      "description": "List of the user's roommate listings on Rate My Roommate."
-    },
     "privacy": {
       "title": "Privacy Policy",
       "description": "Rate My Roommate privacy policy. Learn more about how we handle your personal data."
@@ -54,7 +50,6 @@
   "layout": {
     "profile": "Profile",
     "quiz": "Quiz",
-    "myPosts": "My Posts",
     "signOut": "Sign out",
     "signedOut": "Signed out",
     "profilePicture": "profile picture",
@@ -85,12 +80,28 @@
     "userProfileImage": "user profile image",
     "noReviewComment": "No comment",
     "noReviews": "No reviews",
+    "noRating": "No reviews yet",
     "completeness": {
       "title": "Profile completeness",
+      "nudge": "Complete profiles get 4× more matches",
       "introduction": "Introduction",
       "socialLink": "Social link",
       "phoneNumber": "Phone number",
-      "quiz": "Compatibility quiz ({answered}/{total})"
+      "quiz": "Compatibility quiz ({answered}/{total})",
+      "add": "Add"
+    },
+    "myPostsHeading": "My posts",
+    "postsHeading": "Posts",
+    "viewAllPosts": "View all",
+    "noPosts": "You haven't posted anything yet.",
+    "noPostsOther": "No posts yet.",
+    "quizCard": {
+      "overline": "Compatibility quiz",
+      "titleDone": "Yours is done. Now you can see who's a match.",
+      "titleInProgress": "Finish the quiz to see who's a match.",
+      "progress": "{answered}/{total} completed",
+      "review": "Review",
+      "continue": "Continue"
     }
   },
   "post": {
@@ -135,6 +146,7 @@
     "max": "max",
     "freshToday": "Fresh today",
     "newBadge": "NEW",
+    "filled": "Filled",
     "coverAlt": "{location} listing, {price}k {unit}",
     "morePhotos": "{count, plural, one {+# photo} other {+# photos}}",
     "personHousehold": "{count, plural, one {# person household} other {# person household}}",
@@ -261,10 +273,6 @@
       "googleOnly": "Google only",
       "oneClick": "One click"
     }
-  },
-  "userPosts": {
-    "title": "My posts",
-    "noPosts": "No posts found for this user."
   },
   "contact": {
     "title": "Get in touch",

@@ -1,12 +1,15 @@
 "use client";
 
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import { AlertCircle, Check } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { api } from "~/trpc/react";
 import { useTranslations } from "next-intl";
-import { Card } from "~/components/ui/card";
+import { CompatRing } from "~/components/ui/compat-ring";
 import { Progress } from "~/components/ui/progress";
 import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
+
+const EDIT_PROFILE_EVENT = "rmrm:open-edit-profile";
 
 const FillQuizButton = ({ size = "sm", className }: { size?: "xs" | "sm"; className?: string }) => {
   const tc = useTranslations("common");
@@ -26,13 +29,22 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
   const { hasAbout, hasSocialLink, hasPhoneNumber, kvizAnswered, kvizTotal } = data;
   const kvizComplete = kvizTotal > 0 && kvizAnswered >= kvizTotal;
 
-  const items = [
-    { label: t("introduction"), done: hasAbout },
-    { label: t("socialLink"), done: hasSocialLink },
-    { label: t("phoneNumber"), done: hasPhoneNumber },
+  type Item = {
+    key: string;
+    label: string;
+    done: boolean;
+    href?: string;
+  };
+
+  const items: Item[] = [
+    { key: "about", label: t("introduction"), done: hasAbout },
+    { key: "socialLink", label: t("socialLink"), done: hasSocialLink },
+    { key: "phoneNumber", label: t("phoneNumber"), done: hasPhoneNumber },
     {
+      key: "quiz",
       label: t("quiz", { answered: kvizAnswered, total: kvizTotal }),
       done: kvizComplete,
+      href: "/compatibility-kviz",
     },
   ];
 
@@ -56,26 +68,75 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
     );
   }
 
+  const openEditProfile = () => {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new Event(EDIT_PROFILE_EVENT));
+  };
+
   return (
-    <Card className="gap-3 p-4">
-      <div className="flex items-center justify-between">
-        <h3 className="font-semibold">{t("title")}</h3>
-        <span className="text-sm font-medium">{percentage}%</span>
+    <div className="rounded-3xl border border-[color:var(--ink-10)] bg-[var(--card)] p-6">
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <h2 className="text-foreground text-[16px] font-semibold">{t("title")}</h2>
+          <p className="mt-0.5 text-[12px] text-[color:var(--ink-60)]">{t("nudge")}</p>
+        </div>
+        <CompatRing value={percentage} size={56} stroke={4} />
       </div>
-      <Progress value={percentage} className="w-full" />
-      <ul className="flex flex-col gap-2">
+
+      <ul className="flex flex-col gap-1.5">
         {items.map((item) => (
-          <li key={item.label} className="flex items-center gap-2 text-sm">
-            {item.done ? (
-              <CheckCircle2 className="text-primary h-5 w-5" />
-            ) : (
-              <AlertCircle className="h-5 w-5 text-amber-500" />
+          <li
+            key={item.key}
+            className={cn(
+              "flex items-center justify-between gap-3 rounded-xl px-3 py-2.5",
+              item.done ? "bg-[color:var(--accent-green-05)]" : "bg-[var(--background)]"
             )}
-            <span className={item.done ? "line-through opacity-60" : ""}>{item.label}</span>
+          >
+            <div className="flex min-w-0 items-center gap-3">
+              <span
+                className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
+                style={{
+                  background: item.done ? "var(--accent-green-hex)" : "var(--ink-10)",
+                  color: item.done ? "var(--background)" : "var(--ink-60)",
+                }}
+              >
+                {item.done ? (
+                  <Check size={12} strokeWidth={2.5} />
+                ) : (
+                  <AlertCircle size={12} strokeWidth={2.25} />
+                )}
+              </span>
+              <span
+                className={cn(
+                  "text-[13px]",
+                  item.done
+                    ? "text-[color:var(--ink-60)] line-through"
+                    : "text-foreground font-medium"
+                )}
+              >
+                {item.label}
+              </span>
+            </div>
+            {!item.done &&
+              (item.href ? (
+                <Link
+                  href={item.href}
+                  className="text-primary whitespace-nowrap text-[12px] font-medium underline-offset-2 hover:underline"
+                >
+                  {t("add")} →
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={openEditProfile}
+                  className="text-primary cursor-pointer whitespace-nowrap text-[12px] font-medium underline-offset-2 hover:underline"
+                >
+                  {t("add")} →
+                </button>
+              ))}
           </li>
         ))}
       </ul>
-      {!kvizComplete && <FillQuizButton className="self-start" />}
-    </Card>
+    </div>
   );
 };
