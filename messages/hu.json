@@ -62,7 +62,10 @@
     "terms": "Felhasználási feltételek",
     "copyright": "© 2025 Ratemyroommate",
     "login": "Bejelentkezés",
-    "selectLanguage": "Nyelv kiválasztása"
+    "selectLanguage": "Nyelv kiválasztása",
+    "profileCompleteness": "Profil teljessége",
+    "stepsLeft": "{count, plural, one {még # lépés} other {még # lépés}} a teljes profilig",
+    "profileComplete": "A profilod teljes"
   },
   "profile": {
     "editProfile": "Profil szerkesztése",
@@ -94,6 +97,9 @@
     "createTitle": "Poszt létrehozás",
     "editTitle": "Poszt módosítás",
     "images": "Képek a lakásról",
+    "imagesDrop": "Húzd ide a képeket vagy",
+    "imagesBrowse": "tallózás",
+    "imagesHint": "JPG, PNG · max. 4 kép",
     "maxImages": "Maximum 4 képet lehet feltölteni jelenleg",
     "rent": "Bérleti díj",
     "rentUnit": "K ft/fő/hónap",

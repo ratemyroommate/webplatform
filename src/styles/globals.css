@@ -49,7 +49,7 @@
 :root {
   /* Brand tokens (design system) */
   --primary-hex: #58cc02;
-  --on-primary-hex: #ffffff;
+  --on-primary-hex: #000000;
   --accent-green-hex: #3f7a4e;
   --bg-hex: #f6f3ee;
   --card-hex: #fffcf7;
@@ -86,7 +86,7 @@
   --popover: #fffcf7;
   --popover-foreground: #1f1b16;
   --primary: #58cc02;
-  --primary-foreground: #ffffff;
+  --primary-foreground: #000000;
   --secondary: #1f1b16;
   --secondary-foreground: #f6f3ee;
   --muted: #efe9df;
@@ -106,7 +106,7 @@
   --sidebar: #fffcf7;
   --sidebar-foreground: #1f1b16;
   --sidebar-primary: #58cc02;
-  --sidebar-primary-foreground: #ffffff;
+  --sidebar-primary-foreground: #000000;
   --sidebar-accent: #efe9df;
   --sidebar-accent-foreground: #1f1b16;
   --sidebar-border: rgba(31, 27, 22, 0.1);
@@ -133,7 +133,7 @@
   --popover: #221e1a;
   --popover-foreground: #f6f3ee;
   --primary: #58cc02;
-  --primary-foreground: #1a1714;
+  --primary-foreground: #000000;
   --secondary: #2b2722;
   --secondary-foreground: #f6f3ee;
   --muted: #2b2722;
@@ -148,7 +148,7 @@
   --sidebar: #221e1a;
   --sidebar-foreground: #f6f3ee;
   --sidebar-primary: #58cc02;
-  --sidebar-primary-foreground: #1a1714;
+  --sidebar-primary-foreground: #000000;
   --sidebar-accent: #2b2722;
   --sidebar-accent-foreground: #f6f3ee;
   --sidebar-border: rgba(246, 243, 238, 0.1);

@@ -62,7 +62,10 @@
     "terms": "Terms",
     "copyright": "© 2025 Ratemyroommate",
     "login": "Log in",
-    "selectLanguage": "Select language"
+    "selectLanguage": "Select language",
+    "profileCompleteness": "Profile completeness",
+    "stepsLeft": "{count, plural, one {# step} other {# steps}} to a complete profile",
+    "profileComplete": "Your profile is complete"
   },
   "profile": {
     "editProfile": "Edit profile",
@@ -94,6 +97,9 @@
     "createTitle": "Create post",
     "editTitle": "Edit post",
     "images": "Photos of the apartment",
+    "imagesDrop": "Drop photos here or",
+    "imagesBrowse": "browse",
+    "imagesHint": "JPG, PNG · up to 4 photos",
     "maxImages": "Maximum 4 images can be uploaded at the moment",
     "rent": "Rent",
     "rentUnit": "K HUF/person/month",

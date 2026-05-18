@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus, Pencil, X } from "lucide-react";
+import { ImagePlus, Minus, Pencil, Plus, Send, X } from "lucide-react";
 import type { Post } from "@prisma/client";
 import { Location } from "@prisma/client";
 import { useLoginModal } from "./LoginModal";
@@ -12,13 +12,11 @@ import { ageOptions, genderOptions, isUserInPostGroup, locationOptions } from "~
 import { genUploader } from "uploadthing/client";
 import type { ChangeEvent } from "react";
 import { compressImages } from "~/utils/imagecompression";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useTranslations } from "next-intl";
+import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { Label } from "~/components/ui/label";
 import { Checkbox } from "~/components/ui/checkbox";
 import {
   Select,
@@ -232,35 +230,30 @@ export const PostModal = ({
         </Button>
       )}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogContent className="max-h-[90vh] overflow-y-auto rounded-2xl p-6 sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle>{post ? t("editTitle") : t("createTitle")}</DialogTitle>
+            <DialogTitle className="text-foreground text-[20px] font-extrabold tracking-[-0.015em]">
+              {post ? t("editTitle") : t("createTitle")}
+            </DialogTitle>
           </DialogHeader>
           <form className="flex w-full flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-2">
-              <Label>{t("images")}</Label>
-              <Input
-                name="images"
-                max={4}
-                multiple
-                type="file"
-                accept="image/*"
+            {/* Image dropzone */}
+            <Field label={t("images")}>
+              <ImageDropzone
                 onChange={handleImagesChange}
+                browseLabel={t("imagesBrowse")}
+                dropLabel={t("imagesDrop")}
+                hintLabel={t("imagesHint")}
               />
               {errors.images?.message && (
                 <span className="text-destructive text-xs">{errors.images.message}</span>
               )}
               {!!previewImages.length && (
-                <div className="relative flex h-24 w-full flex-row gap-4 overflow-x-scroll py-2">
+                <div className="relative flex h-24 w-full flex-row gap-4 overflow-x-auto py-2">
                   {previewImages.map((image, index) => (
                     <div key={index} className="relative flex h-full flex-none">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        key={index}
-                        src={image.url}
-                        alt=""
-                        className="relative h-full rounded-lg"
-                      />
+                      <img src={image.url} alt="" className="relative h-full rounded-lg" />
                       <button
                         type="button"
                         onClick={() => removeImage(index)}
@@ -272,175 +265,249 @@ export const PostModal = ({
                   ))}
                 </div>
               )}
+            </Field>
+
+            {/* Rent + headcount steppers */}
+            <div className="grid grid-cols-2 gap-4">
+              <Field label={t("rent")}>
+                <StepperField
+                  value={watch("price") ?? 0}
+                  onDecrease={() => handleDecrease("price")}
+                  onIncrease={() => handleIncrease("price")}
+                  unit={t("rentUnit")}
+                />
+              </Field>
+              <Field label={t("personCount")}>
+                <StepperField
+                  value={watch("maxPersonCount") ?? 0}
+                  onDecrease={() => handleDecrease("maxPersonCount")}
+                  onIncrease={() => handleIncrease("maxPersonCount")}
+                  unit={t("max")}
+                />
+              </Field>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <Label>{t("rent")}</Label>
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => handleDecrease("price")}
-                >
-                  <Minus />
-                </Button>
-                <div className="relative flex flex-1 items-center">
-                  <Input
-                    min={10}
-                    max={999}
-                    type="number"
-                    className="pr-12"
-                    value={watch("price") ?? ""}
-                    onChange={(e) => setValue("price", Number(e.target.value))}
-                  />
-                  <span className="text-muted-foreground absolute right-3 text-sm">
-                    {t("rentUnit")}
-                  </span>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => handleIncrease("price")}
-                >
-                  <Plus />
-                </Button>
-              </div>
+            {/* Location / age / gender */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <Field label={t("where")}>
+                <Controller
+                  control={control}
+                  name="location"
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="h-11 w-full rounded-xl">
+                        <SelectValue placeholder={t("wherePlaceholder")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {locationOptions.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>
+                            {te(`location.${opt.value}`)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </Field>
+
+              <Field label={t("age")}>
+                <Controller
+                  control={control}
+                  name="age"
+                  render={({ field }) => (
+                    <Select
+                      value={String(field.value)}
+                      onValueChange={(v) => field.onChange(Number(v))}
+                    >
+                      <SelectTrigger className="h-11 w-full rounded-xl">
+                        <SelectValue placeholder={t("age")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ageOptions.map((opt) => (
+                          <SelectItem key={opt.value} value={String(opt.value)}>
+                            {te(`age.${opt.value}`)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </Field>
+
+              <Field label={t("genderPreference")}>
+                <Controller
+                  control={control}
+                  name="gender"
+                  render={({ field }) => (
+                    <Select
+                      value={String(field.value)}
+                      onValueChange={(v) => field.onChange(Number(v))}
+                    >
+                      <SelectTrigger className="h-11 w-full rounded-xl">
+                        <SelectValue placeholder={t("gender")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {genderOptions.map((opt) => (
+                          <SelectItem key={opt.value} value={String(opt.value)}>
+                            {te(`gender.${opt.value}`)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </Field>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <Label>{t("where")}</Label>
-              <Controller
-                control={control}
-                name="location"
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder={t("wherePlaceholder")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {locationOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value}>
-                          {te(`location.${opt.value}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Label>{t("age")}</Label>
-              <Controller
-                control={control}
-                name="age"
-                render={({ field }) => (
-                  <Select
-                    value={String(field.value)}
-                    onValueChange={(v) => field.onChange(Number(v))}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder={t("age")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ageOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={String(opt.value)}>
-                          {te(`age.${opt.value}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Label>{t("genderPreference")}</Label>
-              <Controller
-                control={control}
-                name="gender"
-                render={({ field }) => (
-                  <Select
-                    value={String(field.value)}
-                    onValueChange={(v) => field.onChange(Number(v))}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder={t("gender")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {genderOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={String(opt.value)}>
-                          {te(`gender.${opt.value}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="description">{t("description")}</Label>
-              <Textarea
+            {/* Description */}
+            <Field label={t("description")}>
+              <textarea
                 id="description"
+                rows={4}
                 placeholder={t("descriptionPlaceholder")}
                 {...register("description", { required: t("descriptionRequired") })}
+                className="text-foreground placeholder:text-[color:var(--ink-50)] w-full rounded-xl border border-[color:var(--ink-15)] bg-[var(--card)] px-4 py-3 text-[13.5px] focus:border-[color:var(--ink-40)] focus:outline-none"
               />
               {errors.description && (
                 <span className="text-destructive text-xs">{errors.description.message}</span>
               )}
-            </div>
+            </Field>
 
-            <div className="flex flex-col gap-2">
-              <Label>{t("personCount")}</Label>
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => handleDecrease("maxPersonCount")}
-                >
-                  <Minus />
-                </Button>
-                <div className="relative flex flex-1 items-center">
-                  <Input
-                    min={2}
-                    max={6}
-                    type="number"
-                    className="pr-12"
-                    value={watch("maxPersonCount") ?? ""}
-                    onChange={(e) => setValue("maxPersonCount", Number(e.target.value))}
-                  />
-                  <span className="text-muted-foreground absolute right-3 text-sm">max</span>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => handleIncrease("maxPersonCount")}
-                >
-                  <Plus />
-                </Button>
-              </div>
-            </div>
+            {/* Self-resident toggle */}
+            <ResidentToggle
+              checked={isResidentValue}
+              onChange={(checked) => setValue("isResident", checked)}
+              label={t("isResident")}
+            />
 
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="isResident"
-                checked={isResidentValue}
-                onCheckedChange={(checked) => setValue("isResident", checked === true)}
-              />
-              <Label htmlFor="isResident">{t("isResident")}</Label>
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                {tc("cancel")}
+              </Button>
+              <Button disabled={isSubmitting} type="submit">
+                {!uploadStatus && !post && <Send />}
+                {uploadStatus ?? (post ? tc("save") : tc("publish"))}
+              </Button>
             </div>
-
-            <Button disabled={isSubmitting} type="submit" className="mt-2 self-center px-12">
-              {uploadStatus ?? (post ? tc("save") : tc("publish"))}
-            </Button>
           </form>
         </DialogContent>
       </Dialog>
     </>
   );
 };
+
+// ─── Helpers ──────────────────────────────────────────────────────────────
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-[12px] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-60)]">
+        {label}
+      </span>
+      {children}
+    </div>
+  );
+}
+
+function StepperField({
+  value,
+  onDecrease,
+  onIncrease,
+  unit,
+}: {
+  value: number;
+  onDecrease: () => void;
+  onIncrease: () => void;
+  unit: string;
+}) {
+  return (
+    <div className="flex h-11 items-center overflow-hidden rounded-xl border border-[color:var(--ink-15)] bg-[var(--card)]">
+      <button
+        type="button"
+        onClick={onDecrease}
+        className="h-full w-11 text-[color:var(--ink-60)] transition-colors hover:bg-[color:var(--ink-05)]"
+        aria-label="decrease"
+      >
+        <Minus className="mx-auto" size={14} />
+      </button>
+      <div className="text-foreground flex-1 text-center text-[14px] font-semibold tabular-nums">
+        {value}
+      </div>
+      <span className="pr-3 text-[11px] text-[color:var(--ink-60)]">{unit}</span>
+      <button
+        type="button"
+        onClick={onIncrease}
+        className="h-full w-11 text-[color:var(--ink-60)] transition-colors hover:bg-[color:var(--ink-05)]"
+        aria-label="increase"
+      >
+        <Plus className="mx-auto" size={14} />
+      </button>
+    </div>
+  );
+}
+
+function ImageDropzone({
+  onChange,
+  dropLabel,
+  browseLabel,
+  hintLabel,
+}: {
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  dropLabel: string;
+  browseLabel: string;
+  hintLabel: string;
+}) {
+  const inputId = useId();
+  return (
+    <label
+      htmlFor={inputId}
+      className={cn(
+        "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[color:var(--ink-15)] bg-[var(--background)] p-8 transition-colors",
+        "hover:border-[var(--primary)]"
+      )}
+    >
+      <span
+        className="inline-flex h-12 w-12 items-center justify-center rounded-full"
+        style={{ background: "var(--primary-10)", color: "var(--primary)" }}
+      >
+        <ImagePlus size={20} strokeWidth={1.75} />
+      </span>
+      <div className="text-center text-[13.5px] text-[color:var(--ink-70)]">
+        {dropLabel}{" "}
+        <span className="font-semibold text-[var(--primary)]">{browseLabel}</span>
+      </div>
+      <div className="text-[11px] text-[color:var(--ink-50)]">{hintLabel}</div>
+      <input
+        id={inputId}
+        type="file"
+        accept="image/*"
+        multiple
+        max={4}
+        onChange={onChange}
+        className="hidden"
+      />
+    </label>
+  );
+}
+
+function ResidentToggle({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+}) {
+  return (
+    <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-[color:var(--ink-10)] bg-[var(--background)] p-3.5">
+      <Checkbox
+        checked={checked}
+        onCheckedChange={(v) => onChange(v === true)}
+        className="size-5 rounded-md"
+      />
+      <span className="text-foreground text-[13.5px] font-medium">{label}</span>
+    </label>
+  );
+}
