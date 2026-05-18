@@ -18,7 +18,7 @@ export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
     0,
     SUPPORTED_LOCALES.indexOf(currentLocale as Locale)
   );
-  const nextLocale = SUPPORTED_LOCALES[(currentIndex + 1) % SUPPORTED_LOCALES.length] as Locale;
+  const nextLocale = SUPPORTED_LOCALES[(currentIndex + 1) % SUPPORTED_LOCALES.length]!;
 
   function handleClick() {
     startTransition(() => {

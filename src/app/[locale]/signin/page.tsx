@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowLeft, ShieldCheck, Sparkles, Star } from "lucide-react";
 import { redirect } from "next/navigation";
-import { useTranslations } from "next-intl";
+import type { useTranslations } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { GoogleG } from "~/components/ui/google-g";
