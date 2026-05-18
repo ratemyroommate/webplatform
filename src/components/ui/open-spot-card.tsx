@@ -15,7 +15,7 @@ export function OpenSpotCard({ title, subtitle, className }: OpenSpotCardProps) 
   return (
     <div
       className={cn(
-        "flex flex-col items-start justify-center rounded-2xl border-2 border-dashed p-4",
+        "flex flex-col items-start justify-center rounded-xl border-2 border-dashed p-4",
         className
       )}
       style={{
@@ -24,16 +24,16 @@ export function OpenSpotCard({ title, subtitle, className }: OpenSpotCardProps) 
       }}
     >
       <div
-        className="inline-flex h-12 w-12 items-center justify-center rounded-full text-primary"
+        className="text-primary inline-flex h-12 w-12 items-center justify-center rounded-full"
         style={{ background: "var(--primary-15)" }}
       >
         <Plus size={20} strokeWidth={2} />
       </div>
-      <div className="mt-3 whitespace-nowrap text-[13.5px] font-semibold leading-tight text-primary">
+      <div className="text-primary mt-3 text-[13.5px] leading-tight font-semibold whitespace-nowrap">
         {title}
       </div>
       {subtitle && (
-        <div className="mt-1 whitespace-nowrap text-[11.5px] text-muted-foreground">{subtitle}</div>
+        <div className="text-muted-foreground mt-1 text-[11.5px] whitespace-nowrap">{subtitle}</div>
       )}
     </div>
   );

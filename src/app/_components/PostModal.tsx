@@ -366,7 +366,7 @@ export const PostModal = ({
                 rows={4}
                 placeholder={t("descriptionPlaceholder")}
                 {...register("description", { required: t("descriptionRequired") })}
-                className="text-foreground placeholder:text-[color:var(--ink-50)] w-full rounded-xl border border-[color:var(--ink-15)] bg-[var(--card)] px-4 py-3 text-[13.5px] focus:border-[color:var(--ink-40)] focus:outline-none"
+                className="text-foreground w-full rounded-xl border border-[color:var(--ink-15)] bg-[var(--card)] px-4 py-3 text-[13.5px] placeholder:text-[color:var(--ink-50)] focus:border-[color:var(--ink-40)] focus:outline-none"
               />
               {errors.description && (
                 <span className="text-destructive text-xs">{errors.description.message}</span>
@@ -402,7 +402,7 @@ export const PostModal = ({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-[12px] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-60)]">
+      <span className="text-[12px] font-medium tracking-[0.1em] text-[color:var(--ink-60)] uppercase">
         {label}
       </span>
       {children}
@@ -463,7 +463,7 @@ function ImageDropzone({
     <label
       htmlFor={inputId}
       className={cn(
-        "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[color:var(--ink-15)] bg-[var(--background)] p-8 transition-colors",
+        "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[color:var(--ink-15)] bg-[var(--background)] p-8 transition-colors",
         "hover:border-[var(--primary)]"
       )}
     >
@@ -474,8 +474,7 @@ function ImageDropzone({
         <ImagePlus size={20} strokeWidth={1.75} />
       </span>
       <div className="text-center text-[13.5px] text-[color:var(--ink-70)]">
-        {dropLabel}{" "}
-        <span className="font-semibold text-[var(--primary)]">{browseLabel}</span>
+        {dropLabel} <span className="font-semibold text-[var(--primary)]">{browseLabel}</span>
       </div>
       <div className="text-[11px] text-[color:var(--ink-50)]">{hintLabel}</div>
       <input
