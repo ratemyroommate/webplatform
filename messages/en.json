@@ -48,7 +48,8 @@
     "required": "Required field",
     "noComment": "No comment",
     "moreDetails": "More details",
-    "fillQuiz": "Take quiz"
+    "fillQuiz": "Take quiz",
+    "backToFeed": "Back to feed"
   },
   "layout": {
     "profile": "Profile",
@@ -170,7 +171,6 @@
     "toastLoggedOut": "Log in and take the compatibility quiz",
     "toastIncomplete": "Complete the compatibility quiz",
     "toastAction": "Take quiz",
-    "backToFeed": "Back to feed",
     "backToHome": "Back to home"
   },
   "request": {
@@ -223,7 +223,6 @@
     "termsLink": "Terms",
     "and": "and",
     "privacyLink": "Privacy Policy",
-    "backToFeed": "Back to feed",
     "verifiedAccounts": "Verified accounts",
     "madeIn": "Made in Budapest",
     "stats": {
@@ -254,8 +253,7 @@
   },
   "userPosts": {
     "title": "My posts",
-    "noPosts": "No posts found for this user.",
-    "backToFeed": "Back to feed"
+    "noPosts": "No posts found for this user."
   },
   "contact": {
     "title": "Get in touch",

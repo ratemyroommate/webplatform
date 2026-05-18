@@ -11,6 +11,7 @@ import { getAverageRating } from "~/utils/helpers";
 import { ProfileCompleteness } from "~/app/_components/ProfileCompleteness";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { BackToFeed } from "~/components/ui/back-to-feed";
 import { JsonLd } from "~/app/_components/JsonLd";
 import { Card } from "~/components/ui/card";
 import { ProfileCover } from "~/components/ui/profile-cover";
@@ -104,6 +105,8 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
   return (
     <HydrateClient>
       <JsonLd data={personLd} />
+
+      <BackToFeed className="mb-4" />
 
       {/* Profile header card */}
       <Card className="w-full gap-0 overflow-hidden rounded-[24px] p-0">

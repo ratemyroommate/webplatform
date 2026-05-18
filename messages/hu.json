@@ -48,7 +48,8 @@
     "required": "Kötelező mező",
     "noComment": "Nincs megjegyzés",
     "moreDetails": "További adatok",
-    "fillQuiz": "Kvíz kitöltése"
+    "fillQuiz": "Kvíz kitöltése",
+    "backToFeed": "Vissza a feedhez"
   },
   "layout": {
     "profile": "Profil",
@@ -170,7 +171,6 @@
     "toastLoggedOut": "Jelentkezz be, és töltsd ki a kompatibilitás kvízt",
     "toastIncomplete": "Töltsd ki a kompatibilitás kvízt",
     "toastAction": "Kitöltés",
-    "backToFeed": "Vissza a feedhez",
     "backToHome": "Vissza a főoldalra"
   },
   "request": {
@@ -223,7 +223,6 @@
     "termsLink": "Felhasználási feltételeket",
     "and": "és az",
     "privacyLink": "Adatvédelmet",
-    "backToFeed": "Vissza a feedhez",
     "verifiedAccounts": "Igazolt fiókok",
     "madeIn": "Budapest",
     "stats": {
@@ -254,8 +253,7 @@
   },
   "userPosts": {
     "title": "Saját posztok",
-    "noPosts": "Nem találtunk posztot a megadott felhasználótól.",
-    "backToFeed": "Vissza a feedhez"
+    "noPosts": "Nem találtunk posztot a megadott felhasználótól."
   },
   "contact": {
     "title": "Lépj velünk kapcsolatba",

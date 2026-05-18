@@ -3,7 +3,7 @@ import { HydrateClient } from "~/trpc/server";
 import { getServerAuthSession } from "~/server/auth";
 import { CompletedKviz } from "~/app/_components/CompletedKviz";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Card } from "~/components/ui/card";
+import { BackToFeed } from "~/components/ui/back-to-feed";
 import { alternatesFor } from "~/i18n/seo";
 
 type KvizPageProps = { params: { id: string; locale: string } };
@@ -23,15 +23,27 @@ export default async function Page({ params: { id, locale } }: KvizPageProps) {
   setRequestLocale(locale);
   const session = await getServerAuthSession();
   const t = await getTranslations("kviz");
+
   return (
     <HydrateClient>
-      <Card className="w-full gap-6 p-4">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+        <BackToFeed />
+
+        <h1
+          className="text-foreground font-extrabold tracking-[-0.02em]"
+          style={{ fontSize: 30, lineHeight: 1.15 }}
+        >
+          {t("title")}
+        </h1>
+
         {session ? (
           <CompletedKviz userId={id} />
         ) : (
-          <div className="text-center">{t("loginRequiredAnswers")}</div>
+          <div className="rounded-2xl border border-[color:var(--ink-10)] bg-[var(--card)] p-8 text-center text-[14px] text-[color:var(--ink-70)]">
+            {t("loginRequiredAnswers")}
+          </div>
         )}
-      </Card>
+      </div>
     </HydrateClient>
   );
 }

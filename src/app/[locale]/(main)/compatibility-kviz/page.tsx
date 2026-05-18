@@ -1,10 +1,9 @@
-import { ArrowLeft } from "lucide-react";
 import { type Metadata } from "next";
 import { HydrateClient } from "~/trpc/server";
 import { Kviz } from "~/app/_components/Kviz";
 import { getServerAuthSession } from "~/server/auth";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "~/i18n/navigation";
+import { BackToFeed } from "~/components/ui/back-to-feed";
 import { alternatesFor } from "~/i18n/seo";
 
 type Props = { params: { locale: string } };
@@ -26,13 +25,7 @@ export default async function Page({ params: { locale } }: Props) {
   return (
     <HydrateClient>
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 self-start whitespace-nowrap text-[12.5px] font-bold text-[color:var(--ink-60)] transition-colors hover:text-[color:var(--foreground)]"
-        >
-          <ArrowLeft size={14} strokeWidth={2.25} />
-          {t("backToFeed")}
-        </Link>
+        <BackToFeed />
 
         <h1
           className="text-foreground font-extrabold tracking-[-0.02em]"

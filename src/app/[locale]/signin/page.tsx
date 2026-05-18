@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { ArrowLeft, ShieldCheck, Sparkles, Star } from "lucide-react";
+import { ShieldCheck, Sparkles, Star } from "lucide-react";
 import { redirect } from "next/navigation";
 import type { useTranslations } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { BackToFeed } from "~/components/ui/back-to-feed";
 import { GoogleG } from "~/components/ui/google-g";
 import { Logo } from "~/components/ui/logo";
 import { Link } from "~/i18n/navigation";
@@ -35,13 +36,7 @@ export default async function SignInPage({ params: { locale } }: SignInPageProps
     <div className="bg-background min-h-screen w-full">
       {/* Header strip */}
       <div className="flex items-center justify-between px-6 py-5">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 whitespace-nowrap text-[12.5px] font-bold text-[color:var(--ink-60)] transition-colors hover:text-[color:var(--foreground)]"
-        >
-          <ArrowLeft size={14} strokeWidth={2.25} />
-          {t("backToFeed")}
-        </Link>
+        <BackToFeed />
         <Logo />
         <span className="w-[80px]" aria-hidden />
       </div>

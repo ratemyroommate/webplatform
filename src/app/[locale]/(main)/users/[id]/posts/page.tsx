@@ -1,7 +1,6 @@
-import { ArrowLeft } from "lucide-react";
 import { type Metadata } from "next";
 import { Post } from "~/app/_components/post";
-import { Link } from "~/i18n/navigation";
+import { BackToFeed } from "~/components/ui/back-to-feed";
 import { HydrateClient, api } from "~/trpc/server";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { alternatesFor } from "~/i18n/seo";
@@ -27,13 +26,7 @@ export default async function UserPosts({ params: { id, locale } }: FeedPostsPro
   return (
     <HydrateClient>
       <div className="flex w-full flex-col gap-6">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 self-start whitespace-nowrap text-[12.5px] font-bold text-[color:var(--ink-60)] transition-colors hover:text-[color:var(--foreground)]"
-        >
-          <ArrowLeft size={14} strokeWidth={2.25} />
-          {t("backToFeed")}
-        </Link>
+        <BackToFeed />
 
         <h1
           className="text-foreground font-extrabold tracking-[-0.02em]"
