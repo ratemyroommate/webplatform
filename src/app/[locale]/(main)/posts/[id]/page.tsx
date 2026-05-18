@@ -103,9 +103,7 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
       availability: "https://schema.org/InStock",
       url: `${baseUrl}/posts/${id}`,
     },
-    brand: post.createdBy?.name
-      ? { "@type": "Person", name: post.createdBy.name }
-      : undefined,
+    brand: post.createdBy?.name ? { "@type": "Person", name: post.createdBy.name } : undefined,
   };
 
   return (
@@ -140,7 +138,7 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
           <div className="col-span-12 space-y-10 lg:col-span-8">
             {/* Title + meta */}
             <div>
-              <div className="text-muted-foreground mb-2 text-[12px] font-medium uppercase tracking-[0.14em]">
+              <div className="text-muted-foreground mb-2 text-[12px] font-medium tracking-[0.14em] uppercase">
                 {tLocation(post.location)}
               </div>
               <h2
@@ -179,7 +177,7 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
                 >
                   {t("roommates")}
                 </h3>
-                <span className="text-muted-foreground whitespace-nowrap text-[12.5px] tabular-nums">
+                <span className="text-muted-foreground text-[12.5px] whitespace-nowrap tabular-nums">
                   {filled} / {total}
                 </span>
               </div>
@@ -192,9 +190,7 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
                       <Card className="hover:border-foreground/25 gap-2 p-4 transition-colors">
                         <Avatar className="size-12">
                           {u.image && <AvatarImage src={u.image} alt={u.name ?? ""} />}
-                          <AvatarFallback>
-                            {(u.name ?? "?").charAt(0).toUpperCase()}
-                          </AvatarFallback>
+                          <AvatarFallback>{(u.name ?? "?").charAt(0).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="text-foreground truncate text-[13.5px] font-semibold">
                           {u.name}
@@ -206,7 +202,10 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
                           </div>
                         )}
                         {u.id === post.createdById && (
-                          <Badge variant="secondary" className="bg-[color:var(--primary-10)] text-primary self-start text-[10.5px] uppercase tracking-wider">
+                          <Badge
+                            variant="secondary"
+                            className="text-primary self-start bg-[color:var(--primary-10)] text-[10.5px] tracking-wider uppercase"
+                          >
                             {t("advertiser")}
                           </Badge>
                         )}
@@ -255,7 +254,7 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
                 <div className="px-6 pt-6">
                   <div className="flex items-baseline gap-3">
                     <span
-                      className="text-foreground font-extrabold leading-none tabular-nums tracking-[-0.02em]"
+                      className="text-foreground leading-none font-extrabold tracking-[-0.02em] tabular-nums"
                       style={{ fontSize: 44 }}
                     >
                       {post.price}k
@@ -265,37 +264,38 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
                   <div className="text-muted-foreground mt-2 text-[12px]">{t("rentUnit")}</div>
                 </div>
 
-                <Link
-                  href={`/users/${post.createdById}`}
-                  className="bg-background mx-6 my-5 flex items-center gap-3 rounded-2xl border p-3 transition-colors"
-                >
-                  <Avatar className="size-10">
-                    {post.createdBy.image && (
-                      <AvatarImage src={post.createdBy.image} alt={t("advertiserAlt")} />
-                    )}
-                    <AvatarFallback>
-                      {post.createdBy.name?.charAt(0).toUpperCase() ?? "?"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-foreground truncate text-[13px] font-semibold">
-                      {post.createdBy.name}
+                <div className="bg-background mx-6 my-5 flex items-center gap-3 rounded-2xl border p-3">
+                  <Link
+                    href={`/users/${post.createdById}`}
+                    className="flex min-w-0 flex-1 items-center gap-3 transition-colors"
+                  >
+                    <Avatar className="size-10">
+                      {post.createdBy.image && (
+                        <AvatarImage src={post.createdBy.image} alt={t("advertiserAlt")} />
+                      )}
+                      <AvatarFallback>
+                        {post.createdBy.name?.charAt(0).toUpperCase() ?? "?"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-foreground truncate text-[13px] font-semibold">
+                        {post.createdBy.name}
+                      </div>
+                      <Badge variant="secondary" className="mt-0.5 text-[10px]">
+                        {t("advertiser")}
+                      </Badge>
                     </div>
-                    <Badge variant="secondary" className="mt-0.5 text-[10px]">
-                      {t("advertiser")}
-                    </Badge>
-                  </div>
+                  </Link>
                   {post.createdBy.phoneNumber && (
                     <a
                       href={`tel:${post.createdBy.phoneNumber}`}
-                      onClick={(e) => e.stopPropagation()}
                       className="text-primary inline-flex h-8 items-center gap-1 rounded-full px-2 text-[11px] font-medium hover:underline"
                     >
                       <Phone size={12} />
                       {post.createdBy.phoneNumber}
                     </a>
                   )}
-                </Link>
+                </div>
 
                 <div className="space-y-2 px-6 pb-6">
                   {canRequest && <RequestModal postId={post.id} userId={session?.user.id} />}
