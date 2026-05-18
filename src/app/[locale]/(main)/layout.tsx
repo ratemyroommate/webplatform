@@ -33,6 +33,9 @@ export default async function MainLayout({
           <Link href="/privacy-policy" className="hover:underline">
             {t("privacyPolicy")}
           </Link>
+          <Link href="/terms" className="hover:underline">
+            {t("terms")}
+          </Link>
         </nav>
         <span className="text-xs opacity-70">{t("copyright")}</span>
       </footer>

@@ -30,6 +30,10 @@
     "privacy": {
       "title": "Privacy Policy",
       "description": "Rate My Roommate privacy policy. Learn more about how we handle your personal data."
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "description": "Rate My Roommate terms of service. Read the rules that govern your use of the platform."
     }
   },
   "common": {
@@ -51,9 +55,11 @@
     "quiz": "Quiz",
     "myPosts": "My Posts",
     "signOut": "Sign out",
+    "signedOut": "Signed out",
     "profilePicture": "profile picture",
     "contact": "Contact",
     "privacyPolicy": "Privacy Policy",
+    "terms": "Terms",
     "copyright": "© 2025 Ratemyroommate",
     "login": "Log in",
     "selectLanguage": "Select language"
@@ -214,15 +220,28 @@
     "madeIn": "Made in Budapest",
     "stats": {
       "activePosts": "Active posts",
+      "activePostsValue": "1,284",
       "membersJoined": "Members joined",
-      "matchesThisWeek": "Matches this week"
+      "membersJoinedValue": "8,500+",
+      "matchesThisWeek": "Matches this week",
+      "matchesThisWeekValue": "142"
+    },
+    "testimonials": {
+      "first": {
+        "name": "Anna K.",
+        "initials": "AK",
+        "quote": "Found my dog-loving flatmate in two weeks."
+      },
+      "second": {
+        "name": "George C.",
+        "initials": "GC",
+        "quote": "The compatibility quiz actually works."
+      },
+      "matchPct": "{pct}% match"
     },
     "quotes": {
-      "first": "Found my dog-loving flatmate in two weeks.",
-      "second": "The compat quiz actually works.",
       "googleOnly": "Google only",
-      "oneClick": "One click",
-      "matchPct": "{pct}% match"
+      "oneClick": "One click"
     }
   },
   "userPosts": {
@@ -233,6 +252,9 @@
     "title": "Get in touch",
     "body": "You can reach us at <b>rmrm.owners@gmail.com</b>. We welcome feedback and any kind of inquiry.",
     "sendEmail": "Send an email"
+  },
+  "terms": {
+    "content": "<h1>Terms of Service</h1><p><strong>⚠ TODO — replace this placeholder with the real terms before launch.</strong> The sections below are scaffolding; the legal text has not been written or reviewed.</p><h2>1. Acceptance of Terms</h2><p>TODO: by using <strong>www.ratemyroommate.hu</strong> you agree to these terms. Describe what counts as acceptance and who is bound.</p><h2>2. Eligibility</h2><p>TODO: minimum age, jurisdiction, account requirements.</p><h2>3. User Accounts</h2><p>TODO: account creation, responsibility for credentials, accuracy of information, suspension/termination.</p><h2>4. User Conduct</h2><p>TODO: prohibited behavior — harassment, fraud, scraping, spamming, impersonation, posting illegal content, circumventing matching/verification systems, etc.</p><h2>5. User-Generated Content</h2><p>TODO: ownership of posts, license you grant to RMRM to display them, takedown policy, content standards.</p><h2>6. Listings and Matching</h2><p>TODO: clarify that RMRM provides a platform only; it does not screen, endorse, or guarantee any user, listing, or rental arrangement.</p><h2>7. Payments and Fees</h2><p>TODO: currently no fees — note this and reserve the right to change with notice.</p><h2>8. Disclaimers</h2><p>TODO: service provided \"as is\", no warranty, no guarantee of finding a roommate or housing.</p><h2>9. Limitation of Liability</h2><p>TODO: cap on damages, exclusions, applicable to the extent permitted by law.</p><h2>10. Indemnification</h2><p>TODO: user agrees to indemnify RMRM for losses caused by their breach.</p><h2>11. Termination</h2><p>TODO: how either party can terminate; what happens to user data on termination.</p><h2>12. Changes to These Terms</h2><p>TODO: how updates are announced and when they take effect.</p><h2>13. Governing Law and Disputes</h2><p>TODO: Hungarian law, jurisdiction, dispute resolution.</p><h2>14. Contact</h2><p>For questions about these terms:<br />Email: <strong>rmrm.owners@gmail.com</strong></p><p>Last updated: <strong>TODO</strong></p>"
   },
   "privacy": {
     "content": "<h1>Privacy Policy</h1><p>This privacy policy aims to inform you about how we handle users' personal data on the <strong>www.ratemyroommate.hu</strong> website.</p><h2>1. Data Controller</h2><p>Email: <strong>rmrm.owners@gmail.com</strong></p><h2>2. Personal Data Collected</h2><p>During use of the website, we may collect the following data:</p><ul><li>Username, email address (via Google Auth)</li><li>IP address and browser information</li><li>Data stored by cookies (e.g. login state)</li><li>Phone number (optional, publicly visible if provided)</li><li>Quiz responses (optional)</li></ul><h2>3. Legal Basis for Processing</h2><p>Data processing is based on the user's consent (e.g. when logging in) or our legitimate interest (e.g. statistical data collection, system security).</p><h2>4. Purpose of Data Processing</h2><ul><li>Creating and managing user accounts</li><li>Saving and displaying quiz results</li><li>Improving user experience</li><li>Ensuring website functionality</li></ul><h2>5. Cookie Management</h2><p>Our website uses cookies essential for operation. These cookies do not require separate consent. We do not currently use third-party or marketing cookies.</p><h2>6. Data Retention</h2><p>Personal data is retained as long as the user account is active, or as required by law. Data is deleted when the account is deleted.</p><h2>7. Data Transfers and Processors</h2><p>We do not transfer data to third parties, except:</p><ul><li>Service providers: e.g. Supabase (database), Vercel (hosting)</li><li>Authorities when required by law</li></ul><h2>8. User Rights</h2><p>Users have the right to:</p><ul><li>Request information about data processing</li><li>Access their own data</li><li>Request correction or deletion of their data</li><li>Request restriction of processing</li><li>Request data portability</li></ul><h2>9. Contact</h2><p>For any data protection related questions, please contact us:<br />Email: <strong>rmrm.owners@gmail.com</strong></p><p>Last updated: <strong>2025-09-28</strong></p>"

@@ -1,10 +1,11 @@
 "use client";
 
 import { Link } from "~/i18n/navigation";
-import NextLink from "next/link";
 import { Inbox, LogOut, BarChart3, UserCircle } from "lucide-react";
 import type { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { LanguagePicker } from "./LanguagePicker";
 import { NotificationModal } from "./NotificationModal";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -63,11 +64,14 @@ export function Navbar({ session, locale }: { session: Session | null; locale: s
                     {t("myPosts")}
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <NextLink href="/api/auth/signout">
-                    <LogOut />
-                    {t("signOut")}
-                  </NextLink>
+                <DropdownMenuItem
+                  onSelect={() => {
+                    toast.success(t("signedOut"));
+                    void signOut({ callbackUrl: "/" });
+                  }}
+                >
+                  <LogOut />
+                  {t("signOut")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

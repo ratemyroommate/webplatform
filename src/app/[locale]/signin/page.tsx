@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowLeft, ShieldCheck, Sparkles, Star } from "lucide-react";
 import { redirect } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { GoogleG } from "~/components/ui/google-g";
@@ -12,6 +13,8 @@ import { GoogleSignInButton } from "./GoogleSignInButton";
 type SignInPageProps = {
   params: { locale: string };
 };
+
+type T = ReturnType<typeof useTranslations<"signin">>;
 
 export async function generateMetadata({
   params: { locale },
@@ -45,16 +48,14 @@ export default async function SignInPage({ params: { locale } }: SignInPageProps
 
       {/* Split layout */}
       <div className="mx-auto grid w-full max-w-[1240px] grid-cols-1 gap-8 px-6 py-6 lg:grid-cols-[1fr_1.05fr] lg:gap-12">
-        <SignInForm />
-        <DecorativePanel />
+        <SignInForm t={t} />
+        <DecorativePanel t={t} />
       </div>
     </div>
   );
 }
 
-async function SignInForm() {
-  const t = await getTranslations("signin");
-
+function SignInForm({ t }: { t: T }) {
   return (
     <div className="flex flex-col justify-center py-8 lg:py-12">
       <div className="mx-auto w-full max-w-[420px]">
@@ -123,13 +124,11 @@ async function SignInForm() {
   );
 }
 
-async function DecorativePanel() {
-  const t = await getTranslations("signin");
-
+function DecorativePanel({ t }: { t: T }) {
   const stats = [
-    { value: "1,284", label: t("stats.activePosts") },
-    { value: "8,500+", label: t("stats.membersJoined") },
-    { value: "142", label: t("stats.matchesThisWeek") },
+    { value: t("stats.activePostsValue"), label: t("stats.activePosts") },
+    { value: t("stats.membersJoinedValue"), label: t("stats.membersJoined") },
+    { value: t("stats.matchesThisWeekValue"), label: t("stats.matchesThisWeek") },
   ];
 
   return (
@@ -168,10 +167,10 @@ async function DecorativePanel() {
       <div className="relative z-10 mt-8 flex-1">
         <TestimonialCard
           className="absolute right-2 top-2 w-[260px] rotate-[2deg]"
-          name="Anna K."
-          fallback="AK"
+          name={t("testimonials.first.name")}
+          fallback={t("testimonials.first.initials")}
           avatarColor="#7C3AED"
-          quote={t("quotes.first")}
+          quote={t("testimonials.first.quote")}
           meta={
             <span className="flex items-center gap-0.5 text-[var(--star-hex)]">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -183,16 +182,16 @@ async function DecorativePanel() {
 
         <TestimonialCard
           className="absolute left-2 top-[120px] w-[240px] -rotate-[2deg]"
-          name="David B."
-          fallback="DB"
+          name={t("testimonials.second.name")}
+          fallback={t("testimonials.second.initials")}
           avatarColor="var(--primary)"
-          quote={t("quotes.second")}
+          quote={t("testimonials.second.quote")}
           meta={
             <span
               className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
               style={{ background: "var(--accent-green-05)", color: "var(--accent-green-hex)" }}
             >
-              {t("quotes.matchPct", { pct: 94 })}
+              {t("testimonials.matchPct", { pct: 94 })}
             </span>
           }
         />
