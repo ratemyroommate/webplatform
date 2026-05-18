@@ -75,6 +75,7 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
     : `https://${env.NEXTAUTH_URL}`;
   const ratingValue = getAverageRating(user);
   const reviewCount = user.reviewsReceived.length;
+  const displayRating = reviewCount > 0 ? ratingValue : 0;
   const personLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -139,7 +140,7 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
               </div>
               <div className="flex flex-col items-end pb-2 text-right">
                 <div className="flex items-center gap-1.5">
-                  <ProfileStars value={ratingValue} />
+                  <ProfileStars value={displayRating} />
                   <span className="text-[12px] text-[color:var(--ink-60)] tabular-nums">
                     ({reviewCount})
                   </span>

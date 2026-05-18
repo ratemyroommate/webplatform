@@ -20,6 +20,7 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Label } from "~/components/ui/label";
 import { Checkbox } from "~/components/ui/checkbox";
+import { OPEN_EDIT_PROFILE_EVENT } from "~/lib/events";
 
 type FormValues = {
   about: string | null;
@@ -35,8 +36,8 @@ export const EditProfile = (user: User) => {
 
   useEffect(() => {
     const handler = () => setOpen(true);
-    window.addEventListener("rmrm:open-edit-profile", handler);
-    return () => window.removeEventListener("rmrm:open-edit-profile", handler);
+    window.addEventListener(OPEN_EDIT_PROFILE_EVENT, handler);
+    return () => window.removeEventListener(OPEN_EDIT_PROFILE_EVENT, handler);
   }, []);
 
   const { register, handleSubmit, formState, watch, setValue, setError, clearErrors } =

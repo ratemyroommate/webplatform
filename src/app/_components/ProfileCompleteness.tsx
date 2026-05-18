@@ -8,8 +8,7 @@ import { CompatRing } from "~/components/ui/compat-ring";
 import { Progress } from "~/components/ui/progress";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-
-const EDIT_PROFILE_EVENT = "rmrm:open-edit-profile";
+import { OPEN_EDIT_PROFILE_EVENT } from "~/lib/events";
 
 const FillQuizButton = ({ size = "sm", className }: { size?: "xs" | "sm"; className?: string }) => {
   const tc = useTranslations("common");
@@ -70,7 +69,7 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
 
   const openEditProfile = () => {
     if (typeof window === "undefined") return;
-    window.dispatchEvent(new Event(EDIT_PROFILE_EVENT));
+    window.dispatchEvent(new Event(OPEN_EDIT_PROFILE_EVENT));
   };
 
   return (
