@@ -27,7 +27,7 @@ export function ProfileDropdown({ user }: ProfileDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="ring-offset-background focus-visible:ring-ring rounded-full outline-none focus-visible:ring-2 focus-visible:ring-offset-2">
+        <button className="ring-offset-background focus-visible:ring-ring cursor-pointer rounded-full outline-none focus-visible:ring-2 focus-visible:ring-offset-2">
           <Avatar className="size-9">
             {user.image && <AvatarImage src={user.image} alt={t("profilePicture")} />}
             <AvatarFallback>{user.name?.charAt(0).toUpperCase() ?? "?"}</AvatarFallback>
@@ -47,13 +47,9 @@ export function ProfileDropdown({ user }: ProfileDropdownProps) {
             <AvatarFallback>{user.name?.charAt(0).toUpperCase() ?? "?"}</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <div className="text-foreground truncate text-[14px] font-semibold">
-              {user.name}
-            </div>
+            <div className="text-foreground truncate text-[14px] font-semibold">{user.name}</div>
             {user.email && (
-              <div className="truncate text-[12px] text-[color:var(--ink-60)]">
-                {user.email}
-              </div>
+              <div className="truncate text-[12px] text-[color:var(--ink-60)]">{user.email}</div>
             )}
           </div>
         </div>
@@ -135,9 +131,7 @@ function CompletenessSection({ userId, data }: { userId: string; data: ProfileCo
         />
       </div>
       <div className="mt-2 text-[11px] text-[color:var(--ink-60)]">
-        {stepsLeft > 0
-          ? `${t("stepsLeft", { count: stepsLeft })} →`
-          : `${t("profileComplete")} ✓`}
+        {stepsLeft > 0 ? `${t("stepsLeft", { count: stepsLeft })} →` : `${t("profileComplete")} ✓`}
       </div>
     </Link>
   );
