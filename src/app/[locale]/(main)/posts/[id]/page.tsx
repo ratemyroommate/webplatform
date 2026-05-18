@@ -186,8 +186,8 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
                 {post.featuredUsers.map((u) => {
                   const avg = getAverageRating(u);
                   return (
-                    <Link key={u.id} href={`/users/${u.id}`}>
-                      <Card className="hover:border-foreground/25 gap-2 p-4 transition-colors">
+                    <Link key={u.id} href={`/users/${u.id}`} className="h-full">
+                      <Card className="hover:border-foreground/25 h-full gap-2 p-4 transition-colors">
                         <Avatar className="size-12">
                           {u.image && <AvatarImage src={u.image} alt={u.name ?? ""} />}
                           <AvatarFallback>{(u.name ?? "?").charAt(0).toUpperCase()}</AvatarFallback>
@@ -204,7 +204,7 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
                         {u.id === post.createdById && (
                           <Badge
                             variant="secondary"
-                            className="text-primary self-start bg-[color:var(--primary-10)] text-[10.5px] tracking-wider uppercase"
+                            className="text-primary mt-auto self-start bg-[color:var(--primary-10)] text-[10.5px] tracking-wider uppercase"
                           >
                             {t("advertiser")}
                           </Badge>
