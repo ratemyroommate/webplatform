@@ -1,20 +1,11 @@
 "use client";
-import { ArrowRight, Home, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Check, Home } from "lucide-react";
 import { useState } from "react";
 import { Link } from "~/i18n/navigation";
 import { api } from "~/trpc/react";
 import { CompletedKviz } from "./CompletedKviz";
 import { useTranslations } from "next-intl";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
-import { Alert, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import { Label } from "~/components/ui/label";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils";
 
@@ -25,9 +16,11 @@ export const Kviz = () => {
   const utils = api.useUtils();
   const saveAnswerMutation = api.kviz.saveAnswer.useMutation({
     onSuccess: () => {
+      setSelectedAnswerId(null);
       void utils.kviz.getQuestion.invalidate();
       void utils.kviz.getStats.invalidate();
       void utils.kviz.getAnsers.invalidate();
+      void utils.kviz.getCurrentUserAnswerCount.invalidate();
       void utils.user.getProfileCompleteness.invalidate();
     },
   });
@@ -47,53 +40,72 @@ export const Kviz = () => {
   };
 
   return (
-    <>
-      <Accordion type="single" collapsible className="rounded-md border px-4">
-        <AccordionItem value="intro" className="border-0">
-          <AccordionTrigger className="font-semibold">{t("title")}</AccordionTrigger>
-          <AccordionContent className="text-sm">
-            <div dangerouslySetInnerHTML={{ __html: t.raw("description") as string }} />
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+    <div className="flex flex-col gap-6">
       <TimeLine questionIndex={questionIndex} totalQuestionCount={totalQuestionCount} />
-      <div className="flex flex-col gap-4">
-        <b className="rounded-lg text-2xl">{question.text}</b>
-        <RadioGroup
-          value={selectedAnswerId !== null ? String(selectedAnswerId) : undefined}
-          onValueChange={(v) => setSelectedAnswerId(Number(v))}
-          className="flex flex-col gap-2"
+
+      <div className="bg-card flex flex-col gap-5 rounded-2xl border border-[color:var(--ink-10)] p-6">
+        <h2
+          className="text-foreground font-extrabold tracking-[-0.015em]"
+          style={{ fontSize: 22, lineHeight: 1.25 }}
         >
-          {question.answers.map((answer) => (
-            <Label
-              key={answer.id}
-              className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-md border p-4"
-            >
-              <RadioGroupItem value={String(answer.id)} />
-              <span>{answer.text}</span>
-            </Label>
-          ))}
-        </RadioGroup>
+          {question.text}
+        </h2>
+
+        <div className="flex flex-col gap-2">
+          {question.answers.map((answer) => {
+            const isSelected = selectedAnswerId === answer.id;
+            return (
+              <button
+                key={answer.id}
+                type="button"
+                onClick={() => setSelectedAnswerId(answer.id)}
+                aria-pressed={isSelected}
+                className={cn(
+                  "group flex w-full items-center gap-3 rounded-xl border p-4 text-left text-[14px] transition-all",
+                  isSelected
+                    ? "border-primary bg-[var(--primary-05)] text-foreground"
+                    : "border-[color:var(--ink-10)] bg-[var(--background)] text-[color:var(--ink-80)] hover:border-[color:var(--ink-30)]"
+                )}
+              >
+                <span
+                  className={cn(
+                    "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+                    isSelected
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-[color:var(--ink-30)] bg-transparent"
+                  )}
+                >
+                  {isSelected && <Check size={12} strokeWidth={3} />}
+                </span>
+                <span className="font-medium">{answer.text}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
+
       <Button
+        variant="chunky"
         disabled={saveAnswerMutation.isPending || selectedAnswerId === null}
         onClick={handleSubmit}
-        className="self-end"
+        className="self-end px-6"
       >
         {t("saveAndNext")}
         <ArrowRight />
       </Button>
-    </>
+    </div>
   );
 };
 
 const LoadingKviz = () => (
-  <>
-    <Skeleton className="h-16" />
-    <Skeleton className="my-4 h-2 w-2/3 self-center" />
-    <LoadingQuestion />
-    <Skeleton className="h-8 w-1/2 self-end" />
-  </>
+  <div className="flex flex-col gap-6">
+    <Skeleton className="h-1.5 w-full" />
+    <div className="bg-card flex flex-col gap-5 rounded-2xl border border-[color:var(--ink-10)] p-6">
+      <Skeleton className="h-6 w-2/3" />
+      <LoadingQuestion />
+    </div>
+    <Skeleton className="h-10 w-40 self-end" />
+  </div>
 );
 
 const TimeLine = ({
@@ -103,26 +115,34 @@ const TimeLine = ({
   questionIndex: number;
   totalQuestionCount: number;
 }) => (
-  <div className="flex w-full items-center gap-1 py-2">
-    {Array.from({ length: totalQuestionCount }).map((_, index) => (
-      <div
-        key={index}
-        className={cn(
-          "h-1.5 flex-1 rounded-full transition-colors",
-          questionIndex >= index ? "bg-primary" : "bg-muted"
-        )}
-      />
-    ))}
+  <div className="flex flex-col gap-2">
+    <div className="flex items-center justify-between text-[12px] font-bold uppercase tracking-wider text-[color:var(--ink-60)]">
+      <span>
+        {questionIndex + 1} / {totalQuestionCount}
+      </span>
+      <span className="tabular-nums">
+        {Math.round(((questionIndex + 1) / totalQuestionCount) * 100)}%
+      </span>
+    </div>
+    <div className="flex w-full items-center gap-1">
+      {Array.from({ length: totalQuestionCount }).map((_, index) => (
+        <div
+          key={index}
+          className={cn(
+            "h-1.5 flex-1 rounded-full transition-colors",
+            questionIndex >= index ? "bg-primary" : "bg-[color:var(--ink-10)]"
+          )}
+        />
+      ))}
+    </div>
   </div>
 );
 
 export const LoadingQuestion = () => (
   <>
-    <Skeleton className="h-4 w-1/2" />
-    <Skeleton className="h-4 w-1/2" />
-    <Skeleton className="h-6" />
-    <Skeleton className="h-6" />
-    <Skeleton className="h-6" />
+    <Skeleton className="h-12" />
+    <Skeleton className="h-12" />
+    <Skeleton className="h-12" />
   </>
 );
 
@@ -130,17 +150,27 @@ const CompletedKvizView = () => {
   const t = useTranslations("kviz");
   return (
     <div className="flex flex-col gap-6">
-      <Alert className="border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
-        <CheckCircle2 className="h-4 w-4" />
-        <AlertTitle>{t("completed")}</AlertTitle>
-      </Alert>
+      <div
+        className="flex items-center gap-3 rounded-2xl border p-4"
+        style={{
+          borderColor: "var(--accent-green-hex)",
+          background: "var(--accent-green-05)",
+        }}
+      >
+        <span
+          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+          style={{ background: "var(--accent-green-hex)", color: "var(--background)" }}
+        >
+          <Check size={16} strokeWidth={2.5} />
+        </span>
+        <span
+          className="text-[14px] font-bold"
+          style={{ color: "var(--accent-green-hex)" }}
+        >
+          {t("completed")}
+        </span>
+      </div>
       <CompletedKviz />
-      <Button asChild className="self-end">
-        <Link href="/">
-          <Home />
-          Vissza a főoldalra
-        </Link>
-      </Button>
     </div>
   );
 };

@@ -169,7 +169,9 @@
     "loginRequiredAnswers": "Jelentkezz be, hogy lásd a kvíz válaszokat",
     "toastLoggedOut": "Jelentkezz be, és töltsd ki a kompatibilitás kvízt",
     "toastIncomplete": "Töltsd ki a kompatibilitás kvízt",
-    "toastAction": "Kitöltés"
+    "toastAction": "Kitöltés",
+    "backToFeed": "Vissza a feedhez",
+    "backToHome": "Vissza a főoldalra"
   },
   "request": {
     "apply": "Jelentkezés",
@@ -252,7 +254,8 @@
   },
   "userPosts": {
     "title": "Saját posztok",
-    "noPosts": "Nem találtunk posztot a megadott felhasználótól."
+    "noPosts": "Nem találtunk posztot a megadott felhasználótól.",
+    "backToFeed": "Vissza a feedhez"
   },
   "contact": {
     "title": "Lépj velünk kapcsolatba",

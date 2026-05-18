@@ -169,7 +169,9 @@
     "loginRequiredAnswers": "Log in to see the quiz answers",
     "toastLoggedOut": "Log in and take the compatibility quiz",
     "toastIncomplete": "Complete the compatibility quiz",
-    "toastAction": "Take quiz"
+    "toastAction": "Take quiz",
+    "backToFeed": "Back to feed",
+    "backToHome": "Back to home"
   },
   "request": {
     "apply": "Apply",
@@ -252,7 +254,8 @@
   },
   "userPosts": {
     "title": "My posts",
-    "noPosts": "No posts found for this user."
+    "noPosts": "No posts found for this user.",
+    "backToFeed": "Back to feed"
   },
   "contact": {
     "title": "Get in touch",

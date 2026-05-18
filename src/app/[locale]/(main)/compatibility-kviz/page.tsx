@@ -1,9 +1,10 @@
+import { ArrowLeft } from "lucide-react";
 import { type Metadata } from "next";
 import { HydrateClient } from "~/trpc/server";
 import { Kviz } from "~/app/_components/Kviz";
 import { getServerAuthSession } from "~/server/auth";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Card } from "~/components/ui/card";
+import { Link } from "~/i18n/navigation";
 import { alternatesFor } from "~/i18n/seo";
 
 type Props = { params: { locale: string } };
@@ -21,12 +22,38 @@ export default async function Page({ params: { locale } }: Props) {
   setRequestLocale(locale);
   const session = await getServerAuthSession();
   const t = await getTranslations("kviz");
+
   return (
     <HydrateClient>
-      <Card className="w-full gap-6 p-4">
-        <h1 className="text-2xl font-semibold">{t("title")}</h1>
-        {session ? <Kviz /> : <div className="text-center">{t("loginRequired")}</div>}
-      </Card>
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 self-start whitespace-nowrap text-[12.5px] font-bold text-[color:var(--ink-60)] transition-colors hover:text-[color:var(--foreground)]"
+        >
+          <ArrowLeft size={14} strokeWidth={2.25} />
+          {t("backToFeed")}
+        </Link>
+
+        <h1
+          className="text-foreground font-extrabold tracking-[-0.02em]"
+          style={{ fontSize: 30, lineHeight: 1.15 }}
+        >
+          {t("title")}
+        </h1>
+
+        <p
+          className="text-[14px] leading-[1.55] text-[color:var(--ink-70)]"
+          dangerouslySetInnerHTML={{ __html: t.raw("description") as string }}
+        />
+
+        {session ? (
+          <Kviz />
+        ) : (
+          <div className="rounded-2xl border border-[color:var(--ink-10)] bg-[var(--card)] p-8 text-center text-[14px] text-[color:var(--ink-70)]">
+            {t("loginRequired")}
+          </div>
+        )}
+      </div>
     </HydrateClient>
   );
 }
