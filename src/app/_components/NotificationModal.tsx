@@ -17,7 +17,8 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "~/components/ui/sheet";
-import { Skeleton } from "~/components/ui/skeleton";
+import { Skeleton } from "boneyard-js/react";
+import { NotificationListFixture } from "./skeleton-fixtures";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
   Accordion,
@@ -143,11 +144,14 @@ export const NotificationModal = ({ session }: { session: Session }) => {
 };
 
 const LoadingList = () => (
-  <div className="flex flex-col gap-2">
-    <Skeleton className="h-16 w-full" />
-    <Skeleton className="h-16 w-full" />
-    <Skeleton className="h-16 w-full" />
-  </div>
+  <Skeleton
+    name="notification-list"
+    loading
+    animate="shimmer"
+    fixture={<NotificationListFixture />}
+  >
+    <NotificationListFixture />
+  </Skeleton>
 );
 
 const RecievedRequest = ({

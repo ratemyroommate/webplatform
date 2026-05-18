@@ -1,12 +1,12 @@
 "use client";
-import { ArrowRight, Check, Home } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { useState } from "react";
-import { Link } from "~/i18n/navigation";
 import { api } from "~/trpc/react";
 import { CompletedKviz } from "./CompletedKviz";
 import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
-import { Skeleton } from "~/components/ui/skeleton";
+import { Skeleton } from "boneyard-js/react";
+import { KvizQuestionFixture } from "./skeleton-fixtures";
 import { cn } from "~/lib/utils";
 
 export const Kviz = () => {
@@ -26,87 +26,89 @@ export const Kviz = () => {
   });
 
   const { data, isLoading, isRefetching } = api.kviz.getQuestion.useQuery();
-  if (isLoading || isRefetching || !data) return <LoadingKviz />;
-
-  const { question, questionIndex, totalQuestionCount } = data;
-  if (!question) return <CompletedKvizView />;
+  const isPending = isLoading || isRefetching || !data;
 
   const handleSubmit = () => {
-    if (selectedAnswerId === null) return;
+    if (selectedAnswerId === null || !data?.question) return;
     saveAnswerMutation.mutate({
       answerId: selectedAnswerId,
-      questionId: question.id,
+      questionId: data.question.id,
     });
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <TimeLine questionIndex={questionIndex} totalQuestionCount={totalQuestionCount} />
+    <Skeleton
+      name="kviz-question"
+      loading={isPending}
+      animate="shimmer"
+      fixture={<KvizQuestionFixture />}
+    >
+      {data && !data.question ? (
+        <CompletedKvizView />
+      ) : data?.question ? (
+        <div className="flex flex-col gap-6">
+          <TimeLine
+            questionIndex={data.questionIndex}
+            totalQuestionCount={data.totalQuestionCount}
+          />
 
-      <div className="bg-card flex flex-col gap-5 rounded-2xl border border-[color:var(--ink-10)] p-6">
-        <h2
-          className="text-foreground font-extrabold tracking-[-0.015em]"
-          style={{ fontSize: 22, lineHeight: 1.25 }}
-        >
-          {question.text}
-        </h2>
+          <div className="bg-card flex flex-col gap-5 rounded-2xl border border-[color:var(--ink-10)] p-6">
+            <h2
+              className="text-foreground font-extrabold tracking-[-0.015em]"
+              style={{ fontSize: 22, lineHeight: 1.25 }}
+            >
+              {data.question.text}
+            </h2>
 
-        <div className="flex flex-col gap-2">
-          {question.answers.map((answer) => {
-            const isSelected = selectedAnswerId === answer.id;
-            return (
-              <button
-                key={answer.id}
-                type="button"
-                onClick={() => setSelectedAnswerId(answer.id)}
-                aria-pressed={isSelected}
-                className={cn(
-                  "group flex w-full items-center gap-3 rounded-xl border p-4 text-left text-[14px] transition-all",
-                  isSelected
-                    ? "border-primary bg-[var(--primary-05)] text-foreground"
-                    : "border-[color:var(--ink-10)] bg-[var(--background)] text-[color:var(--ink-80)] hover:border-[color:var(--ink-30)]"
-                )}
-              >
-                <span
-                  className={cn(
-                    "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
-                    isSelected
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-[color:var(--ink-30)] bg-transparent"
-                  )}
-                >
-                  {isSelected && <Check size={12} strokeWidth={3} />}
-                </span>
-                <span className="font-medium">{answer.text}</span>
-              </button>
-            );
-          })}
+            <div className="flex flex-col gap-2">
+              {data.question.answers.map((answer) => {
+                const isSelected = selectedAnswerId === answer.id;
+                return (
+                  <button
+                    key={answer.id}
+                    type="button"
+                    onClick={() => setSelectedAnswerId(answer.id)}
+                    aria-pressed={isSelected}
+                    className={cn(
+                      "group flex w-full items-center gap-3 rounded-xl border p-4 text-left text-[14px] transition-all",
+                      isSelected
+                        ? "border-primary bg-[var(--primary-05)] text-foreground"
+                        : "border-[color:var(--ink-10)] bg-[var(--background)] text-[color:var(--ink-80)] hover:border-[color:var(--ink-30)]"
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+                        isSelected
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-[color:var(--ink-30)] bg-transparent"
+                      )}
+                    >
+                      {isSelected && <Check size={12} strokeWidth={3} />}
+                    </span>
+                    <span className="font-medium">{answer.text}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <Button
+            variant="chunky"
+            disabled={saveAnswerMutation.isPending || selectedAnswerId === null}
+            onClick={handleSubmit}
+            className="self-end px-6"
+          >
+            {t("saveAndNext")}
+            <ArrowRight />
+          </Button>
         </div>
-      </div>
-
-      <Button
-        variant="chunky"
-        disabled={saveAnswerMutation.isPending || selectedAnswerId === null}
-        onClick={handleSubmit}
-        className="self-end px-6"
-      >
-        {t("saveAndNext")}
-        <ArrowRight />
-      </Button>
-    </div>
+      ) : (
+        <KvizQuestionFixture />
+      )}
+    </Skeleton>
   );
 };
-
-const LoadingKviz = () => (
-  <div className="flex flex-col gap-6">
-    <Skeleton className="h-1.5 w-full" />
-    <div className="bg-card flex flex-col gap-5 rounded-2xl border border-[color:var(--ink-10)] p-6">
-      <Skeleton className="h-6 w-2/3" />
-      <LoadingQuestion />
-    </div>
-    <Skeleton className="h-10 w-40 self-end" />
-  </div>
-);
 
 const TimeLine = ({
   questionIndex,
@@ -136,14 +138,6 @@ const TimeLine = ({
       ))}
     </div>
   </div>
-);
-
-export const LoadingQuestion = () => (
-  <>
-    <Skeleton className="h-12" />
-    <Skeleton className="h-12" />
-    <Skeleton className="h-12" />
-  </>
 );
 
 const CompletedKvizView = () => {

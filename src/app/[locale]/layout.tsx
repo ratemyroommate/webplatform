@@ -1,4 +1,5 @@
 import "~/styles/globals.css";
+import "~/bones/registry";
 
 import { Analytics } from "@vercel/analytics/next";
 import { Plus_Jakarta_Sans } from "next/font/google";
