@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, Check, Inbox, LogOut, UserCircle } from "lucide-react";
+import { BarChart3, Check, LogOut, UserCircle } from "lucide-react";
 import type { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
@@ -63,12 +63,6 @@ export function ProfileDropdown({ user }: ProfileDropdownProps) {
             <Link href={`/users/${user.id}`}>
               <UserCircle />
               {t("profile")}
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="rounded-lg px-3 py-2 text-[13px]">
-            <Link href={`/users/${user.id}/posts`}>
-              <Inbox />
-              {t("myPosts")}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="rounded-lg px-3 py-2 text-[13px]">

@@ -2,7 +2,7 @@ import { type Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { HydrateClient } from "~/trpc/server";
 import { Feed } from "~/app/_components/Feed";
-import { ProfileCompleteness } from "~/app/_components/ProfileCompleteness";
+import { CompactProfileCompleteness } from "~/app/_components/ProfileCompleteness";
 import { getServerAuthSession } from "~/server/auth";
 
 type Props = { params: { locale: string } };
@@ -22,7 +22,7 @@ export default async function Home({ params: { locale } }: Props) {
   return (
     <HydrateClient>
       <h1 className="sr-only">{tMeta("home.title")}</h1>
-      {session && <ProfileCompleteness compact />}
+      {session && <CompactProfileCompleteness />}
       <Feed userId={session?.user.id} />
     </HydrateClient>
   );

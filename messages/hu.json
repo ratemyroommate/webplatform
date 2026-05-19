@@ -23,10 +23,6 @@
       "titleWithName": "{name} – Felhasználói profil",
       "description": "Felhasználói profil megtekintése a Rate My Roommate platformon. Nézd meg az értékeléseket és a kompatibilitást."
     },
-    "userPosts": {
-      "title": "Felhasználó hirdetései",
-      "description": "A felhasználó szobatárs hirdetéseinek listája a Rate My Roommate platformon."
-    },
     "privacy": {
       "title": "Adatvédelmi szabályzat",
       "description": "A Rate My Roommate adatvédelmi szabályzata. Tudj meg többet arról, hogyan kezeljük személyes adataidat."
@@ -54,7 +50,6 @@
   "layout": {
     "profile": "Profil",
     "quiz": "Kvíz",
-    "myPosts": "Posztjaim",
     "signOut": "Kijelentkezés",
     "signedOut": "Kijelentkezve",
     "profilePicture": "profilkép",
@@ -85,12 +80,28 @@
     "userProfileImage": "user profile image",
     "noReviewComment": "Nincs megjegyzés",
     "noReviews": "Nincs értékelés",
+    "noRating": "Nincs még értékelés",
     "completeness": {
       "title": "Profil teljessége",
+      "nudge": "A teljes profilok 4× több találatot kapnak",
       "introduction": "Bemutatkozás",
       "socialLink": "Közösségi link",
       "phoneNumber": "Telefonszám",
-      "quiz": "Kompatibilitási kvíz ({answered}/{total})"
+      "quiz": "Kompatibilitási kvíz ({answered}/{total})",
+      "add": "Hozzáadás"
+    },
+    "myPostsHeading": "Hirdetéseim",
+    "postsHeading": "Hirdetések",
+    "viewAllPosts": "Összes",
+    "noPosts": "Még nem hoztál létre hirdetést.",
+    "noPostsOther": "Még nincsenek hirdetések.",
+    "quizCard": {
+      "overline": "Kompatibilitási kvíz",
+      "titleDone": "Te már kész vagy. Most már láthatod, ki illik hozzád.",
+      "titleInProgress": "Töltsd ki a kvízt, hogy lásd, kivel passzolsz.",
+      "progress": "{answered}/{total} kitöltve",
+      "review": "Áttekintés",
+      "continue": "Folytatás"
     }
   },
   "post": {
@@ -135,6 +146,7 @@
     "max": "max",
     "freshToday": "Friss ma",
     "newBadge": "ÚJ",
+    "filled": "Betelt",
     "coverAlt": "{location} hirdetés, {price}k {unit}",
     "morePhotos": "{count, plural, one {+# kép} other {+# kép}}",
     "personHousehold": "{count, plural, one {# fős lakás} other {# fős lakás}}",
@@ -261,10 +273,6 @@
       "googleOnly": "Csak Google",
       "oneClick": "Egy kattintás"
     }
-  },
-  "userPosts": {
-    "title": "Saját posztok",
-    "noPosts": "Nem találtunk posztot a megadott felhasználótól."
   },
   "contact": {
     "title": "Lépj velünk kapcsolatba",

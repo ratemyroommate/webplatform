@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ImageIcon, Star } from "lucide-react";
+import { Check, ImageIcon, Star } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -98,10 +98,17 @@ export const Post = ({ post }: PostProps) => {
               </Avatar>
             ))}
           </div>
-          <span className="text-muted-foreground whitespace-nowrap text-[12px]">
-            <span className="text-foreground font-bold">{free}</span>
-            <span> / {total}</span>
-          </span>
+          {free === 0 ? (
+            <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-[color:var(--ink-10)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--ink-60)]">
+              <Check size={11} strokeWidth={2.5} />
+              {t("filled")}
+            </span>
+          ) : (
+            <span className="text-muted-foreground whitespace-nowrap text-[12px]">
+              <span className="text-foreground font-bold">{free}</span>
+              <span> / {total}</span>
+            </span>
+          )}
         </div>
       </div>
     </Link>

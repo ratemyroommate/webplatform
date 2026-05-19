@@ -28,10 +28,27 @@ type FormValues = {
   phoneNumberConsent: boolean;
 };
 
-export const EditProfile = (user: User) => {
+type EditProfileProps = User & {
+  /**
+   * When provided, the dialog becomes controlled and the default pencil
+   * trigger is hidden. Used by the owner-only profile section so the
+   * ProfileCompleteness "fix" buttons can open the same dialog.
+   */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+};
+
+export const EditProfile = ({ open: openProp, onOpenChange, ...user }: EditProfileProps) => {
   const t = useTranslations("profile");
   const tc = useTranslations("common");
-  const [open, setOpen] = useState(false);
+  const isControlled = openProp !== undefined;
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = isControlled ? openProp : internalOpen;
+  const setOpen = (next: boolean) => {
+    if (!isControlled) setInternalOpen(next);
+    onOpenChange?.(next);
+  };
+
   const { register, handleSubmit, formState, watch, setValue, setError, clearErrors } =
     useForm<FormValues>({
       defaultValues: {
@@ -75,12 +92,14 @@ export const EditProfile = (user: User) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">
-          <Pencil />
-          {t("editProfile")}
-        </Button>
-      </DialogTrigger>
+      {!isControlled && (
+        <DialogTrigger asChild>
+          <Button variant="outline">
+            <Pencil />
+            {t("editProfile")}
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t("editProfile")}</DialogTitle>
