@@ -19,11 +19,8 @@ export function EndOfList({ title, subtitle, icon: Icon = Sparkles, className }:
       }
     >
       <span
-        className="inline-flex h-14 w-14 items-center justify-center rounded-full"
-        style={{
-          background: "var(--accent-green-05)",
-          color: "var(--accent-green-hex)",
-        }}
+        className="text-primary inline-flex h-14 w-14 items-center justify-center rounded-full"
+        style={{ background: "var(--primary-15)" }}
       >
         <Icon size={22} strokeWidth={2.25} />
       </span>
