@@ -210,6 +210,19 @@
     "createSuccess": "Értékelés sikeresen létrehozva",
     "updateSuccess": "Értékelés sikeresen módosítva"
   },
+  "share": {
+    "trigger": "Megosztás",
+    "title": "Hirdetés megosztása",
+    "subtitle": "Küldd el a linket egy ismerősödnek",
+    "copyLink": "Link másolása",
+    "copied": "Másolva",
+    "copyError": "Nem sikerült másolni a linket",
+    "email": "E-mail",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "twitter": "X",
+    "more": "Továbbiak"
+  },
   "compatibility": {
     "quizBased": "Kompatibilitás kvíz alapján",
     "fillQuiz": "Töltsd ki a kvízt, hogy lásd mennyire vagytok kompatibilisak",

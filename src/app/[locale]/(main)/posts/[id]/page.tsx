@@ -4,6 +4,7 @@ import { PostGallery } from "~/app/_components/PostGallery";
 import { PostDelete } from "~/app/_components/PostDelete";
 import { PostModal } from "~/app/_components/PostModal";
 import { RequestModal } from "~/app/_components/RequestModal";
+import { ShareModal } from "~/app/_components/ShareModal";
 import { getServerAuthSession } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
 import { Link } from "~/i18n/navigation";
@@ -121,12 +122,15 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
             <ArrowLeft size={15} strokeWidth={2} />
             {tCommon("cancel")}
           </Link>
-          {canEdit && (
-            <div className="flex items-center gap-2">
-              <PostModal post={post} userId={session?.user.id} />
-              <PostDelete id={post.id} />
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <ShareModal url={`${baseUrl}/posts/${id}`} title={h1} />
+            {canEdit && (
+              <>
+                <PostModal post={post} userId={session?.user.id} />
+                <PostDelete id={post.id} />
+              </>
+            )}
+          </div>
         </div>
 
         {/* Gallery */}
