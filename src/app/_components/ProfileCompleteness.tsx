@@ -1,6 +1,8 @@
 "use client";
 
 import { AlertCircle, Check } from "lucide-react";
+import type { User } from "@prisma/client";
+import { useState } from "react";
 import { Link } from "~/i18n/navigation";
 import { api } from "~/trpc/react";
 import { useTranslations } from "next-intl";
@@ -8,20 +10,54 @@ import { CompatRing } from "~/components/ui/compat-ring";
 import { Progress } from "~/components/ui/progress";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { OPEN_EDIT_PROFILE_EVENT } from "~/lib/events";
+import { EditProfile } from "~/app/_components/EditProfile";
 
-const FillQuizButton = ({ size = "sm", className }: { size?: "xs" | "sm"; className?: string }) => {
+/**
+ * Compact completeness bar shown on the feed page. Read-only: links to the
+ * quiz when needed but cannot open the EditProfile dialog — that lives on
+ * the user's profile page only.
+ */
+export const CompactProfileCompleteness = () => {
+  const { data, isLoading } = api.user.getProfileCompleteness.useQuery();
+  const t = useTranslations("profile.completeness");
   const tc = useTranslations("common");
+
+  if (isLoading || !data) return null;
+
+  const { hasAbout, hasSocialLink, hasPhoneNumber, kvizAnswered, kvizTotal } = data;
+  const kvizComplete = kvizTotal > 0 && kvizAnswered >= kvizTotal;
+  const flags = [hasAbout, hasSocialLink, hasPhoneNumber, kvizComplete];
+  const percentage = Math.round((flags.filter(Boolean).length / flags.length) * 100);
+
+  if (percentage === 100) return null;
+
   return (
-    <Button asChild variant="outline" size={size} className={className}>
-      <Link href="/compatibility-kviz">{tc("fillQuiz")}</Link>
-    </Button>
+    <div className="w-full">
+      <div className="mb-1 flex w-full items-center justify-between gap-2">
+        <span className="text-sm">{t("title")}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">{percentage}%</span>
+          {!kvizComplete && (
+            <Button asChild variant="outline" size="xs">
+              <Link href="/compatibility-kviz">{tc("fillQuiz")}</Link>
+            </Button>
+          )}
+        </div>
+      </div>
+      <Progress value={percentage} className="w-full" />
+    </div>
   );
 };
 
-export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) => {
+/**
+ * Full completeness checklist shown on the owner's profile page. Owns its
+ * own controlled EditProfile dialog so the inline "fix" buttons open the
+ * editor directly — no shared state, no events.
+ */
+export const ProfileCompleteness = ({ user }: { user: User }) => {
   const { data, isLoading } = api.user.getProfileCompleteness.useQuery();
   const t = useTranslations("profile.completeness");
+  const [editOpen, setEditOpen] = useState(false);
 
   if (isLoading || !data) return null;
 
@@ -49,28 +85,6 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
 
   const completed = items.filter((i) => i.done).length;
   const percentage = Math.round((completed / items.length) * 100);
-
-  if (percentage === 100 && compact) return null;
-
-  if (compact) {
-    return (
-      <div className="w-full">
-        <div className="mb-1 flex w-full items-center justify-between gap-2">
-          <span className="text-sm">{t("title")}</span>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">{percentage}%</span>
-            {!kvizComplete && <FillQuizButton size="xs" />}
-          </div>
-        </div>
-        <Progress value={percentage} className="w-full" />
-      </div>
-    );
-  }
-
-  const openEditProfile = () => {
-    if (typeof window === "undefined") return;
-    window.dispatchEvent(new Event(OPEN_EDIT_PROFILE_EVENT));
-  };
 
   return (
     <div className="rounded-3xl border border-[color:var(--ink-10)] bg-[var(--card)] p-6">
@@ -120,15 +134,15 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
               (item.href ? (
                 <Link
                   href={item.href}
-                  className="text-primary whitespace-nowrap text-[12px] font-medium underline-offset-2 hover:underline"
+                  className="text-primary text-[12px] font-medium whitespace-nowrap underline-offset-2 hover:underline"
                 >
                   {t("add")} →
                 </Link>
               ) : (
                 <button
                   type="button"
-                  onClick={openEditProfile}
-                  className="text-primary cursor-pointer whitespace-nowrap text-[12px] font-medium underline-offset-2 hover:underline"
+                  onClick={() => setEditOpen(true)}
+                  className="text-primary cursor-pointer text-[12px] font-medium whitespace-nowrap underline-offset-2 hover:underline"
                 >
                   {t("add")} →
                 </button>
@@ -136,6 +150,8 @@ export const ProfileCompleteness = ({ compact = false }: { compact?: boolean }) 
           </li>
         ))}
       </ul>
+
+      <EditProfile {...user} open={editOpen} onOpenChange={setEditOpen} />
     </div>
   );
 };

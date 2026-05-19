@@ -4,7 +4,7 @@ import { Pencil } from "lucide-react";
 import type { User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { useRouter } from "~/i18n/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -20,7 +20,6 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Label } from "~/components/ui/label";
 import { Checkbox } from "~/components/ui/checkbox";
-import { OPEN_EDIT_PROFILE_EVENT } from "~/lib/events";
 
 type FormValues = {
   about: string | null;
@@ -29,16 +28,26 @@ type FormValues = {
   phoneNumberConsent: boolean;
 };
 
-export const EditProfile = (user: User) => {
+type EditProfileProps = User & {
+  /**
+   * When provided, the dialog becomes controlled and the default pencil
+   * trigger is hidden. Used by the owner-only profile section so the
+   * ProfileCompleteness "fix" buttons can open the same dialog.
+   */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+};
+
+export const EditProfile = ({ open: openProp, onOpenChange, ...user }: EditProfileProps) => {
   const t = useTranslations("profile");
   const tc = useTranslations("common");
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const handler = () => setOpen(true);
-    window.addEventListener(OPEN_EDIT_PROFILE_EVENT, handler);
-    return () => window.removeEventListener(OPEN_EDIT_PROFILE_EVENT, handler);
-  }, []);
+  const isControlled = openProp !== undefined;
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = isControlled ? openProp : internalOpen;
+  const setOpen = (next: boolean) => {
+    if (!isControlled) setInternalOpen(next);
+    onOpenChange?.(next);
+  };
 
   const { register, handleSubmit, formState, watch, setValue, setError, clearErrors } =
     useForm<FormValues>({
@@ -83,12 +92,14 @@ export const EditProfile = (user: User) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">
-          <Pencil />
-          {t("editProfile")}
-        </Button>
-      </DialogTrigger>
+      {!isControlled && (
+        <DialogTrigger asChild>
+          <Button variant="outline">
+            <Pencil />
+            {t("editProfile")}
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t("editProfile")}</DialogTitle>

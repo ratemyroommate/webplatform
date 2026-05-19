@@ -31,9 +31,7 @@ export async function generateMetadata({
 
   const name = user.name?.trim() ?? "";
   const title = name ? t("user.titleWithName", { name }) : t("user.title");
-  const description = user.about?.trim().length
-    ? user.about.slice(0, 200)
-    : t("user.description");
+  const description = user.about?.trim().length ? user.about.slice(0, 200) : t("user.description");
   const alts = alternatesFor(locale, `/users/${id}`);
 
   return {
@@ -146,9 +144,7 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
                   </span>
                 </div>
                 {reviewCount === 0 && (
-                  <div className="text-[11px] text-[color:var(--ink-50)]">
-                    {t("noRating")}
-                  </div>
+                  <div className="text-[11px] text-[color:var(--ink-50)]">{t("noRating")}</div>
                 )}
               </div>
             </div>
@@ -197,7 +193,7 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
         {canEdit && (
           <div className="mt-6 grid grid-cols-12 gap-6">
             <div className="col-span-12 md:col-span-7">
-              <ProfileCompleteness />
+              <ProfileCompleteness user={user} />
             </div>
             <div className="col-span-12 md:col-span-5">
               <QuizCard />
@@ -235,16 +231,10 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
             user.reviewsReceived.map((review, index) => (
               <Card key={index} className="w-full gap-3 p-5">
                 <div className="flex items-start justify-between gap-3">
-                  <Link
-                    href={`/users/${review.reviewer.id}`}
-                    className="flex items-center gap-3"
-                  >
+                  <Link href={`/users/${review.reviewer.id}`} className="flex items-center gap-3">
                     <Avatar className="size-10">
                       {review.reviewer.image && (
-                        <AvatarImage
-                          src={review.reviewer.image}
-                          alt={t("userProfileImage")}
-                        />
+                        <AvatarImage src={review.reviewer.image} alt={t("userProfileImage")} />
                       )}
                       <AvatarFallback>
                         {review.reviewer.name?.charAt(0).toUpperCase() ?? "?"}
@@ -255,11 +245,7 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
                     </span>
                   </Link>
                   {review.reviewer.id === session?.user.id && (
-                    <ReviewModal
-                      reviewerId={session?.user.id}
-                      reviewedId={id}
-                      review={review}
-                    />
+                    <ReviewModal reviewerId={session?.user.id} reviewedId={id} review={review} />
                   )}
                 </div>
                 <Rating rating={review.rating} itemKey={index} />
@@ -269,9 +255,7 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
               </Card>
             ))
           ) : (
-            <p className="text-muted-foreground text-center text-[13px]">
-              {t("noReviews")}
-            </p>
+            <p className="text-muted-foreground text-center text-[13px]">{t("noReviews")}</p>
           )}
         </div>
       </div>
