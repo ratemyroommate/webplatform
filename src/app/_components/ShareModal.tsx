@@ -97,7 +97,8 @@ export const ShareModal = ({ url, title }: ShareModalProps) => {
     <>
       <Button variant="outline" onClick={() => setOpen(true)}>
         <Share2 />
-        {t("trigger")}
+        <span className="sr-only sm:hidden">{t("trigger")}</span>
+        <span className="hidden sm:inline">{t("trigger")}</span>
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-md">

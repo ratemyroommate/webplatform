@@ -46,9 +46,10 @@ export const PostDelete = ({ id }: PostDeleteProps) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" className="flex-1">
+        <Button variant="destructive">
           <Trash2 />
-          {tc("delete")}
+          <span className="sr-only sm:hidden">{tc("delete")}</span>
+          <span className="hidden sm:inline">{tc("delete")}</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
