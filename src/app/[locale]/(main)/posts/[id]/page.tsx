@@ -262,7 +262,6 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
                     </span>
                     <span className="text-muted-foreground text-[13px]">{t("priceUnit")}</span>
                   </div>
-                  <div className="text-muted-foreground mt-2 text-[12px]">{t("rentUnit")}</div>
                 </div>
 
                 <div className="bg-background mx-4 my-5 flex flex-col items-start gap-2 rounded-2xl border p-3 sm:mx-6 sm:flex-row sm:items-center sm:gap-3">

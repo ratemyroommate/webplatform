@@ -116,7 +116,7 @@
     "rent": "Bérleti díj",
     "rentUnit": "K ft/fő/hónap",
     "rentTooltip": "Bérleti díj",
-    "priceUnit": "ft/hónap",
+    "priceUnit": "ft/fő/hónap",
     "priceShort": "ft/hó",
     "where": "Hol",
     "wherePlaceholder": "Hol lakni?",

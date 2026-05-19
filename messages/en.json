@@ -116,7 +116,7 @@
     "rent": "Rent",
     "rentUnit": "K HUF/person/month",
     "rentTooltip": "Rent",
-    "priceUnit": "HUF/month",
+    "priceUnit": "HUF/person/month",
     "priceShort": "HUF/mo",
     "where": "Location",
     "wherePlaceholder": "Where to live?",
