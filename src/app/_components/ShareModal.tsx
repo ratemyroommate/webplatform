@@ -95,7 +95,7 @@ export const ShareModal = ({ url, title }: ShareModalProps) => {
 
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>
+      <Button type="button" variant="outline" onClick={() => setOpen(true)}>
         <Share2 />
         <span className="sr-only sm:hidden">{t("trigger")}</span>
         <span className="hidden sm:inline">{t("trigger")}</span>
