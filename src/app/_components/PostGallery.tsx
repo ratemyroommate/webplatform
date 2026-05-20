@@ -105,7 +105,6 @@ export function PostGallery({ images, alt = "" }: Props) {
                 : "md:rounded-tr-none md:rounded-br-[24px]";
             const tileIndex = i + 1; // hero is 0
             const isOverflowTile = i === 1 && images.length > 3;
-            const targetIndex = isOverflowTile ? 3 : tileIndex;
             const label = isOverflowTile
               ? t("viewer.viewAll", { count: images.length })
               : t("viewer.openLabel", {
@@ -116,7 +115,7 @@ export function PostGallery({ images, alt = "" }: Props) {
               <button
                 key={img.id}
                 type="button"
-                onClick={() => open(targetIndex)}
+                onClick={() => open(tileIndex)}
                 aria-label={label}
                 className={
                   "focus-visible:ring-ring relative block cursor-zoom-in overflow-hidden rounded-[24px] focus:outline-none focus-visible:ring-2 md:rounded-l-none " +
