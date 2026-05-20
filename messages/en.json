@@ -116,7 +116,7 @@
     "rent": "Rent",
     "rentUnit": "K HUF/person/month",
     "rentTooltip": "Rent",
-    "priceUnit": "HUF/month",
+    "priceUnit": "HUF/person/month",
     "priceShort": "HUF/mo",
     "where": "Location",
     "wherePlaceholder": "Where to live?",
@@ -209,6 +209,19 @@
     "commentPlaceholder": "Write your opinion",
     "createSuccess": "Review created successfully",
     "updateSuccess": "Review updated successfully"
+  },
+  "share": {
+    "trigger": "Share",
+    "title": "Share this listing",
+    "subtitle": "Send a link to a friend",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "copyError": "Could not copy link",
+    "email": "Email",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "twitter": "X",
+    "more": "More"
   },
   "compatibility": {
     "quizBased": "Based on compatibility quiz",

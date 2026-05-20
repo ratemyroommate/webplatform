@@ -33,7 +33,14 @@ export function PostGallery({ images, alt = "" }: Props) {
         className="relative w-full overflow-hidden rounded-[24px]"
         style={{ aspectRatio: "16 / 11", background: "var(--ink-05)" }}
       >
-        <Image src={hero.url} alt={alt} fill sizes="(max-width: 1024px) 100vw, 1240px" className="object-cover" priority />
+        <Image
+          src={hero.url}
+          alt={alt}
+          fill
+          sizes="(max-width: 1024px) 100vw, 1240px"
+          className="object-cover"
+          priority
+        />
       </div>
     );
   }
@@ -44,28 +51,51 @@ export function PostGallery({ images, alt = "" }: Props) {
         className="relative col-span-12 overflow-hidden rounded-[24px] md:col-span-8 md:rounded-r-none"
         style={{ aspectRatio: "16 / 11", background: "var(--ink-05)" }}
       >
-        <Image src={hero.url} alt={alt} fill sizes="(max-width: 1024px) 100vw, 820px" className="object-cover" priority />
+        <Image
+          src={hero.url}
+          alt={alt}
+          fill
+          sizes="(max-width: 1024px) 100vw, 820px"
+          className="object-cover"
+          priority
+        />
       </div>
-      <div className="col-span-12 grid grid-rows-2 gap-2 md:col-span-4">
-        {right.map((img, i) => (
-          <div
-            key={img.id}
-            className={
-              "relative overflow-hidden rounded-[24px] md:rounded-l-none " +
-              (i === 0
-                ? "md:rounded-br-none md:rounded-tr-[24px]"
-                : "md:rounded-tr-none md:rounded-br-[24px]")
-            }
-            style={{ background: "var(--ink-05)", minHeight: 140 }}
-          >
-            <Image src={img.url} alt={alt} fill sizes="(max-width: 1024px) 100vw, 420px" className="object-cover" />
-            {i === 1 && images.length > 3 && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-[12px] font-semibold text-white backdrop-blur-sm">
-                {t("morePhotos", { count: images.length - 3 })}
-              </div>
-            )}
-          </div>
-        ))}
+      <div
+        className={
+          "col-span-12 grid gap-2 md:col-span-4 " +
+          (right.length === 2 ? "grid-rows-2" : "grid-rows-1")
+        }
+      >
+        {right.map((img, i) => {
+          const isOnly = right.length === 1;
+          const cornerClasses = isOnly
+            ? "md:rounded-tr-[24px] md:rounded-br-[24px]"
+            : i === 0
+              ? "md:rounded-tr-[24px] md:rounded-br-none"
+              : "md:rounded-tr-none md:rounded-br-[24px]";
+          return (
+            <div
+              key={img.id}
+              className={
+                "relative overflow-hidden rounded-[24px] md:rounded-l-none " + cornerClasses
+              }
+              style={{ background: "var(--ink-05)", minHeight: 140 }}
+            >
+              <Image
+                src={img.url}
+                alt={alt}
+                fill
+                sizes="(max-width: 1024px) 100vw, 420px"
+                className="object-cover"
+              />
+              {i === 1 && images.length > 3 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-[12px] font-semibold text-white backdrop-blur-sm">
+                  {t("morePhotos", { count: images.length - 3 })}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

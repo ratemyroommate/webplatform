@@ -212,14 +212,16 @@ export const PostModal = ({
         renderTrigger(handleTriggerClick)
       ) : (
         <Button
+          type="button"
           onClick={handleTriggerClick}
           variant={post ? "outline" : "default"}
-          className={post ? "flex-1" : "flex-1 shadow-md"}
+          className={post ? undefined : "shadow-md"}
         >
           {post ? (
             <>
               <Pencil />
-              {tc("edit")}
+              <span className="sr-only sm:hidden">{tc("edit")}</span>
+              <span className="hidden sm:inline">{tc("edit")}</span>
             </>
           ) : (
             <>

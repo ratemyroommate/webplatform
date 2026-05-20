@@ -116,7 +116,7 @@
     "rent": "Bérleti díj",
     "rentUnit": "K ft/fő/hónap",
     "rentTooltip": "Bérleti díj",
-    "priceUnit": "ft/hónap",
+    "priceUnit": "ft/fő/hónap",
     "priceShort": "ft/hó",
     "where": "Hol",
     "wherePlaceholder": "Hol lakni?",
@@ -209,6 +209,19 @@
     "commentPlaceholder": "Írd le a véleményed",
     "createSuccess": "Értékelés sikeresen létrehozva",
     "updateSuccess": "Értékelés sikeresen módosítva"
+  },
+  "share": {
+    "trigger": "Megosztás",
+    "title": "Hirdetés megosztása",
+    "subtitle": "Küldd el a linket egy ismerősödnek",
+    "copyLink": "Link másolása",
+    "copied": "Másolva",
+    "copyError": "Nem sikerült másolni a linket",
+    "email": "E-mail",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "twitter": "X",
+    "more": "Továbbiak"
   },
   "compatibility": {
     "quizBased": "Kompatibilitás kvíz alapján",

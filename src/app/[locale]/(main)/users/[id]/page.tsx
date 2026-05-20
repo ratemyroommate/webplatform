@@ -11,7 +11,7 @@ import { ReviewModal } from "~/app/_components/ReviewModal";
 import { getServerAuthSession } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
 import { getAverageRating } from "~/utils/helpers";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { BackToFeed } from "~/components/ui/back-to-feed";
 import { JsonLd } from "~/app/_components/JsonLd";
@@ -58,6 +58,7 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
   setRequestLocale(locale);
   const session = await getServerAuthSession();
   const user = await api.user.getById(id);
+  const format = await getFormatter();
   const t = await getTranslations("profile");
 
   if (!user) return t("userNotFound");
@@ -240,9 +241,14 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
                         {review.reviewer.name?.charAt(0).toUpperCase() ?? "?"}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-foreground text-[13.5px] font-semibold">
-                      {review.reviewer.name}
-                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-foreground text-[13.5px] font-semibold">
+                        {review.reviewer.name}
+                      </span>
+                      <span className="text-muted-foreground text-[11.5px]">
+                        {format.dateTime(review.createdAt, { month: "long", year: "numeric" })}
+                      </span>
+                    </div>
                   </Link>
                   {review.reviewer.id === session?.user.id && (
                     <ReviewModal reviewerId={session?.user.id} reviewedId={id} review={review} />
