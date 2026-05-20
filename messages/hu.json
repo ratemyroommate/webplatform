@@ -149,6 +149,16 @@
     "filled": "Betelt",
     "coverAlt": "{location} hirdetés, {price}k {unit}",
     "morePhotos": "{count, plural, one {+# kép} other {+# kép}}",
+    "viewer": {
+      "title": "Képnéző",
+      "description": "Böngészd a hirdetés képeit",
+      "close": "Bezárás",
+      "previous": "Előző kép",
+      "next": "Következő kép",
+      "counter": "{current} / {total}",
+      "openLabel": "{index}. kép megnyitása ({total}-ből)",
+      "viewAll": "Mind a(z) {count} kép megtekintése"
+    },
     "personHousehold": "{count, plural, one {# fős lakás} other {# fős lakás}}",
     "freeSpots": "{count, plural, one {# szabad hely} other {# szabad hely}}",
     "openSpotTitle": "Szabad hely",

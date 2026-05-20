@@ -149,6 +149,16 @@
     "filled": "Filled",
     "coverAlt": "{location} listing, {price}k {unit}",
     "morePhotos": "{count, plural, one {+# photo} other {+# photos}}",
+    "viewer": {
+      "title": "Photo viewer",
+      "description": "Browse photos of this listing",
+      "close": "Close",
+      "previous": "Previous photo",
+      "next": "Next photo",
+      "counter": "{current} / {total}",
+      "openLabel": "Open photo {index} of {total}",
+      "viewAll": "View all {count} photos"
+    },
     "personHousehold": "{count, plural, one {# person household} other {# person household}}",
     "freeSpots": "{count, plural, one {# free spot} other {# free spots}}",
     "openSpotTitle": "Open spot",
