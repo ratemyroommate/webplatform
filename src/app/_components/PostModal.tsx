@@ -212,6 +212,7 @@ export const PostModal = ({
         renderTrigger(handleTriggerClick)
       ) : (
         <Button
+          type="button"
           onClick={handleTriggerClick}
           variant={post ? "outline" : "default"}
           className={post ? undefined : "shadow-md"}
