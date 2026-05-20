@@ -108,7 +108,7 @@ export const ShareModal = ({ url, title }: ShareModalProps) => {
           </DialogHeader>
 
           <div className="flex items-center gap-2">
-            <Input value={url} readOnly className="text-[13px]" />
+            <Input value={url} readOnly aria-label={t("title")} className="text-[13px]" />
             <Button
               type="button"
               variant={copied ? "default" : "outline"}
