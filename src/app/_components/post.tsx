@@ -36,7 +36,7 @@ export const Post = ({ post }: PostProps) => {
     .sort((a, b) => b.rating - a.rating)[0];
 
   return (
-    <Link href={`/posts/${post.id}`} className="group block w-full">
+    <div className="group block w-full">
       {/* Image area */}
       <div
         className="bg-muted relative overflow-hidden rounded-[var(--radius)]"
@@ -64,7 +64,7 @@ export const Post = ({ post }: PostProps) => {
       </div>
 
       {/* Content row below image */}
-      <div className="pt-3">
+      <Link href={`/posts/${post.id}`} className="block pt-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="text-foreground truncate text-[14.5px] leading-tight font-bold">
@@ -112,7 +112,7 @@ export const Post = ({ post }: PostProps) => {
             </span>
           )}
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };

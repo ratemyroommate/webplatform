@@ -87,12 +87,11 @@ export function ImageViewer({ images, open, onOpenChange, initialIndex = 0, alt 
           "h-screen w-screen max-w-none translate-x-[-50%] translate-y-[-50%] gap-0 overflow-hidden rounded-none border-0 bg-black/95 p-0 shadow-none",
           "sm:max-w-none sm:rounded-none"
         )}
-        onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogTitle className="sr-only">{t("title")}</DialogTitle>
         <DialogDescription className="sr-only">{t("description")}</DialogDescription>
 
-        {/* Swipe / tap-to-close surface */}
+        {/* Swipe surface */}
         <div
           className="relative h-full w-full select-none"
           onTouchStart={onTouchStart}
