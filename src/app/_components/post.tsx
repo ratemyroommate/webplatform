@@ -1,10 +1,12 @@
-import Image from "next/image";
+"use client";
+
 import { Check, ImageIcon, Star } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { FreshBadge } from "~/components/ui/fresh-badge";
 import { PriceChip } from "~/components/ui/price-chip";
+import { PostCardCarousel } from "~/app/_components/PostCardCarousel";
 import { getAverageRating } from "~/utils/helpers";
 
 type PostProps = {
@@ -17,12 +19,16 @@ export const Post = ({ post }: PostProps) => {
   const t = useTranslations("post");
   const te = useTranslations("enums.location");
 
-  const cover = post.images[0]?.url;
   const locationLabel = te(post.location);
   const filled = post.featuredUsers.length;
   const total = post.maxPersonCount;
   const free = Math.max(0, total - filled);
   const isFresh = Date.now() - new Date(post.createdAt).getTime() < FRESH_WINDOW_DAYS * 86_400_000;
+  const altText = t("coverAlt", {
+    location: locationLabel,
+    price: post.price,
+    unit: t("priceShort"),
+  });
 
   const topRated = post.featuredUsers
     .map((u) => ({ ...u, rating: getAverageRating(u) }))
@@ -30,19 +36,17 @@ export const Post = ({ post }: PostProps) => {
     .sort((a, b) => b.rating - a.rating)[0];
 
   return (
-    <Link href={`/posts/${post.id}`} className="group block w-full">
+    <div className="group block w-full">
       {/* Image area */}
       <div
         className="bg-muted relative overflow-hidden rounded-[var(--radius)]"
         style={{ aspectRatio: "3 / 4" }}
       >
-        {cover ? (
-          <Image
-            src={cover}
-            alt={t("coverAlt", { location: locationLabel, price: post.price, unit: t("priceShort") })}
-            fill
+        {post.images.length > 0 ? (
+          <PostCardCarousel
+            images={post.images}
+            alt={altText}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
@@ -50,22 +54,20 @@ export const Post = ({ post }: PostProps) => {
           </div>
         )}
 
-        {isFresh && (
-          <FreshBadge label={t("newBadge")} className="absolute left-3 top-3" />
-        )}
+        {isFresh && <FreshBadge label={t("newBadge")} className="absolute top-3 left-3 z-20" />}
 
         <PriceChip
           price={post.price}
           unit={t("priceShort")}
-          className="absolute bottom-3 right-3"
+          className="absolute right-3 bottom-3 z-20"
         />
       </div>
 
       {/* Content row below image */}
-      <div className="pt-3">
+      <Link href={`/posts/${post.id}`} className="block pt-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <div className="text-foreground truncate text-[14.5px] font-bold leading-tight">
+            <div className="text-foreground truncate text-[14.5px] leading-tight font-bold">
               {locationLabel}
             </div>
             {post.description && (
@@ -99,18 +101,18 @@ export const Post = ({ post }: PostProps) => {
             ))}
           </div>
           {free === 0 ? (
-            <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-[color:var(--ink-10)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--ink-60)]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--ink-10)] px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap text-[color:var(--ink-60)]">
               <Check size={11} strokeWidth={2.5} />
               {t("filled")}
             </span>
           ) : (
-            <span className="text-muted-foreground whitespace-nowrap text-[12px]">
+            <span className="text-muted-foreground text-[12px] whitespace-nowrap">
               <span className="text-foreground font-bold">{free}</span>
               <span> / {total}</span>
             </span>
           )}
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
