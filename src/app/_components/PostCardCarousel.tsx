@@ -19,8 +19,7 @@ type Props = {
  * Airbnb-style swipeable image gallery for post cards.
  * - Native CSS scroll-snap horizontal scroller (smooth touch on mobile)
  * - Pagination dots overlay
- * - Hover-only chevron buttons on desktop, which preventDefault so they
- *   don't trigger the surrounding <Link> navigation.
+ * - Hover-only chevron buttons on desktop
  */
 export function PostCardCarousel({ images, alt, sizes }: Props) {
   const t = useTranslations("post.viewer");
