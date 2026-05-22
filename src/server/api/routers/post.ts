@@ -5,7 +5,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/
 import { utapi } from "~/app/api/uploadthing/utapi";
 import { Location } from "@prisma/client";
 
-const limit = 2;
+const limit = 3;
 const maxPostCountPerUser = 4;
 const imagesValidation = z
   .array(
