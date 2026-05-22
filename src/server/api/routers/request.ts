@@ -52,17 +52,19 @@ export const requestRouter = createTRPCRouter({
           code: "UNAUTHORIZED",
         });
       }
-      // todo: make this a transaction
-      await ctx.db.request.update({
-        where: { id: input.requestId },
-        data: { status: input.status, modifiedById: ctx.session.user.id },
-      });
-      if (isAccepting) {
-        await ctx.db.post.update({
-          where: { id: request.postId },
-          data: { featuredUsers: { connect: { id: request.userId } } },
+      // Update status (+ connect requester to featuredUsers when accepting) atomically.
+      await ctx.db.$transaction(async (tx) => {
+        await tx.request.update({
+          where: { id: input.requestId },
+          data: { status: input.status, modifiedById: ctx.session.user.id },
         });
-      }
+        if (isAccepting) {
+          await tx.post.update({
+            where: { id: request.postId },
+            data: { featuredUsers: { connect: { id: request.userId } } },
+          });
+        }
+      });
     }),
   create: protectedProcedure
     .input(z.object({ postId: z.number(), comment: z.string().nullable() }))
