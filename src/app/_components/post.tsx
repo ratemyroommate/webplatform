@@ -38,8 +38,10 @@ export const Post = ({ post }: PostProps) => {
   return (
     <div className="group block w-full">
       {/* Image area */}
-      <div
-        className="bg-muted relative overflow-hidden rounded-[var(--radius)]"
+      <Link
+        href={`/posts/${post.id}`}
+        aria-label={locationLabel}
+        className="bg-muted relative block overflow-hidden rounded-[var(--radius)]"
         style={{ aspectRatio: "3 / 4" }}
       >
         {post.images.length > 0 ? (
@@ -61,7 +63,7 @@ export const Post = ({ post }: PostProps) => {
           unit={t("priceShort")}
           className="absolute right-3 bottom-3 z-20"
         />
-      </div>
+      </Link>
 
       {/* Content row below image */}
       <Link href={`/posts/${post.id}`} className="block pt-3">
