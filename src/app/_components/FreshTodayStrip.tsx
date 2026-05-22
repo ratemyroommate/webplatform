@@ -1,5 +1,6 @@
 "use client";
 
+import { ImageIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { api } from "~/trpc/react";
 import { Link } from "~/i18n/navigation";
@@ -49,7 +50,7 @@ export function FreshTodayStrip() {
               className="group relative shrink-0 overflow-hidden rounded-2xl"
               style={{ width: 120, aspectRatio: "3 / 4", background: "var(--ink-05)" }}
             >
-              {cover && (
+              {cover ? (
                 <Image
                   src={cover}
                   alt={t("coverAlt", { location: locationLabel, price: p.price, unit: priceShort })}
@@ -57,6 +58,10 @@ export function FreshTodayStrip() {
                   sizes="120px"
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center">
+                  <ImageIcon size={20} className="opacity-30" />
+                </div>
               )}
               <div
                 className="absolute inset-0"
