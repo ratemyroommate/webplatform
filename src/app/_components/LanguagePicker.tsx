@@ -14,10 +14,7 @@ export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("layout");
 
-  const currentIndex = Math.max(
-    0,
-    SUPPORTED_LOCALES.indexOf(currentLocale as Locale)
-  );
+  const currentIndex = Math.max(0, SUPPORTED_LOCALES.indexOf(currentLocale as Locale));
   const nextLocale = SUPPORTED_LOCALES[(currentIndex + 1) % SUPPORTED_LOCALES.length]!;
 
   function handleClick() {
@@ -37,7 +34,7 @@ export function LanguagePicker({ currentLocale }: { currentLocale: string }) {
       disabled={isPending}
       aria-label={t("selectLanguage")}
       title={nextLocale.toUpperCase()}
-      className="inline-flex h-9 items-center gap-1.5 rounded-full border border-[color:var(--ink-10)] bg-[var(--card)] px-3 text-[12px] font-medium text-[color:var(--ink-70)] transition-colors outline-none hover:border-[color:var(--ink-30)] hover:text-[color:var(--foreground)] disabled:opacity-50"
+      className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-[color:var(--ink-10)] bg-[var(--card)] px-3 text-[12px] font-medium text-[color:var(--ink-70)] transition-colors outline-none hover:border-[color:var(--ink-30)] hover:text-[color:var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
     >
       <Globe size={13} strokeWidth={2} />
       <span className="tracking-wide uppercase">{currentLocale}</span>

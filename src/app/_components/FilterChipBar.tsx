@@ -37,7 +37,7 @@ export function FilterChipBar({ active, onChange }: FilterChipBarProps) {
             type="button"
             onClick={() => onChange(c.key)}
             className={
-              "relative flex shrink-0 flex-col items-center gap-1 whitespace-nowrap px-4 pb-3 pt-1 text-[11.5px] font-bold transition-colors " +
+              "relative flex shrink-0 cursor-pointer flex-col items-center gap-1 px-4 pt-1 pb-3 text-[11.5px] font-bold whitespace-nowrap transition-colors " +
               (isActive
                 ? "text-[var(--foreground)]"
                 : "text-[color:var(--ink-50)] hover:text-[color:var(--ink-80)]")
@@ -47,7 +47,7 @@ export function FilterChipBar({ active, onChange }: FilterChipBarProps) {
             <span>{label}</span>
             {isActive && (
               <span
-                className="absolute bottom-0 left-2 right-2 h-0.5 rounded-t-full"
+                className="absolute right-2 bottom-0 left-2 h-0.5 rounded-t-full"
                 style={{ background: "var(--foreground)" }}
               />
             )}
