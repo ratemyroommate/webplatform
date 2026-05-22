@@ -78,6 +78,19 @@ export const requestRouter = createTRPCRouter({
           code: "UNAUTHORIZED",
         });
 
+      const recentCount = await ctx.db.request.count({
+        where: {
+          userId: ctx.session.user.id,
+          createdAt: { gte: new Date(Date.now() - 60 * 60 * 1000) },
+        },
+      });
+      if (recentCount >= 10) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Too many applications, try again later",
+        });
+      }
+
       return ctx.db.request.create({
         data: {
           postId: input.postId,
