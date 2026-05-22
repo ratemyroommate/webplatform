@@ -31,7 +31,7 @@ export const Feed = ({ userId }: FeedProps) => {
     <div className="flex w-full flex-col gap-6">
       <FreshTodayStrip />
 
-      <div className="bg-background/95 sticky top-[60px] z-20 -mx-6 flex items-center gap-2 border-b border-[color:var(--ink-10)] px-6 pt-2 backdrop-blur">
+      <div className="bg-background/95 sticky top-[60px] z-30 -mx-6 flex items-center gap-2 border-b border-[color:var(--ink-10)] px-6 pt-2 backdrop-blur">
         <div className="min-w-0 flex-1">
           <FilterChipBar active={activeLocation} onChange={setLocation} />
         </div>
@@ -43,12 +43,7 @@ export const Feed = ({ userId }: FeedProps) => {
       <PostModal
         userId={userId}
         renderTrigger={(open) => (
-          <CtaBanner
-            title={t("newPost")}
-            subtitle={t("rentTooltip")}
-            icon={Plus}
-            onClick={open}
-          />
+          <CtaBanner title={t("newPost")} subtitle={t("rentTooltip")} icon={Plus} onClick={open} />
         )}
       />
 
