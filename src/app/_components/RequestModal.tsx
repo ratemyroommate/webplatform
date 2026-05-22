@@ -1,6 +1,6 @@
 "use client";
 
-import { Users } from "lucide-react";
+import { Loader2, Users } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { api } from "~/trpc/react";
 import { useRouter } from "~/i18n/navigation";
@@ -50,7 +50,7 @@ export const RequestModal = ({ postId, userId }: ReviewProps) => {
         <Users />
         {t("apply")}
       </Button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={(o) => !reviewMutation.isPending && setOpen(o)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t("title")}</DialogTitle>
@@ -58,6 +58,7 @@ export const RequestModal = ({ postId, userId }: ReviewProps) => {
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
             <Textarea placeholder={t("commentPlaceholder")} {...register("comment")} />
             <Button type="submit" disabled={formState.isSubmitting || reviewMutation.isPending}>
+              {reviewMutation.isPending && <Loader2 className="animate-spin" />}
               {t("send")}
             </Button>
           </form>

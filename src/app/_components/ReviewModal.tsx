@@ -1,6 +1,6 @@
 "use client";
 
-import { Pencil, Plus } from "lucide-react";
+import { Loader2, Pencil, Plus } from "lucide-react";
 import { Rating } from "./Rating";
 import { useForm } from "react-hook-form";
 import { useRouter } from "~/i18n/navigation";
@@ -73,7 +73,7 @@ export const ReviewModal = ({ review, reviewedId, reviewerId }: ReviewProps) => 
           </>
         )}
       </Button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={(o) => !reviewMutation.isPending && setOpen(o)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t("title")}</DialogTitle>
@@ -82,6 +82,7 @@ export const ReviewModal = ({ review, reviewedId, reviewerId }: ReviewProps) => 
             <Rating rating={watch("rating")} itemKey={-1} isLarge onClick={handleRatingClick} />
             <Textarea placeholder={t("commentPlaceholder")} {...register("comment")} />
             <Button type="submit" disabled={formState.isSubmitting || reviewMutation.isPending}>
+              {reviewMutation.isPending && <Loader2 className="animate-spin" />}
               {tc("publish")}
             </Button>
           </form>
