@@ -37,7 +37,7 @@ export const postRouter = createTRPCRouter({
         where: { createdById: ctx.session.user.id },
       });
 
-      if (postCountPerUser > maxPostCountPerUser) {
+      if (postCountPerUser >= maxPostCountPerUser) {
         await utapi.deleteFiles(input.images.map(({ id }) => id));
         throw new TRPCError({
           message: `Maximum ${maxPostCountPerUser} poszt készíthető felhasználóként jelenleg`,
