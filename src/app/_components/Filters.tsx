@@ -75,14 +75,15 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
   return (
     <>
       <FiltersIndicator filters={filters}>
-        <button
+        <Button
           type="button"
+          variant="flat"
+          size="icon-round"
           aria-label={t("title")}
           onClick={() => setOpen(true)}
-          className="relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[color:var(--ink-10)] bg-[var(--card)] text-[color:var(--ink-70)] transition-colors hover:border-[color:var(--ink-30)] hover:text-[color:var(--foreground)]"
         >
           <SlidersHorizontal size={15} strokeWidth={1.75} />
-        </button>
+        </Button>
       </FiltersIndicator>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent
