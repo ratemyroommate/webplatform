@@ -8,7 +8,6 @@ import { Location } from "@prisma/client";
 const limit = 3;
 const maxPostCountPerUser = 4;
 const FRESH_WINDOW_DAYS = 4;
-const FRESH_MAX = 12;
 const imagesValidation = z
   .array(
     z.object({
@@ -190,7 +189,6 @@ export const postRouter = createTRPCRouter({
     return ctx.db.post.findMany({
       where: { createdAt: { gte: cutoff } },
       orderBy: { createdAt: "desc" },
-      take: FRESH_MAX,
       include: featuredImageQuery,
     });
   }),
