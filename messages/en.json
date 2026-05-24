@@ -21,7 +21,8 @@
     "user": {
       "title": "User profile",
       "titleWithName": "{name} – User profile",
-      "description": "View user profile on Rate My Roommate. See reviews and compatibility."
+      "description": "View user profile on Rate My Roommate. See reviews and compatibility.",
+      "ogAlt": "{name} on Rate My Roommate"
     },
     "privacy": {
       "title": "Privacy Policy",
@@ -223,7 +224,9 @@
   "share": {
     "trigger": "Share",
     "title": "Share this listing",
+    "titleProfile": "Share this profile",
     "subtitle": "Send a link to a friend",
+    "subtitleProfile": "Send a link to a friend",
     "copyLink": "Copy link",
     "copied": "Copied",
     "copyError": "Could not copy link",

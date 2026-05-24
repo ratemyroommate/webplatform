@@ -21,7 +21,8 @@
     "user": {
       "title": "Felhasználói profil",
       "titleWithName": "{name} – Felhasználói profil",
-      "description": "Felhasználói profil megtekintése a Rate My Roommate platformon. Nézd meg az értékeléseket és a kompatibilitást."
+      "description": "Felhasználói profil megtekintése a Rate My Roommate platformon. Nézd meg az értékeléseket és a kompatibilitást.",
+      "ogAlt": "{name} a Rate My Roommate-en"
     },
     "privacy": {
       "title": "Adatvédelmi szabályzat",
@@ -223,7 +224,9 @@
   "share": {
     "trigger": "Megosztás",
     "title": "Hirdetés megosztása",
+    "titleProfile": "Profil megosztása",
     "subtitle": "Küldd el a linket egy ismerősödnek",
+    "subtitleProfile": "Küldd el a linket egy ismerősödnek",
     "copyLink": "Link másolása",
     "copied": "Másolva",
     "copyError": "Nem sikerült másolni a linket",

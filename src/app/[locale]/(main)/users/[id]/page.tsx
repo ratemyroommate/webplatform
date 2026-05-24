@@ -8,6 +8,7 @@ import { ProfileCompleteness } from "~/app/_components/ProfileCompleteness";
 import { QuizCard } from "~/app/_components/QuizCard";
 import { Rating } from "~/app/_components/Rating";
 import { ReviewModal } from "~/app/_components/ReviewModal";
+import { ShareModal } from "~/app/_components/ShareModal";
 import { getServerAuthSession } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
 import { getAverageRating } from "~/utils/helpers";
@@ -17,8 +18,7 @@ import { BackToFeed } from "~/components/ui/back-to-feed";
 import { JsonLd } from "~/app/_components/JsonLd";
 import { Card } from "~/components/ui/card";
 import { ProfileCover } from "~/components/ui/profile-cover";
-import { env } from "~/env";
-import { alternatesFor } from "~/i18n/seo";
+import { alternatesFor, getBaseUrl } from "~/i18n/seo";
 
 type UserPageProps = { params: { id: string; locale: string } };
 
@@ -69,9 +69,7 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
 
   const userPosts = await api.post.getAllByUserId(id);
 
-  const baseUrl = env.NEXTAUTH_URL.startsWith("http")
-    ? env.NEXTAUTH_URL
-    : `https://${env.NEXTAUTH_URL}`;
+  const baseUrl = getBaseUrl();
   const ratingValue = getAverageRating(user);
   const reviewCount = user.reviewsReceived.length;
   const displayRating = reviewCount > 0 ? ratingValue : 0;
@@ -113,7 +111,15 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
       <div className="mx-auto flex w-full max-w-[1100px] flex-col">
         <div className="mb-4 flex items-center justify-between">
           <BackToFeed />
-          {canEdit && <EditProfile {...user} />}
+          <div className="flex items-center gap-2">
+            <ShareModal
+              url={`${baseUrl}/users/${id}`}
+              title={user.name ?? undefined}
+              titleKey="titleProfile"
+              subtitleKey="subtitleProfile"
+            />
+            {canEdit && <EditProfile {...user} />}
+          </div>
         </div>
 
         {/* Profile header card */}

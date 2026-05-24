@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/components/u
 import { Textarea } from "~/components/ui/textarea";
 
 type ReviewProps = {
-  review?: Review;
+  review?: Pick<Review, "rating" | "comment">;
   reviewedId: string;
   reviewerId?: string;
 };
