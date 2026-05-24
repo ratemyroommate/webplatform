@@ -21,6 +21,21 @@ export default async function OgImage({ params: { id, locale } }: Props) {
   const reviewCount = user?.reviewsReceived.length ?? 0;
   const overline = locale === "hu" ? "SZOBATÁRSAT KERESEK" : "I'M LOOKING FOR A ROOMMATE";
 
+  // Only render <img> for absolute https URLs we can reasonably fetch; if the
+  // upstream image 404s or 5xxs, Satori would otherwise fail the whole card.
+  // Pre-check with a HEAD request and fall back to initials on any failure.
+  let avatarUrl: string | null = null;
+  if (user?.image && /^https:\/\//i.test(user.image)) {
+    try {
+      const res = await fetch(user.image, { method: "HEAD", cache: "no-store" });
+      if (res.ok) avatarUrl = user.image;
+    } catch {
+      avatarUrl = null;
+    }
+  }
+  const fallbackInitial = (name.charAt(0) || "?").toUpperCase();
+  const headline = user ? name || t("title") : t("title");
+
   return new ImageResponse(
     (
       <div
@@ -72,17 +87,11 @@ export default async function OgImage({ params: { id, locale } }: Props) {
               overflow: "hidden",
             }}
           >
-            {user?.image ? (
+            {avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={user.image}
-                alt=""
-                width={220}
-                height={220}
-                style={{ objectFit: "cover" }}
-              />
+              <img src={avatarUrl} alt="" width={220} height={220} style={{ objectFit: "cover" }} />
             ) : (
-              (name.charAt(0) || "?").toUpperCase()
+              fallbackInitial
             )}
           </div>
 
@@ -108,7 +117,7 @@ export default async function OgImage({ params: { id, locale } }: Props) {
                 marginBottom: 16,
               }}
             >
-              {name || t("title")}
+              {headline}
             </div>
             {reviewCount > 0 && (
               <div

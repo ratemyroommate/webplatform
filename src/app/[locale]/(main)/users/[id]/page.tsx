@@ -43,13 +43,11 @@ export async function generateMetadata({
       url: alts.canonical,
       title,
       description,
-      images: user.image ? [{ url: user.image, alt: name || title }] : undefined,
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description,
-      images: user.image ? [user.image] : undefined,
     },
   };
 }
