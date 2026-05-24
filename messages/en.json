@@ -21,7 +21,8 @@
     "user": {
       "title": "User profile",
       "titleWithName": "{name} – User profile",
-      "description": "View user profile on Rate My Roommate. See reviews and compatibility."
+      "description": "View user profile on Rate My Roommate. See reviews and compatibility.",
+      "ogAlt": "{name} on Rate My Roommate"
     },
     "privacy": {
       "title": "Privacy Policy",
@@ -185,13 +186,18 @@
   },
   "notification": {
     "title": "Notifications",
-    "receivedTab": "Received requests",
-    "sentTab": "Sent requests",
+    "receivedTab": "Received",
+    "sentTab": "Sent",
     "noReceived": "No received requests",
+    "noReceivedHint": "When someone applies to live with you, it will show up here.",
     "noSent": "No sent requests",
+    "noSentHint": "When you apply to a listing, you can track it here.",
     "post": "Post",
     "relatedPost": "Related post",
     "quizAnswers": "Answers",
+    "accept": "Accept",
+    "decline": "Decline",
+    "cancelRequest": "Cancel request",
     "updateSuccess": "Request updated successfully"
   },
   "kviz": {
@@ -223,7 +229,9 @@
   "share": {
     "trigger": "Share",
     "title": "Share this listing",
+    "titleProfile": "Share this profile",
     "subtitle": "Send a link to a friend",
+    "subtitleProfile": "Send a link to a friend",
     "copyLink": "Copy link",
     "copied": "Copied",
     "copyError": "Could not copy link",

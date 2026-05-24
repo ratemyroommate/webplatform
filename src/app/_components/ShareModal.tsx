@@ -26,9 +26,18 @@ import { Input } from "~/components/ui/input";
 type ShareModalProps = {
   url: string;
   title?: string;
+  /** Translation key under the `share` namespace for the dialog title. */
+  titleKey?: "title" | "titleProfile";
+  /** Translation key under the `share` namespace for the dialog subtitle. */
+  subtitleKey?: "subtitle" | "subtitleProfile";
 };
 
-export const ShareModal = ({ url, title }: ShareModalProps) => {
+export const ShareModal = ({
+  url,
+  title,
+  titleKey = "title",
+  subtitleKey = "subtitle",
+}: ShareModalProps) => {
   const t = useTranslations("share");
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -119,8 +128,8 @@ export const ShareModal = ({ url, title }: ShareModalProps) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{t("title")}</DialogTitle>
-            <DialogDescription>{t("subtitle")}</DialogDescription>
+            <DialogTitle>{t(titleKey)}</DialogTitle>
+            <DialogDescription>{t(subtitleKey)}</DialogDescription>
           </DialogHeader>
 
           <div className="flex items-center gap-2">

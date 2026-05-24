@@ -7,7 +7,23 @@ export const userRouter = createTRPCRouter({
   getById: publicProcedure.input(z.string()).query(({ ctx, input }) =>
     ctx.db.user.findUnique({
       where: { id: input },
-      include: { reviewsReceived: { include: { reviewer: true } } },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        about: true,
+        socialLink: true,
+        phoneNumber: true,
+        reviewsReceived: {
+          select: {
+            id: true,
+            rating: true,
+            comment: true,
+            createdAt: true,
+            reviewer: { select: { id: true, name: true, image: true } },
+          },
+        },
+      },
     })
   ),
   update: protectedProcedure

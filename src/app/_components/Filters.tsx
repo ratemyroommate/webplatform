@@ -42,7 +42,7 @@ export type FormValues = {
 };
 export type OrderBy = z.infer<typeof orderBy>;
 
-const defaultFilters: FormValues = {
+export const defaultFilters: FormValues = {
   orderBy: "createdAt-desc",
   maxPersonCount: 0,
   maxPrice: 0,
@@ -76,12 +76,13 @@ export const Filters = ({ filters, setFilters }: FiltersProps) => {
     <>
       <FiltersIndicator filters={filters}>
         <Button
-          variant="outline"
-          size="icon"
+          type="button"
+          variant="flat"
+          size="icon-round"
+          aria-label={t("title")}
           onClick={() => setOpen(true)}
-          className="bg-card shadow-sm"
         >
-          <SlidersHorizontal />
+          <SlidersHorizontal size={15} strokeWidth={1.75} />
         </Button>
       </FiltersIndicator>
       <Sheet open={open} onOpenChange={setOpen}>

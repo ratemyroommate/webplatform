@@ -28,7 +28,7 @@ type FormValues = {
   phoneNumberConsent: boolean;
 };
 
-type EditProfileProps = User & {
+type EditProfileProps = Pick<User, "id" | "about" | "socialLink" | "phoneNumber"> & {
   /**
    * When provided, the dialog becomes controlled and the default pencil
    * trigger is hidden. Used by the owner-only profile section so the

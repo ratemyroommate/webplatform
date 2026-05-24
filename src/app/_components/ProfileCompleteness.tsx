@@ -1,7 +1,6 @@
 "use client";
 
 import { AlertCircle, Check } from "lucide-react";
-import type { User } from "@prisma/client";
 import { useState } from "react";
 import { Link } from "~/i18n/navigation";
 import { api } from "~/trpc/react";
@@ -54,7 +53,14 @@ export const CompactProfileCompleteness = () => {
  * own controlled EditProfile dialog so the inline "fix" buttons open the
  * editor directly — no shared state, no events.
  */
-export const ProfileCompleteness = ({ user }: { user: User }) => {
+type ProfileCompletenessUser = {
+  id: string;
+  about: string | null;
+  socialLink: string | null;
+  phoneNumber: string | null;
+};
+
+export const ProfileCompleteness = ({ user }: { user: ProfileCompletenessUser }) => {
   const { data, isLoading } = api.user.getProfileCompleteness.useQuery();
   const t = useTranslations("profile.completeness");
   const [editOpen, setEditOpen] = useState(false);

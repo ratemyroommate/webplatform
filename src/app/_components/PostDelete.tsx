@@ -4,12 +4,11 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "~/i18n/navigation";
-import { Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -44,7 +43,7 @@ export const PostDelete = ({ id }: PostDeleteProps) => {
   });
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <AlertDialog open={open} onOpenChange={(o) => !deletePost.isPending && setOpen(o)}>
       <AlertDialogTrigger asChild>
         <Button type="button" variant="destructive">
           <Trash2 />
@@ -58,13 +57,16 @@ export const PostDelete = ({ id }: PostDeleteProps) => {
           <AlertDialogDescription className="sr-only">{t("deleteConfirm")}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{tc("cancel")}</AlertDialogCancel>
-          <AlertDialogAction
+          <AlertDialogCancel disabled={deletePost.isPending}>{tc("cancel")}</AlertDialogCancel>
+          <Button
+            type="button"
             onClick={() => deletePost.mutate(id)}
+            disabled={deletePost.isPending}
             className="bg-destructive hover:bg-destructive/90 text-white"
           >
+            {deletePost.isPending && <Loader2 className="animate-spin" />}
             {tc("yes")}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

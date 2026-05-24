@@ -5,8 +5,9 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/
 import { utapi } from "~/app/api/uploadthing/utapi";
 import { Location } from "@prisma/client";
 
-const limit = 2;
+const limit = 3;
 const maxPostCountPerUser = 4;
+const FRESH_WINDOW_DAYS = 4;
 const imagesValidation = z
   .array(
     z.object({
@@ -37,7 +38,7 @@ export const postRouter = createTRPCRouter({
         where: { createdById: ctx.session.user.id },
       });
 
-      if (postCountPerUser > maxPostCountPerUser) {
+      if (postCountPerUser >= maxPostCountPerUser) {
         await utapi.deleteFiles(input.images.map(({ id }) => id));
         throw new TRPCError({
           message: `Maximum ${maxPostCountPerUser} poszt készíthető felhasználóként jelenleg`,
@@ -182,6 +183,15 @@ export const postRouter = createTRPCRouter({
       orderBy: { createdAt: "desc" },
     })
   ),
+
+  getFresh: publicProcedure.query(({ ctx }) => {
+    const cutoff = new Date(Date.now() - FRESH_WINDOW_DAYS * 24 * 60 * 60 * 1000);
+    return ctx.db.post.findMany({
+      where: { createdAt: { gte: cutoff } },
+      orderBy: { createdAt: "desc" },
+      include: featuredImageQuery,
+    });
+  }),
 
   deleteById: protectedProcedure.input(z.number()).mutation(async ({ ctx, input }) => {
     const post = await ctx.db.post.findUniqueOrThrow({

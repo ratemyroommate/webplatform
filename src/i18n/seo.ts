@@ -7,6 +7,10 @@ const baseUrl = env.NEXTAUTH_URL.startsWith("http")
   ? env.NEXTAUTH_URL
   : `https://${env.NEXTAUTH_URL}`;
 
+export function getBaseUrl() {
+  return baseUrl;
+}
+
 export function pathForLocale(locale: string, path: string) {
   return locale === routing.defaultLocale ? path : `/${locale}${path === "/" ? "" : path}`;
 }
