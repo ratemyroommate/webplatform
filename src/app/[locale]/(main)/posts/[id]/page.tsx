@@ -35,7 +35,6 @@ export async function generateMetadata({
   const description = post.description?.trim().length
     ? post.description.slice(0, 200)
     : tMeta("post.description", { location: locationLabel, price: post.price });
-  const ogImage = post.images[0]?.url;
   const path = `/posts/${id}`;
   const alts = alternatesFor(locale, path);
 
@@ -48,13 +47,11 @@ export async function generateMetadata({
       url: alts.canonical,
       title,
       description,
-      images: ogImage ? [{ url: ogImage, alt: title }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ogImage ? [ogImage] : undefined,
     },
   };
 }
