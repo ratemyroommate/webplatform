@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Check, Eye, Inbox, X } from "lucide-react";
+import { Bell, Check, Eye, Inbox, Loader2, X } from "lucide-react";
 import { api } from "~/trpc/react";
 import { Link } from "~/i18n/navigation";
 import React, { useEffect, useState } from "react";
@@ -177,23 +177,7 @@ const RecievedRequest = ({
           </div>
         </Link>
         {request.status === "PENDING" && (
-          <div className="flex shrink-0 gap-2">
-            <Button
-              size="icon"
-              aria-label={t("accept")}
-              onClick={() => updateRequest.mutate({ requestId: request.id, status: "ACCEPTED" })}
-            >
-              <Check />
-            </Button>
-            <Button
-              size="icon"
-              variant="destructive"
-              aria-label={t("decline")}
-              onClick={() => updateRequest.mutate({ requestId: request.id, status: "DENIED" })}
-            >
-              <X />
-            </Button>
-          </div>
+          <RequestActions request={request} updateRequest={updateRequest} />
         )}
       </div>
       <Accordion type="single" collapsible value={accordion} onValueChange={setAccordion}>
@@ -236,6 +220,7 @@ const SentRequest = ({
 }) => {
   const t = useTranslations("notification");
   const tc = useTranslations("common");
+  const isPending = updateRequest.isPending && updateRequest.variables?.requestId === request.id;
 
   return (
     <NotificationCard>
@@ -253,9 +238,10 @@ const SentRequest = ({
               variant="destructive"
               size="icon"
               aria-label={t("cancelRequest")}
+              disabled={isPending}
               onClick={() => updateRequest.mutate({ requestId: request.id, status: "DENIED" })}
             >
-              <X />
+              {isPending ? <Loader2 className="animate-spin" /> : <X />}
             </Button>
           )}
         </div>
@@ -273,5 +259,39 @@ const SentRequest = ({
         </AccordionItem>
       </Accordion>
     </NotificationCard>
+  );
+};
+
+const RequestActions = ({
+  request,
+  updateRequest,
+}: {
+  request: Request;
+  updateRequest: ReturnType<typeof api.request.update.useMutation>;
+}) => {
+  const t = useTranslations("notification");
+  const isPending = updateRequest.isPending && updateRequest.variables?.requestId === request.id;
+  const pendingStatus = isPending ? updateRequest.variables?.status : undefined;
+
+  return (
+    <div className="flex shrink-0 gap-2">
+      <Button
+        size="icon"
+        aria-label={t("accept")}
+        disabled={isPending}
+        onClick={() => updateRequest.mutate({ requestId: request.id, status: "ACCEPTED" })}
+      >
+        {pendingStatus === "ACCEPTED" ? <Loader2 className="animate-spin" /> : <Check />}
+      </Button>
+      <Button
+        size="icon"
+        variant="destructive"
+        aria-label={t("decline")}
+        disabled={isPending}
+        onClick={() => updateRequest.mutate({ requestId: request.id, status: "DENIED" })}
+      >
+        {pendingStatus === "DENIED" ? <Loader2 className="animate-spin" /> : <X />}
+      </Button>
+    </div>
   );
 };
