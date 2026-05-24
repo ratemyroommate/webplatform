@@ -18,7 +18,7 @@ import { BackToFeed } from "~/components/ui/back-to-feed";
 import { JsonLd } from "~/app/_components/JsonLd";
 import { Card } from "~/components/ui/card";
 import { ProfileCover } from "~/components/ui/profile-cover";
-import { alternatesFor, getBaseUrl } from "~/i18n/seo";
+import { alternatesFor, getBaseUrl, pathForLocale } from "~/i18n/seo";
 
 type UserPageProps = { params: { id: string; locale: string } };
 
@@ -113,7 +113,7 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
           <BackToFeed />
           <div className="flex items-center gap-2">
             <ShareModal
-              url={`${baseUrl}/users/${id}`}
+              url={`${baseUrl}${pathForLocale(locale, `/users/${id}`)}`}
               title={user.name ?? undefined}
               titleKey="titleProfile"
               subtitleKey="subtitleProfile"
