@@ -186,13 +186,18 @@
   },
   "notification": {
     "title": "Notifications",
-    "receivedTab": "Received requests",
-    "sentTab": "Sent requests",
+    "receivedTab": "Received",
+    "sentTab": "Sent",
     "noReceived": "No received requests",
+    "noReceivedHint": "When someone applies to live with you, it will show up here.",
     "noSent": "No sent requests",
+    "noSentHint": "When you apply to a listing, you can track it here.",
     "post": "Post",
     "relatedPost": "Related post",
     "quizAnswers": "Answers",
+    "accept": "Accept",
+    "decline": "Decline",
+    "cancelRequest": "Cancel request",
     "updateSuccess": "Request updated successfully"
   },
   "kviz": {

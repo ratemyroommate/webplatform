@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Check, Eye, X } from "lucide-react";
+import { Bell, Check, Eye, Inbox, X } from "lucide-react";
 import { api } from "~/trpc/react";
 import { Link } from "~/i18n/navigation";
 import React, { useEffect, useState } from "react";
@@ -13,9 +13,7 @@ import type { Session } from "next-auth";
 import { CompatibilityScore } from "./CompatibilityScore";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "~/components/ui/sheet";
 import { Skeleton } from "boneyard-js/react";
 import { NotificationListFixture } from "./skeleton-fixtures";
@@ -29,7 +27,6 @@ import {
 
 export const NotificationModal = ({ session }: { session: Session }) => {
   const t = useTranslations("notification");
-  const tc = useTranslations("common");
   const [open, setOpen] = useState(false);
   const { data: requests, isLoading } = api.request.getAll.useQuery();
   const recievedRequests = requests?.recievedRequests;
@@ -58,25 +55,33 @@ export const NotificationModal = ({ session }: { session: Session }) => {
         </button>
       </NotificationBell>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="right" className="w-full overflow-y-auto p-4 sm:max-w-md">
-          <SheetHeader className="p-0">
-            <SheetTitle>{t("title")}</SheetTitle>
+        <SheetContent
+          side="right"
+          className="bg-background flex w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-md"
+        >
+          <SheetHeader className="border-b border-[color:var(--ink-10)] px-5 py-4">
+            <SheetTitle className="text-foreground text-[17px] font-extrabold tracking-[-0.01em]">
+              {t("title")}
+            </SheetTitle>
           </SheetHeader>
-          <Tabs defaultValue="received" className="mt-4">
-            <TabsList className="w-full">
-              <TabsTrigger value="received" className="flex-1">
-                {t("receivedTab")}
-              </TabsTrigger>
-              <TabsTrigger value="sent" className="flex-1">
-                {t("sentTab")}
-              </TabsTrigger>
-            </TabsList>
 
-            <TabsContent value="received" className="mt-4">
+          <Tabs defaultValue="received" className="flex min-h-0 flex-1 flex-col">
+            <div className="border-b border-[color:var(--ink-10)] px-5 pt-3">
+              <TabsList className="w-full">
+                <TabsTrigger value="received" className="flex-1">
+                  {t("receivedTab")}
+                </TabsTrigger>
+                <TabsTrigger value="sent" className="flex-1">
+                  {t("sentTab")}
+                </TabsTrigger>
+              </TabsList>
+            </div>
+
+            <TabsContent value="received" className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
               {isLoading ? (
                 <LoadingList />
               ) : recievedRequests?.length ? (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-3">
                   {recievedRequests.map((request) => (
                     <RecievedRequest
                       key={request.id}
@@ -87,53 +92,21 @@ export const NotificationModal = ({ session }: { session: Session }) => {
                   ))}
                 </div>
               ) : (
-                <p className="text-muted-foreground text-sm">{t("noReceived")}</p>
+                <EmptyState title={t("noReceived")} hint={t("noReceivedHint")} />
               )}
             </TabsContent>
 
-            <TabsContent value="sent" className="mt-4">
+            <TabsContent value="sent" className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
               {isLoading ? (
                 <LoadingList />
               ) : sentRequests?.length ? (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-3">
                   {sentRequests.map((request) => (
-                    <Card key={request.id} className="gap-2 p-3">
-                      <div className="flex flex-row items-center justify-between gap-2">
-                        <Button asChild variant="outline" size="sm">
-                          <Link href={`/posts/${request.postId}`}>
-                            {t("post")}
-                            <Eye />
-                          </Link>
-                        </Button>
-                        <RequestStatusBadge status={request.status} />
-                        {request.status === "PENDING" && (
-                          <Button
-                            variant="destructive"
-                            size="icon"
-                            onClick={() =>
-                              updateRequest.mutate({
-                                requestId: request.id,
-                                status: "DENIED",
-                              })
-                            }
-                          >
-                            <X />
-                          </Button>
-                        )}
-                      </div>
-                      <Accordion type="single" collapsible>
-                        <AccordionItem value="details">
-                          <AccordionTrigger>{tc("moreDetails")}</AccordionTrigger>
-                          <AccordionContent>
-                            {request.comment === "" ? tc("noComment") : request.comment}
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-                    </Card>
+                    <SentRequest key={request.id} request={request} updateRequest={updateRequest} />
                   ))}
                 </div>
               ) : (
-                <p className="text-muted-foreground text-sm">{t("noSent")}</p>
+                <EmptyState title={t("noSent")} hint={t("noSentHint")} />
               )}
             </TabsContent>
           </Tabs>
@@ -142,6 +115,22 @@ export const NotificationModal = ({ session }: { session: Session }) => {
     </>
   );
 };
+
+const EmptyState = ({ title, hint }: { title: string; hint: string }) => (
+  <div className="mx-auto flex max-w-[260px] flex-col items-center gap-2 py-12 text-center">
+    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--ink-05)] text-[color:var(--ink-50)]">
+      <Inbox size={20} strokeWidth={1.75} />
+    </div>
+    <p className="text-foreground text-[14px] font-semibold">{title}</p>
+    <p className="text-[12.5px] leading-snug text-[color:var(--ink-60)]">{hint}</p>
+  </div>
+);
+
+const NotificationCard = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex flex-col gap-2 rounded-2xl border border-[color:var(--ink-10)] bg-[var(--card)] p-3">
+    {children}
+  </div>
+);
 
 const LoadingList = () => (
   <Skeleton
@@ -165,57 +154,60 @@ const RecievedRequest = ({
   };
   updateRequest: ReturnType<typeof api.request.update.useMutation>;
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("notification");
   const tc = useTranslations("common");
+  const [accordion, setAccordion] = useState<string>("");
+  const isDetailsOpen = accordion === "details";
+
   return (
-    <Card className="gap-2 p-3" onClick={() => setIsOpen(true)}>
+    <NotificationCard>
       <div className="flex flex-row items-center justify-between gap-2">
-        <div className="flex items-center gap-3">
-          <Link href={`/users/${request.user.id}`}>
-            <Avatar className="size-10">
-              {request.user.image && (
-                <AvatarImage src={request.user.image} alt={request.user.name ?? "Profile image"} />
-              )}
-              <AvatarFallback>{request.user.name?.charAt(0).toUpperCase() ?? "?"}</AvatarFallback>
-            </Avatar>
-          </Link>
-          <div className="flex flex-col gap-1">
-            <div className="line-clamp-1 text-sm">{request.user.name}</div>
+        <Link href={`/users/${request.user.id}`} className="flex min-w-0 items-center gap-3">
+          <Avatar className="size-10">
+            {request.user.image && (
+              <AvatarImage src={request.user.image} alt={request.user.name ?? "Profile image"} />
+            )}
+            <AvatarFallback>{request.user.name?.charAt(0).toUpperCase() ?? "?"}</AvatarFallback>
+          </Avatar>
+          <div className="flex min-w-0 flex-col gap-1">
+            <div className="text-foreground line-clamp-1 text-[13.5px] font-semibold">
+              {request.user.name}
+            </div>
             <RequestStatusBadge status={request.status} />
           </div>
-        </div>
+        </Link>
         {request.status === "PENDING" && (
-          <div className="flex gap-2">
+          <div className="flex shrink-0 gap-2">
             <Button
               size="icon"
-              className="bg-emerald-500 hover:bg-emerald-600"
-              onClick={(e) => {
-                e.stopPropagation();
-                updateRequest.mutate({ requestId: request.id, status: "ACCEPTED" });
-              }}
+              aria-label={t("accept")}
+              onClick={() => updateRequest.mutate({ requestId: request.id, status: "ACCEPTED" })}
             >
               <Check />
             </Button>
             <Button
               size="icon"
               variant="destructive"
-              onClick={(e) => {
-                e.stopPropagation();
-                updateRequest.mutate({ requestId: request.id, status: "DENIED" });
-              }}
+              aria-label={t("decline")}
+              onClick={() => updateRequest.mutate({ requestId: request.id, status: "DENIED" })}
             >
               <X />
             </Button>
           </div>
         )}
       </div>
-      <Accordion type="single" collapsible>
-        <AccordionItem value="details">
-          <AccordionTrigger>{tc("moreDetails")}</AccordionTrigger>
+      <Accordion type="single" collapsible value={accordion} onValueChange={setAccordion}>
+        <AccordionItem value="details" className="border-b-0">
+          <AccordionTrigger className="py-1 text-[12px] font-medium text-[color:var(--ink-60)] hover:no-underline">
+            {tc("moreDetails")}
+          </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-2">
-            {request.comment === "" ? tc("noComment") : request.comment}
-            {isOpen && <CompatibilityScore compareUserId={request.userId} session={session} />}
+            <p className="text-[13px] text-[color:var(--ink-70)]">
+              {request.comment === "" ? tc("noComment") : request.comment}
+            </p>
+            {isDetailsOpen && (
+              <CompatibilityScore compareUserId={request.userId} session={session} />
+            )}
             <div className="flex flex-wrap gap-2">
               <Button asChild variant="outline" size="sm" className="min-w-0 flex-1 basis-0">
                 <Link href={`/posts/${request.postId}`} className="truncate">
@@ -231,6 +223,55 @@ const RecievedRequest = ({
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </Card>
+    </NotificationCard>
+  );
+};
+
+const SentRequest = ({
+  request,
+  updateRequest,
+}: {
+  request: Request;
+  updateRequest: ReturnType<typeof api.request.update.useMutation>;
+}) => {
+  const t = useTranslations("notification");
+  const tc = useTranslations("common");
+
+  return (
+    <NotificationCard>
+      <div className="flex flex-row items-center justify-between gap-2">
+        <Button asChild variant="outline" size="sm" className="min-w-0">
+          <Link href={`/posts/${request.postId}`}>
+            <Eye />
+            {t("post")}
+          </Link>
+        </Button>
+        <div className="flex items-center gap-2">
+          <RequestStatusBadge status={request.status} />
+          {request.status === "PENDING" && (
+            <Button
+              variant="destructive"
+              size="icon"
+              aria-label={t("cancelRequest")}
+              onClick={() => updateRequest.mutate({ requestId: request.id, status: "DENIED" })}
+            >
+              <X />
+            </Button>
+          )}
+        </div>
+      </div>
+      <Accordion type="single" collapsible>
+        <AccordionItem value="details" className="border-b-0">
+          <AccordionTrigger className="py-1 text-[12px] font-medium text-[color:var(--ink-60)] hover:no-underline">
+            {tc("moreDetails")}
+          </AccordionTrigger>
+          <AccordionContent>
+            <p className="text-[13px] text-[color:var(--ink-70)]">
+              {request.comment === "" ? tc("noComment") : request.comment}
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </NotificationCard>
   );
 };
