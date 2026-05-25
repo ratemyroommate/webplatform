@@ -34,28 +34,39 @@ export const NotificationModal = ({ session }: { session: Session }) => {
   const pathname = usePathname();
   const router = useRouter();
   const utils = api.useUtils();
+  const markSeen = api.request.markSeen.useMutation({
+    onSuccess: () => {
+      void utils.request.unreadCount.invalidate();
+    },
+  });
   const updateRequest = api.request.update.useMutation({
     onSuccess: () => {
       router.refresh();
       void utils.request.getAll.invalidate();
+      void utils.request.unreadCount.invalidate();
       toast.success(t("updateSuccess"));
     },
   });
   useEffect(() => setOpen(false), [pathname]);
 
+  const handleOpenChange = (next: boolean) => {
+    setOpen(next);
+    if (next) markSeen.mutate();
+  };
+
   return (
     <>
-      <NotificationBell requests={recievedRequests}>
+      <NotificationBell>
         <Button
           variant="flat"
           size="icon-round"
           aria-label="notifications"
-          onClick={() => setOpen(true)}
+          onClick={() => handleOpenChange(true)}
         >
           <Bell size={15} strokeWidth={1.75} />
         </Button>
       </NotificationBell>
-      <Sheet open={open} onOpenChange={setOpen}>
+      <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent
           side="right"
           className="bg-background flex w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-md"
