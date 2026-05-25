@@ -2,7 +2,6 @@ import { ImageResponse } from "next/og";
 import { getTranslations } from "next-intl/server";
 import { api } from "~/trpc/server";
 import { getAverageRating } from "~/utils/helpers";
-import { getBaseUrl } from "~/i18n/seo";
 
 export const runtime = "nodejs";
 export const contentType = "image/png";
@@ -30,7 +29,7 @@ export default async function OgImage({ params: { id, locale } }: Props) {
   const overline = locale === "hu" ? "SZOBATÁRSAT KERESEK" : "I'M LOOKING FOR A ROOMMATE";
   const reviewsLabel = locale === "hu" ? "értékelés" : "reviews";
   const headline = user ? name || t("title") : t("title");
-  const siteLabel = getBaseUrl().replace(/^https?:\/\//, "");
+  const initial = (name.charAt(0) || "?").toUpperCase();
 
   return new ImageResponse(
     (
@@ -78,14 +77,38 @@ export default async function OgImage({ params: { id, locale } }: Props) {
         >
           <div
             style={{
-              fontSize: 20,
-              fontWeight: 700,
-              letterSpacing: 3,
-              color: BRAND,
-              marginBottom: 16,
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
+              marginBottom: 20,
             }}
           >
-            {overline}
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: 999,
+                background: BRAND,
+                color: INK,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 28,
+                fontWeight: 800,
+              }}
+            >
+              {initial}
+            </div>
+            <div
+              style={{
+                fontSize: 20,
+                fontWeight: 700,
+                letterSpacing: 3,
+                color: BRAND,
+              }}
+            >
+              {overline}
+            </div>
           </div>
           <div
             style={{
@@ -126,20 +149,6 @@ export default async function OgImage({ params: { id, locale } }: Props) {
               </span>
             </div>
           )}
-        </div>
-
-        {/* footer */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 48,
-            right: 72,
-            fontSize: 22,
-            fontWeight: 600,
-            color: INK_MUTED,
-          }}
-        >
-          {siteLabel}
         </div>
       </div>
     ),
