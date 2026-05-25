@@ -69,12 +69,6 @@ Each item lists what's missing, what the design wants, and the smallest change t
 
 ---
 
-## "Fresh today" — better data
-
-**Status:** ✅ Shipped. `post.getFresh` returns up to `FRESH_MAX` (12) posts created within `FRESH_WINDOW_DAYS` (4), both constants server-side so they can't be tampered with from the browser. `FreshTodayStrip` calls it with no args.
-
----
-
 ## Shareable compatibility quiz (growth lever)
 
 **Why:** The quiz is the product's actual differentiator — no other Hungarian roommate site has it. Today it's locked behind sign-in, which means it can't go viral. Treat it like a BuzzFeed-style personality quiz: anyone can take it, and the result is something people _want_ to share with friends.
