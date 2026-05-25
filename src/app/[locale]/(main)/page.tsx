@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { HydrateClient } from "~/trpc/server";
+import { HydrateClient, api } from "~/trpc/server";
 import { Feed } from "~/app/_components/Feed";
 import { CompactProfileCompleteness } from "~/app/_components/ProfileCompleteness";
 import { getServerAuthSession } from "~/server/auth";
@@ -19,6 +19,9 @@ export default async function Home({ params: { locale } }: Props) {
   setRequestLocale(locale);
   const session = await getServerAuthSession();
   const tMeta = await getTranslations("metadata");
+
+  await api.post.getFresh.prefetch();
+
   return (
     <HydrateClient>
       <h1 className="sr-only">{tMeta("home.title")}</h1>

@@ -189,7 +189,16 @@ export const postRouter = createTRPCRouter({
     return ctx.db.post.findMany({
       where: { createdAt: { gte: cutoff } },
       orderBy: { createdAt: "desc" },
-      include: featuredImageQuery,
+      select: {
+        id: true,
+        price: true,
+        location: true,
+        images: {
+          select: { url: true },
+          take: 1,
+          orderBy: { createdAt: "asc" },
+        },
+      },
     });
   }),
 
@@ -219,6 +228,6 @@ const featuredImageQuery = {
       image: true,
       name: true,
       reviewsReceived: { select: { rating: true } },
-    }, // improve in the future: either make pagination of posts short or save rating avg in user table
+    },
   },
 };
