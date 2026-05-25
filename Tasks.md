@@ -75,16 +75,6 @@ Each item lists what's missing, what the design wants, and the smallest change t
 
 ---
 
-## Notifications: badge count
-
-**Status:** `NotificationModal` exists with a bell icon. The redesign's mockup shows a numeric badge ("3" pill on the bell).
-
-**What's missing:** A query that returns the count of _unread_ incoming requests for the current user.
-
-**Smallest viable change:** Add `request.getUnreadCount`, render a small primary-colored badge on the bell trigger inside `NotificationModal.tsx`.
-
----
-
 ## Shareable compatibility quiz (growth lever)
 
 **Why:** The quiz is the product's actual differentiator — no other Hungarian roommate site has it. Today it's locked behind sign-in, which means it can't go viral. Treat it like a BuzzFeed-style personality quiz: anyone can take it, and the result is something people _want_ to share with friends.
@@ -104,25 +94,3 @@ Each item lists what's missing, what the design wants, and the smallest change t
 5. "Share with a friend" CTA at the end of the quiz: copy link + native share. Gentle nudge to sign up to "see who matches you".
 
 **Bonus:** Track which result types convert best — feeds back into onboarding copy.
-
----
-
-## Shareable profile (growth lever)
-
-**Why:** Posts already have shareable URLs and (will have) good OG images. Profiles don't, which means when users link their `rmrm.hu/users/abc123` in a Facebook group or DM, the preview is generic — nobody clicks. The profile is the natural artifact to share: "Hi, I'm looking for housemates, here's my profile + quiz."
-
-**What's missing:**
-
-- No `opengraph-image.tsx` or `metadata` for `/users/[id]` — Next.js falls back to the global OG image.
-- No public-facing "share my profile" button on the profile page.
-- Profile page may render owner-only sections (e.g. ProfileCompleteness) without a viewer-mode check — verify before exposing the URL publicly.
-
-**Smallest viable change:**
-
-1. Add `opengraph-image.tsx` at `src/app/[locale]/(main)/users/[id]/opengraph-image.tsx` rendering avatar + name + location + rating + "I'm looking for a roommate" overline.
-2. Add `generateMetadata` on the profile page setting `openGraph`, `twitter`, and a localized title/description.
-3. Add a "Share profile" button (icon + native share API + clipboard fallback) on the profile page, visible to the owner only.
-4. Audit `users/[id]/page.tsx` to confirm no logged-in-only data leaks when viewed by anonymous users (phone number especially — the recent migration added it).
-5. Consider a vanity slug (`/u/[handle]`) later — `cuid()` URLs are share-hostile.
-
-**Bonus:** Same OG treatment applied to `/users/[id]/posts` — sharing your listings page should also preview nicely.
