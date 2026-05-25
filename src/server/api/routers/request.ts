@@ -28,6 +28,25 @@ export const requestRouter = createTRPCRouter({
     const sentRequests = allRequests.filter((request) => request.userId === ctx.session.user.id);
     return { recievedRequests, sentRequests };
   }),
+  unreadCount: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUniqueOrThrow({
+      where: { id: ctx.session.user.id },
+      select: { notificationsSeenAt: true },
+    });
+    return ctx.db.request.count({
+      where: {
+        post: { createdById: ctx.session.user.id },
+        userId: { not: ctx.session.user.id },
+        ...(user.notificationsSeenAt ? { updatedAt: { gt: user.notificationsSeenAt } } : {}),
+      },
+    });
+  }),
+  markSeen: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.user.update({
+      where: { id: ctx.session.user.id },
+      data: { notificationsSeenAt: new Date() },
+    });
+  }),
   update: protectedProcedure
     .input(z.object({ requestId: z.string(), status: z.nativeEnum(RequestStatus) }))
     .mutation(async ({ ctx, input }) => {
@@ -62,6 +81,14 @@ export const requestRouter = createTRPCRouter({
           await tx.post.update({
             where: { id: request.postId },
             data: { featuredUsers: { connect: { id: request.userId } } },
+          });
+        }
+        if (isPostOwner) {
+          // Owner acted on the request — mark notifications seen so this update
+          // doesn't resurface as unread via the bumped `updatedAt`.
+          await tx.user.update({
+            where: { id: ctx.session.user.id },
+            data: { notificationsSeenAt: new Date() },
           });
         }
       });
