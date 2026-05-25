@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getTranslations } from "next-intl/server";
 import { api } from "~/trpc/server";
-import { getBaseUrl } from "~/i18n/seo";
 
 export const runtime = "nodejs";
 export const contentType = "image/png";
@@ -26,7 +25,6 @@ export default async function OgImage({ params: { id, locale } }: Props) {
   const overline = locale === "hu" ? "SZOBATÁRS HIRDETÉS" : "ROOMMATE LISTING";
   const spotsLabel = locale === "hu" ? "szabad hely" : "spots free";
   const perMonth = locale === "hu" ? "Ft/hó" : "HUF/mo";
-  const siteLabel = getBaseUrl().replace(/^https?:\/\//, "");
 
   const headline = post
     ? tMeta("post.titleWithPrice", {
@@ -135,20 +133,6 @@ export default async function OgImage({ params: { id, locale } }: Props) {
               )}
             </div>
           )}
-        </div>
-
-        {/* footer */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 48,
-            right: 72,
-            fontSize: 22,
-            fontWeight: 600,
-            color: INK_MUTED,
-          }}
-        >
-          {siteLabel}
         </div>
       </div>
     ),
