@@ -253,7 +253,44 @@
     "notIdeal": "Nem ideális",
     "compatible": "Kompatibilis",
     "perfectMatch": "Tökéletes egyezés",
-    "noData": "Nincs adat"
+    "noData": "Nincs adat",
+    "yourStyle": "A stílusod",
+    "matchByCategory": "Kategóriánkénti egyezés",
+    "viewerAnswered": "Te",
+    "otherAnswered": "Ő",
+    "noAnswerYet": "—",
+    "categories": {
+      "lifestyle": {
+        "label": "Életmód",
+        "axisLow": "Lazább",
+        "axisHigh": "Strukturált",
+        "bucket": {
+          "low": "Lazább",
+          "balanced": "Kiegyensúlyozott",
+          "high": "Strukturált"
+        }
+      },
+      "social": {
+        "label": "Társas",
+        "axisLow": "Önálló",
+        "axisHigh": "Társaságkedvelő",
+        "bucket": {
+          "low": "Társaságkedvelő",
+          "balanced": "Kiegyensúlyozott",
+          "high": "Önálló"
+        }
+      },
+      "boundaries": {
+        "label": "Határok",
+        "axisLow": "Megosztó",
+        "axisHigh": "Privát",
+        "bucket": {
+          "low": "Megosztó",
+          "balanced": "Rugalmas",
+          "high": "Privát"
+        }
+      }
+    }
   },
   "featuredUsers": {
     "roommate": "szobatárs",

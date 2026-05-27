@@ -1,4 +1,6 @@
 import { z } from "zod";
+import type { CompatibilityCategory } from "@prisma/client";
+import { COMPATIBILITY_CATEGORIES } from "~/utils/compatibility";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const kvizRouter = createTRPCRouter({
@@ -51,108 +53,167 @@ export const kvizRouter = createTRPCRouter({
         },
       })
     ),
-  getAnsers: protectedProcedure.input(z.string().optional()).query(({ ctx, input }) =>
-    ctx.db.compatibilityQuestionOption.findMany({
+  /**
+   * Answered questions for a user (defaults to the current user) plus the
+   * per-category style profile derived from those answers. Single query so the
+   * Completed Quiz view can render both donuts and the answer list in one hop.
+   */
+  getAnswers: protectedProcedure.input(z.string().optional()).query(async ({ ctx, input }) => {
+    const userId = input ?? ctx.session.user.id;
+    const questions = await ctx.db.compatibilityQuestionOption.findMany({
       where: { active: true },
       include: {
         answers: {
           include: {
             submittedAnswers: {
-              where: { createdById: input ?? ctx.session.user.id },
+              where: { createdById: userId },
             },
           },
         },
       },
-      orderBy: {
-        order: "asc",
-      },
-    })
-  ),
+      orderBy: { order: "asc" },
+    });
+
+    const byCategory = new Map<
+      CompatibilityCategory,
+      { total: number; max: number; answered: number; questionCount: number }
+    >();
+    for (const cat of COMPATIBILITY_CATEGORIES) {
+      byCategory.set(cat, { total: 0, max: 0, answered: 0, questionCount: 0 });
+    }
+
+    for (const q of questions) {
+      const bucket = byCategory.get(q.category);
+      if (!bucket) continue;
+      bucket.questionCount += 1;
+      bucket.max += 2; // value range 0..2 per question
+      const picked = q.answers.find((a) => a.submittedAnswers.length > 0);
+      if (picked) {
+        bucket.total += picked.value;
+        bucket.answered += 1;
+      }
+    }
+
+    const profile = COMPATIBILITY_CATEGORIES.map((cat) => {
+      const b = byCategory.get(cat)!;
+      return {
+        category: cat,
+        total: b.total,
+        max: b.max,
+        answered: b.answered,
+        questionCount: b.questionCount,
+      };
+    });
+
+    return { questions, profile };
+  }),
+  /**
+   * Pairwise compatibility stats between the current user and `input` (target user):
+   * overall percentage + match counts and a per-category breakdown derived from
+   * the same question set. Also returns completion counts so the UI can prompt
+   * either user to fill the quiz.
+   */
   getStats: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const currentUser = ctx.session.user.id;
     const postUser = input;
-    const questions = await ctx.db.compatibilityQuestionOption.findMany({
-      where: {
-        active: true,
-        submittedAnswers: {
-          some: { createdById: currentUser },
+
+    const [
+      questions,
+      totalQuestionCount,
+      completedQuestionCountByCurrentUser,
+      completedQuestionCountByPostUser,
+    ] = await Promise.all([
+      ctx.db.compatibilityQuestionOption.findMany({
+        where: {
+          active: true,
+          submittedAnswers: { some: { createdById: currentUser } },
+          AND: { submittedAnswers: { some: { createdById: postUser } } },
         },
-        AND: {
+        select: {
+          id: true,
+          category: true,
           submittedAnswers: {
-            some: { createdById: postUser },
+            where: { createdById: { in: [currentUser, postUser] } },
+            select: { createdById: true, answer: { select: { value: true } } },
           },
         },
-      },
-      include: {
-        submittedAnswers: {
-          where: {
-            createdById: { in: [currentUser, postUser] },
-          },
-          include: {
-            answer: true,
-          },
-        },
-      },
+      }),
+      ctx.db.compatibilityQuestionOption.count({ where: { active: true } }),
+      ctx.db.compatibilityQuestionOption.count({
+        where: { active: true, submittedAnswers: { some: { createdById: currentUser } } },
+      }),
+      ctx.db.compatibilityQuestionOption.count({
+        where: { submittedAnswers: { some: { createdById: postUser } } },
+      }),
+    ]);
+
+    type MatchKey = "exact" | "close" | "opposite";
+    type Bucket = {
+      score: number;
+      max: number;
+      exact: number;
+      close: number;
+      opposite: number;
+      questionIds: number[];
+    };
+    const emptyBucket = (): Bucket => ({
+      score: 0,
+      max: 0,
+      exact: 0,
+      close: 0,
+      opposite: 0,
+      questionIds: [],
     });
-    const stats = questions.reduce(
-      (total, question) => {
-        const currentUserAnswer = question.submittedAnswers.find(
-          (a) => a.createdById === currentUser
-        );
-        const postUserAnswer = question.submittedAnswers.find((a) => a.createdById === postUser);
-
-        if (!currentUserAnswer || !postUserAnswer) return total;
-
-        const diff = Math.abs(currentUserAnswer.answer.value - postUserAnswer.answer.value);
-
-        total.score += Math.max(0, 2 - diff);
-        if (diff === 0) total.exactMatches += 1;
-        else if (diff === 1) total.closeMatches += 1;
-        else total.noMatches += 1;
-
-        return total;
-      },
-      { score: 0, exactMatches: 0, closeMatches: 0, noMatches: 0 }
+    const byCategory = new Map<CompatibilityCategory, Bucket>(
+      COMPATIBILITY_CATEGORIES.map((cat) => [cat, emptyBucket()])
     );
+    const overall = emptyBucket();
 
-    const totalQuestionCount = await ctx.db.compatibilityQuestionOption.count({
-      where: { active: true },
+    for (const q of questions) {
+      const me = q.submittedAnswers.find((a) => a.createdById === currentUser);
+      const other = q.submittedAnswers.find((a) => a.createdById === postUser);
+      if (!me || !other) continue;
+      const bucket = byCategory.get(q.category);
+      if (!bucket) continue;
+
+      const diff = Math.abs(me.answer.value - other.answer.value);
+      const points = Math.max(0, 2 - diff);
+      const matchKey: MatchKey = diff === 0 ? "exact" : diff === 1 ? "close" : "opposite";
+
+      for (const b of [bucket, overall]) {
+        b.score += points;
+        b.max += 2;
+        b[matchKey] += 1;
+      }
+      bucket.questionIds.push(q.id);
+    }
+
+    const categories = COMPATIBILITY_CATEGORIES.map((cat) => {
+      const b = byCategory.get(cat)!;
+      return {
+        category: cat,
+        percentage: b.max === 0 ? 0 : Math.round((b.score / b.max) * 100),
+        score: b.score,
+        max: b.max,
+        exact: b.exact,
+        close: b.close,
+        opposite: b.opposite,
+        questionIds: b.questionIds,
+      };
     });
 
     const maxScore = totalQuestionCount * 2;
-    const percentage = maxScore === 0 ? 0 : (stats.score / maxScore) * 100;
-    const roundedPercentage = Math.round(percentage);
+    const percentage = maxScore === 0 ? 0 : Math.round((overall.score / maxScore) * 100);
 
-    const completedQuestionCountByCurrentUser = await ctx.db.compatibilityQuestionOption.count({
-      where: {
-        active: true,
-        submittedAnswers: {
-          some: {
-            createdById: currentUser,
-          },
-        },
-      },
-    });
-
-    const completedQuestionCountByPostUser = await ctx.db.compatibilityQuestionOption.count({
-      where: {
-        submittedAnswers: {
-          some: {
-            createdById: postUser,
-          },
-        },
-      },
-    });
-
-    const { exactMatches, closeMatches, noMatches } = stats;
     return {
-      percentage: roundedPercentage,
-      exactMatches,
-      closeMatches,
-      noMatches,
+      percentage,
+      exactMatches: overall.exact,
+      closeMatches: overall.close,
+      noMatches: overall.opposite,
       completedQuestionCountByCurrentUser,
       completedQuestionCountByPostUser,
       totalQuestionCount,
+      categories,
     };
   }),
   getCurrentUserAnswerCount: protectedProcedure.query(async ({ ctx }) => {
@@ -172,4 +233,29 @@ export const kvizRouter = createTRPCRouter({
 
     return { completedQuestionCountByCurrentUser, totalQuestionCount };
   }),
+
+  /**
+   * Side-by-side answers for two users across a specified set of question ids.
+   * Used by the CompatibilityScore accordion drill-down.
+   */
+  getPairAnswers: protectedProcedure
+    .input(z.object({ userId: z.string(), questionIds: z.array(z.number()) }))
+    .query(async ({ ctx, input }) => {
+      if (input.questionIds.length === 0) return [];
+      return ctx.db.compatibilityQuestionOption.findMany({
+        where: { id: { in: input.questionIds } },
+        orderBy: { order: "asc" },
+        include: {
+          answers: {
+            include: {
+              submittedAnswers: {
+                where: {
+                  createdById: { in: [ctx.session.user.id, input.userId] },
+                },
+              },
+            },
+          },
+        },
+      });
+    }),
 });

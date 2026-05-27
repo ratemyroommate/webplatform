@@ -33,17 +33,28 @@ export const PostCardFixture = () => (
 );
 
 export const CompatScoreFixture = () => (
-  <Card className="p-4">
-    <div className="flex">
+  <Card className="flex flex-col gap-5 p-4">
+    <div className="flex items-end justify-between gap-3">
       <div className="flex flex-col gap-1">
         <div className="h-3 w-24 rounded bg-[color:var(--ink-10)]" />
         <div className="h-9 w-20 rounded bg-[color:var(--ink-10)]" />
         <div className="mt-1 h-5 w-28 rounded bg-[color:var(--ink-10)]" />
       </div>
-      <div className="ml-auto flex flex-col items-end gap-1">
-        <div className="h-6 w-24 rounded bg-[color:var(--ink-10)]" />
-        <div className="h-6 w-24 rounded bg-[color:var(--ink-10)]" />
-        <div className="h-6 w-24 rounded bg-[color:var(--ink-10)]" />
+      <div className="flex flex-col items-end gap-1">
+        <div className="h-3 w-20 rounded bg-[color:var(--ink-10)]" />
+        <div className="h-3 w-20 rounded bg-[color:var(--ink-10)]" />
+        <div className="h-3 w-20 rounded bg-[color:var(--ink-10)]" />
+      </div>
+    </div>
+    <div className="flex flex-col gap-3 border-t border-[color:var(--ink-10)] pt-4">
+      <div className="h-3 w-32 rounded bg-[color:var(--ink-10)]" />
+      <div className="grid grid-cols-3 gap-2">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="flex flex-col items-center gap-2">
+            <div className="size-[88px] rounded-full bg-[color:var(--ink-10)]" />
+            <div className="h-3 w-16 rounded bg-[color:var(--ink-10)]" />
+          </div>
+        ))}
       </div>
     </div>
   </Card>
