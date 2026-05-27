@@ -62,7 +62,7 @@ type StatsData = {
 
 type CategoryStats = {
   category: CategoryKey;
-  percentage: number;
+  percentage: number | null;
   score: number;
   max: number;
   exact: number;
@@ -127,6 +127,7 @@ const Loaded = ({ data, compareUserId }: { data: StatsData; compareUserId: strin
                   const meta = CATEGORY_META[key];
                   if (!meta) return null;
                   const labelText = t(`categories.${meta.i18nKey}.label` as const);
+                  const hasData = c.percentage !== null;
                   const pressed = openCategory === key;
                   return (
                     <CategoryDonut
@@ -134,11 +135,12 @@ const Loaded = ({ data, compareUserId }: { data: StatsData; compareUserId: strin
                       value={c.score}
                       max={c.max}
                       label={labelText}
-                      centerText={`${c.percentage}%`}
+                      centerText={hasData ? `${c.percentage}%` : "—"}
                       colorVar={meta.colorVar}
                       size="sm"
-                      pressed={pressed}
-                      onClick={() => setOpenCategory(pressed ? null : key)}
+                      pressed={hasData ? pressed : undefined}
+                      onClick={hasData ? () => setOpenCategory(pressed ? null : key) : undefined}
+                      className={hasData ? undefined : "opacity-50"}
                     />
                   );
                 })}

@@ -112,6 +112,9 @@ export const kvizRouter = createTRPCRouter({
    * overall percentage + match counts and a per-category breakdown derived from
    * the same question set. Also returns completion counts so the UI can prompt
    * either user to fill the quiz.
+   *
+   * `percentage` is `null` for categories where no question has been answered
+   * by both users — distinguishes "no shared data" from a genuine 0% match.
    */
   getStats: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const currentUser = ctx.session.user.id;
@@ -148,6 +151,19 @@ export const kvizRouter = createTRPCRouter({
     ]);
 
     type MatchKey = "exact" | "close" | "opposite";
+    type Scored = { id: number; category: CompatibilityCategory; points: number; match: MatchKey };
+
+    // 1. Score every question both users answered; drop the rest.
+    const scored: Scored[] = questions.flatMap((q) => {
+      const me = q.submittedAnswers.find((a) => a.createdById === currentUser);
+      const other = q.submittedAnswers.find((a) => a.createdById === postUser);
+      if (!me || !other) return [];
+      const diff = Math.abs(me.answer.value - other.answer.value);
+      const match: MatchKey = diff === 0 ? "exact" : diff === 1 ? "close" : "opposite";
+      return [{ id: q.id, category: q.category, points: Math.max(0, 2 - diff), match }];
+    });
+
+    // 2. Aggregate any list of scored questions into a bucket of counts.
     type Bucket = {
       score: number;
       max: number;
@@ -156,54 +172,29 @@ export const kvizRouter = createTRPCRouter({
       opposite: number;
       questionIds: number[];
     };
-    const emptyBucket = (): Bucket => ({
-      score: 0,
-      max: 0,
-      exact: 0,
-      close: 0,
-      opposite: 0,
-      questionIds: [],
-    });
-    const byCategory = new Map<CompatibilityCategory, Bucket>(
-      COMPATIBILITY_CATEGORIES.map((cat) => [cat, emptyBucket()])
-    );
-    const overall = emptyBucket();
+    const aggregate = (items: Scored[]): Bucket =>
+      items.reduce<Bucket>(
+        (acc, item) => {
+          acc.score += item.points;
+          acc.max += 2;
+          acc[item.match] += 1;
+          acc.questionIds.push(item.id);
+          return acc;
+        },
+        { score: 0, max: 0, exact: 0, close: 0, opposite: 0, questionIds: [] }
+      );
 
-    for (const q of questions) {
-      const me = q.submittedAnswers.find((a) => a.createdById === currentUser);
-      const other = q.submittedAnswers.find((a) => a.createdById === postUser);
-      if (!me || !other) continue;
-      const bucket = byCategory.get(q.category);
-      if (!bucket) continue;
+    // 3. Shape per-category + overall results.
+    const toPercentage = (score: number, max: number) =>
+      max === 0 ? null : Math.round((score / max) * 100);
 
-      const diff = Math.abs(me.answer.value - other.answer.value);
-      const points = Math.max(0, 2 - diff);
-      const matchKey: MatchKey = diff === 0 ? "exact" : diff === 1 ? "close" : "opposite";
-
-      for (const b of [bucket, overall]) {
-        b.score += points;
-        b.max += 2;
-        b[matchKey] += 1;
-      }
-      bucket.questionIds.push(q.id);
-    }
-
-    const categories = COMPATIBILITY_CATEGORIES.map((cat) => {
-      const b = byCategory.get(cat)!;
-      return {
-        category: cat,
-        percentage: b.max === 0 ? 0 : Math.round((b.score / b.max) * 100),
-        score: b.score,
-        max: b.max,
-        exact: b.exact,
-        close: b.close,
-        opposite: b.opposite,
-        questionIds: b.questionIds,
-      };
+    const categories = COMPATIBILITY_CATEGORIES.map((category) => {
+      const bucket = aggregate(scored.filter((s) => s.category === category));
+      return { category, percentage: toPercentage(bucket.score, bucket.max), ...bucket };
     });
 
-    const maxScore = totalQuestionCount * 2;
-    const percentage = maxScore === 0 ? 0 : Math.round((overall.score / maxScore) * 100);
+    const overall = aggregate(scored);
+    const percentage = toPercentage(overall.score, totalQuestionCount * 2) ?? 0;
 
     return {
       percentage,
