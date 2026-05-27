@@ -11,13 +11,13 @@ const main = async () => {
       category: "LIFESTYLE",
       text: "Mennyire vagy rendtartó a közös helyiségekben (pl. konyha, fürdőszoba)?",
       answers: [
-        { id: 1, text: "Nagyon - Rendszeresen takarítok, szeretem a rendet.", value: 0 },
+        { id: 1, text: "Nagyon - Rendszeresen takarítok, szeretem a rendet.", value: 2 },
         {
           id: 2,
           text: "Közepesen - Akkor takarítok, ha szükséges, de nem veszem túl komolyan.",
           value: 1,
         },
-        { id: 3, text: "Nem igazán - Nem zavar a rendetlenség, ritkán takarítok.", value: 2 },
+        { id: 3, text: "Nem igazán - Nem zavar a rendetlenség, ritkán takarítok.", value: 0 },
       ],
     },
     {
@@ -67,7 +67,7 @@ const main = async () => {
         {
           id: 10,
           text: "Nagyon - Rendszeresen szükségem van egyedüllétre és nyugalomra.",
-          value: 0,
+          value: 2,
         },
         {
           id: 11,
@@ -77,7 +77,7 @@ const main = async () => {
         {
           id: 12,
           text: "Nem igazán - Szeretek emberek között lenni, nem igénylem az egyedüllétet.",
-          value: 2,
+          value: 0,
         },
       ],
     },
@@ -110,19 +110,22 @@ const main = async () => {
   ];
 
   await Promise.all(
-    compatibilityQuestionOption.map(({ id, answers, ...rest }) =>
-      prisma.compatibilityQuestionOption.upsert({
+    compatibilityQuestionOption.map(async ({ id, answers, ...rest }) => {
+      await prisma.compatibilityQuestionOption.upsert({
         where: { id },
         update: { ...rest },
-        create: {
-          id,
-          ...rest,
-          answers: {
-            create: answers,
-          },
-        },
-      })
-    )
+        create: { id, ...rest },
+      });
+      await Promise.all(
+        answers.map((answer) =>
+          prisma.compatibilityAnswerOption.upsert({
+            where: { id: answer.id },
+            update: { text: answer.text, value: answer.value, questionId: id },
+            create: { ...answer, questionId: id },
+          })
+        )
+      );
+    })
   );
 };
 
