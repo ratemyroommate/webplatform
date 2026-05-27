@@ -1,11 +1,18 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
 import { env } from "~/env";
 
-const createPrismaClient = () =>
-  new PrismaClient({
+const createPrismaClient = () => {
+  // Prisma v7 requires a driver adapter for direct database connections.
+  // DATABASE_URL points at the Supavisor pooled connection (port 6543);
+  // migrations use DIRECT_URL via prisma.config.ts.
+  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
+  return new PrismaClient({
+    adapter,
     log: env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
+};
 
 const globalForPrisma = globalThis as unknown as {
   prisma: ReturnType<typeof createPrismaClient> | undefined;
