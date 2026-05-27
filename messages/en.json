@@ -253,7 +253,44 @@
     "notIdeal": "Not ideal",
     "compatible": "Compatible",
     "perfectMatch": "Perfect match",
-    "noData": "No data"
+    "noData": "No data",
+    "yourStyle": "Your style",
+    "matchByCategory": "Match by category",
+    "viewerAnswered": "You",
+    "otherAnswered": "Them",
+    "noAnswerYet": "—",
+    "categories": {
+      "lifestyle": {
+        "label": "Lifestyle",
+        "axisLow": "Relaxed",
+        "axisHigh": "Structured",
+        "bucket": {
+          "low": "Easy-going",
+          "balanced": "Balanced",
+          "high": "Structured"
+        }
+      },
+      "social": {
+        "label": "Social",
+        "axisLow": "Independent",
+        "axisHigh": "Outgoing",
+        "bucket": {
+          "low": "Outgoing",
+          "balanced": "Balanced",
+          "high": "Independent"
+        }
+      },
+      "boundaries": {
+        "label": "Boundaries",
+        "axisLow": "Sharing",
+        "axisHigh": "Private",
+        "bucket": {
+          "low": "Sharing",
+          "balanced": "Flexible",
+          "high": "Private"
+        }
+      }
+    }
   },
   "featuredUsers": {
     "roommate": "roommate",

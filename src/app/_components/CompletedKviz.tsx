@@ -1,16 +1,22 @@
 "use client";
-import { Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { api } from "~/trpc/react";
 import { Skeleton } from "boneyard-js/react";
 import { KvizQuestionFixture } from "./skeleton-fixtures";
-import { cn } from "~/lib/utils";
+import { CategoryDonut } from "./CategoryDonut";
+import { KvizQuestionCard } from "./KvizQuestionCard";
+import { CATEGORY_META, bucketFor } from "~/utils/compatibility";
 
 type CompletedKvizProps = {
   userId?: string;
 };
 
 export const CompletedKviz = ({ userId }: CompletedKvizProps) => {
-  const { data: questions, isLoading } = api.kviz.getAnsers.useQuery(userId);
+  const t = useTranslations("compatibility");
+  const { data, isLoading } = api.kviz.getAnswers.useQuery(userId);
+  const questions = data?.questions;
+  const profile = data?.profile;
+
   return (
     <Skeleton
       name="kviz-question"
@@ -18,53 +24,53 @@ export const CompletedKviz = ({ userId }: CompletedKvizProps) => {
       animate="shimmer"
       fixture={<KvizQuestionFixture />}
     >
-      <div className="flex flex-col gap-4">
-        {questions?.map((question) => {
-        const selectedAnswerId = question.answers.find(
-          (a) => a.id === a.submittedAnswers[0]?.answerId
-        )?.id;
-        return (
-          <div
-            key={question.id}
-            className="bg-card flex flex-col gap-4 rounded-2xl border border-[color:var(--ink-10)] p-5"
-          >
+      <div className="flex flex-col gap-6">
+        {profile?.some((p) => p.answered > 0) ? (
+          <div className="bg-card flex flex-col gap-5 rounded-2xl border border-[color:var(--ink-10)] p-5">
             <h3
               className="text-foreground font-extrabold tracking-[-0.01em]"
-              style={{ fontSize: 18, lineHeight: 1.3 }}
+              style={{ fontSize: 16 }}
             >
-              {question.text}
+              {t("yourStyle")}
             </h3>
-            <div className="flex flex-col gap-2">
-              {question.answers.map((answer) => {
-                const isSelected = selectedAnswerId === answer.id;
+            <div className="grid grid-cols-3 gap-3">
+              {profile.map((cat) => {
+                const meta = CATEGORY_META[cat.category];
+                const bucket = bucketFor(cat.total, cat.max);
+                const tCat = t(`categories.${meta.i18nKey}.label` as const);
+                const tBucket = t(`categories.${meta.i18nKey}.bucket.${bucket}` as const);
                 return (
-                  <div
-                    key={answer.id}
-                    className={cn(
-                      "flex items-center gap-3 rounded-xl border p-3.5 text-[13.5px]",
-                      isSelected
-                        ? "border-primary bg-[var(--primary-05)] text-foreground"
-                        : "border-[color:var(--ink-10)] bg-[var(--background)] text-[color:var(--ink-60)]"
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
-                        isSelected
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-[color:var(--ink-30)]"
-                      )}
-                    >
-                      {isSelected && <Check size={12} strokeWidth={3} />}
-                    </span>
-                    <span className={isSelected ? "font-medium" : ""}>{answer.text}</span>
-                  </div>
+                  <CategoryDonut
+                    key={cat.category}
+                    value={cat.total}
+                    max={cat.max}
+                    label={tCat}
+                    centerText={tBucket}
+                    centerSubText={`${cat.total}/${cat.max}`}
+                    colorVar={meta.colorVar}
+                  />
                 );
               })}
             </div>
           </div>
-          );
-        })}
+        ) : null}
+
+        {questions && questions.length > 0 ? (
+          <div className="flex flex-col gap-4">
+            {questions.map((question) => {
+              const selectedAnswerId =
+                question.answers.find((a) => a.id === a.submittedAnswers[0]?.answerId)?.id ?? null;
+              return (
+                <KvizQuestionCard
+                  key={question.id}
+                  question={question}
+                  selectedAnswerId={selectedAnswerId}
+                  variant="review"
+                />
+              );
+            })}
+          </div>
+        ) : null}
       </div>
     </Skeleton>
   );

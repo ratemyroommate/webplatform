@@ -76,6 +76,14 @@
   --accent-green-05: rgba(63, 122, 78, 0.08);
   --danger-05: rgba(184, 74, 58, 0.08);
 
+  /* Pastel compatibility category tokens (light) */
+  --category-lifestyle: #6fb8a8;
+  --category-lifestyle-soft: rgba(111, 184, 168, 0.18);
+  --category-social: #b298d6;
+  --category-social-soft: rgba(178, 152, 214, 0.2);
+  --category-boundaries: #e5b96b;
+  --category-boundaries-soft: rgba(229, 185, 107, 0.22);
+
   --radius: 18px;
 
   /* shadcn tokens — mapped to the brand palette */
@@ -125,6 +133,14 @@
   --ink-60: rgba(246, 243, 238, 0.6);
   --ink-70: rgba(246, 243, 238, 0.72);
   --ink-80: rgba(246, 243, 238, 0.84);
+
+  /* Pastel compatibility category tokens (dark) */
+  --category-lifestyle: #7fc9b9;
+  --category-lifestyle-soft: rgba(127, 201, 185, 0.22);
+  --category-social: #c2a8e5;
+  --category-social-soft: rgba(194, 168, 229, 0.22);
+  --category-boundaries: #f0c479;
+  --category-boundaries-soft: rgba(240, 196, 121, 0.22);
 
   --background: #1a1714;
   --foreground: #f6f3ee;

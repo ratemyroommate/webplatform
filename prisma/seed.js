@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -7,20 +8,22 @@ const main = async () => {
     {
       id: 1,
       order: 1,
+      category: "LIFESTYLE",
       text: "Mennyire vagy rendtartó a közös helyiségekben (pl. konyha, fürdőszoba)?",
       answers: [
-        { id: 1, text: "Nagyon - Rendszeresen takarítok, szeretem a rendet.", value: 0 },
+        { id: 1, text: "Nagyon - Rendszeresen takarítok, szeretem a rendet.", value: 2 },
         {
           id: 2,
           text: "Közepesen - Akkor takarítok, ha szükséges, de nem veszem túl komolyan.",
           value: 1,
         },
-        { id: 3, text: "Nem igazán - Nem zavar a rendetlenség, ritkán takarítok.", value: 2 },
+        { id: 3, text: "Nem igazán - Nem zavar a rendetlenség, ritkán takarítok.", value: 0 },
       ],
     },
     {
       id: 2,
       order: 2,
+      category: "SOCIAL",
       text: "Szeretsz időt tölteni a szobatársaddal (pl. együtt enni, beszélgetni)?",
       answers: [
         {
@@ -35,6 +38,7 @@ const main = async () => {
     {
       id: 3,
       order: 3,
+      category: "SOCIAL",
       text: "Mennyire zavar a zaj vagy a nyüzsgés otthon (pl. zene, vendégek, TV)?",
       answers: [
         {
@@ -57,12 +61,13 @@ const main = async () => {
     {
       id: 4,
       order: 4,
+      category: "BOUNDARIES",
       text: "Mennyire van szükséged saját térre, egyedüllétre otthon?",
       answers: [
         {
           id: 10,
           text: "Nagyon - Rendszeresen szükségem van egyedüllétre és nyugalomra.",
-          value: 0,
+          value: 2,
         },
         {
           id: 11,
@@ -72,13 +77,14 @@ const main = async () => {
         {
           id: 12,
           text: "Nem igazán - Szeretek emberek között lenni, nem igénylem az egyedüllétet.",
-          value: 2,
+          value: 0,
         },
       ],
     },
     {
       id: 5,
       order: 5,
+      category: "LIFESTYLE",
       text: "Milyen a napi ritmusod?",
       answers: [
         { id: 13, text: "Éjjeli bagoly vagyok - Későn fekszem le, este vagyok aktív.", value: 0 },
@@ -89,6 +95,7 @@ const main = async () => {
     {
       id: 6,
       order: 6,
+      category: "BOUNDARIES",
       text: "Számodra rendben van, ha megosztjuk a konyhai dolgokat (pl. edények, fűszerek, eszközök)?",
       answers: [
         { id: 16, text: "Igen - Nyitott vagyok a közös használatra.", value: 0 },
@@ -103,19 +110,22 @@ const main = async () => {
   ];
 
   await Promise.all(
-    compatibilityQuestionOption.map(({ id, answers, ...rest }) =>
-      prisma.compatibilityQuestionOption.upsert({
+    compatibilityQuestionOption.map(async ({ id, answers, ...rest }) => {
+      await prisma.compatibilityQuestionOption.upsert({
         where: { id },
         update: { ...rest },
-        create: {
-          id,
-          ...rest,
-          answers: {
-            create: answers,
-          },
-        },
-      })
-    )
+        create: { id, ...rest },
+      });
+      await Promise.all(
+        answers.map((answer) =>
+          prisma.compatibilityAnswerOption.upsert({
+            where: { id: answer.id },
+            update: { text: answer.text, value: answer.value, questionId: id },
+            create: { ...answer, questionId: id },
+          })
+        )
+      );
+    })
   );
 };
 
