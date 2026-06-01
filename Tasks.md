@@ -44,21 +44,6 @@ Each item lists what's missing, what the design wants, and the smallest change t
 
 ---
 
-## Per-category compatibility breakdown
-
-**What the design shows:** Four progress bars on the post detail page — Lifestyle, Schedule, Cleanliness, Sociability — each with its own percentage.
-
-**What's missing:** Today's compatibility is a single aggregate percentage from `CompatibilityScore`. Quiz answers exist per question (`CompatibilityAnswer`) but no per-category aggregation.
-
-**Smallest viable change:**
-
-1. Add `category` field to `CompatibilityQuestion` (enum: `LIFESTYLE | SCHEDULE | CLEANLINESS | SOCIABILITY`).
-2. Backfill existing questions with categories.
-3. New tRPC `user.getCompatibilityBreakdown` that computes percentage per category.
-4. Render the four bars on post detail (component shape spec'd in the redesign source).
-
----
-
 ## Profile stats: posts / applications counters
 
 **What the design shows:** A 3-column stat grid on the profile (`My posts`, `Saved`, `Applications` sent) with big tabular numerals.
