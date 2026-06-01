@@ -1,7 +1,16 @@
 // @ts-nocheck
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const connectionString = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("Cannot seed: neither DIRECT_URL nor DATABASE_URL is set in the environment.");
+}
+
+const adapter = new PrismaPg({ connectionString });
+const prisma = new PrismaClient({ adapter });
 
 const main = async () => {
   const compatibilityQuestionOption = [
