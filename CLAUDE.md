@@ -21,16 +21,16 @@ No test suite is configured.
 
 **T3 Stack** — Next.js 14 (App Router) + tRPC + Prisma + NextAuth + Tailwind CSS
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 18, Next.js App Router, TypeScript (strict) |
-| API | tRPC v11 (all backend operations go through tRPC) |
-| Database | PostgreSQL via Prisma ORM |
-| Auth | NextAuth.js 4, Google OAuth only |
-| Styling | Tailwind CSS 4 + shadcn/ui (radix primitives) |
-| Forms | React Hook Form 7 + Zod validation |
-| File uploads | Uploadthing (max 4 files, 4 MB each) |
-| Server state | React Query 5 (via tRPC hooks) |
+| Layer        | Technology                                        |
+| ------------ | ------------------------------------------------- |
+| Frontend     | React 18, Next.js App Router, TypeScript (strict) |
+| API          | tRPC v11 (all backend operations go through tRPC) |
+| Database     | PostgreSQL via Prisma ORM                         |
+| Auth         | NextAuth.js 4, Google OAuth only                  |
+| Styling      | Tailwind CSS 4 + shadcn/ui (radix primitives)     |
+| Forms        | React Hook Form 7 + Zod validation                |
+| File uploads | Uploadthing (max 4 files, 4 MB each)              |
+| Server state | React Query 5 (via tRPC hooks)                    |
 
 Path alias: `~/` maps to `./src/`
 
@@ -41,6 +41,7 @@ Path alias: `~/` maps to `./src/`
 All data operations are tRPC procedures. Domain routers: `post`, `user`, `review`, `request`, `kviz`. They are composed in `src/server/api/root.ts`.
 
 Two procedure types:
+
 - `publicProcedure` — no auth required
 - `protectedProcedure` — requires session; throws UNAUTHORIZED otherwise
 
@@ -69,7 +70,9 @@ NextAuth.js with Google provider only. **Custom sign-in page** at `src/app/[loca
 
 ### Environment variables
 
-See `.env.example`. Required: `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`.
+See `.env.example`. Required: `DATABASE_URL` (Supabase Supavisor pooled URL, port 6543, used by the app at runtime via the `@prisma/adapter-pg` driver adapter), `DIRECT_URL` (direct Postgres connection, port 5432, used by `prisma migrate` / `prisma studio` / `prisma db seed` — configured in `prisma.config.ts`), `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET`.
+
+On Vercel the `vercel-build` script runs `prisma generate && prisma migrate deploy && prisma db seed && next build`, so migrations and seed (idempotent upserts of quiz questions/answers) run once per deploy against `DIRECT_URL`.
 
 ## Key conventions
 
@@ -91,7 +94,7 @@ import { PostCardFixture } from "./skeleton-fixtures";
 
 <Skeleton name="post-card" loading={isPending} animate="shimmer" fixture={<PostCardFixture />}>
   <RealComponent data={data} />
-</Skeleton>
+</Skeleton>;
 ```
 
 - `name` — global key for the bone registry; same name everywhere = same bones.
@@ -141,18 +144,18 @@ Dark mode (`.dark`) uses a warm dark base (`#1A1714` background, `#221E1A` card)
 
 The redesign's visual vocabulary lives as small shadcn-style primitives. Compose these instead of writing inline styles in routes:
 
-| Primitive | Purpose |
-|---|---|
-| `logo.tsx` | The chunky lowercase `rmrm` wordmark + brand dot. `size` prop scales both; optional `accent` prop overrides the dot color (use when placing the logo on a primary background). |
-| `button.tsx` | Standard shadcn Button + `chunky` variant (Duolingo-style offset shadow via `--primary-shadow`, primary fill, extrabold, pill-shaped). |
-| `cta-banner.tsx` | Full-width primary banner with icon + title + subtitle + trailing arrow. Shares `--primary-shadow` with the chunky button. |
-| `price-chip.tsx` | Floating white pill with bold price + small unit. Designed for absolute-positioning over a hero image. |
-| `fresh-badge.tsx` | Primary chip with a pulsing dot for freshness flags ("NEW", "ÚJ"). |
-| `open-spot-card.tsx` | Dashed primary-bordered card representing an unfilled roommate slot. |
-| `profile-cover.tsx` | Primary-gradient banner with a soft radial overlay. Used at the top of profile cards. |
-| `compat-ring.tsx` | Circular % indicator. Colors step at 70% (primary) and 85% (accent green). |
-| `back-to-feed.tsx` | Muted bold "← Back to feed" link. Used as the top-of-page nav affordance on routes outside the main feed. Reads `common.backToFeed`. |
-| `google-g.tsx` | Multi-color Google "G" logo SVG. Used on the sign-in CTA. |
+| Primitive            | Purpose                                                                                                                                                                        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `logo.tsx`           | The chunky lowercase `rmrm` wordmark + brand dot. `size` prop scales both; optional `accent` prop overrides the dot color (use when placing the logo on a primary background). |
+| `button.tsx`         | Standard shadcn Button + `chunky` variant (Duolingo-style offset shadow via `--primary-shadow`, primary fill, extrabold, pill-shaped).                                         |
+| `cta-banner.tsx`     | Full-width primary banner with icon + title + subtitle + trailing arrow. Shares `--primary-shadow` with the chunky button.                                                     |
+| `price-chip.tsx`     | Floating white pill with bold price + small unit. Designed for absolute-positioning over a hero image.                                                                         |
+| `fresh-badge.tsx`    | Primary chip with a pulsing dot for freshness flags ("NEW", "ÚJ").                                                                                                             |
+| `open-spot-card.tsx` | Dashed primary-bordered card representing an unfilled roommate slot.                                                                                                           |
+| `profile-cover.tsx`  | Primary-gradient banner with a soft radial overlay. Used at the top of profile cards.                                                                                          |
+| `compat-ring.tsx`    | Circular % indicator. Colors step at 70% (primary) and 85% (accent green).                                                                                                     |
+| `back-to-feed.tsx`   | Muted bold "← Back to feed" link. Used as the top-of-page nav affordance on routes outside the main feed. Reads `common.backToFeed`.                                           |
+| `google-g.tsx`       | Multi-color Google "G" logo SVG. Used on the sign-in CTA.                                                                                                                      |
 
 When you build a new screen and find yourself reaching for `style={{ background: "var(--primary)", boxShadow: "..." }}`, check this folder first — there's probably already a primitive for it. If not, add one here rather than inlining.
 
