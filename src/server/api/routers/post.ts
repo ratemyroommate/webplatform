@@ -166,7 +166,8 @@ export const postRouter = createTRPCRouter({
   getById: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const id = Number(input);
     if (isNaN(id)) return null;
-    return ctx.db.post.findUnique({
+    const userId = ctx.session?.user?.id;
+    const post = await ctx.db.post.findUnique({
       where: { id },
       include: {
         ...featuredImageQuery,
@@ -174,6 +175,19 @@ export const postRouter = createTRPCRouter({
         createdBy: { select: { name: true, image: true, phoneNumber: true } },
       },
     });
+    if (!post) return null;
+
+    // The full applicant list is owner-only. Logged-in non-owners still see
+    // their own request (so "already applied" detection works); logged-out
+    // visitors see none.
+    const isOwner = !!userId && userId === post.createdById;
+    const requests = isOwner
+      ? post.requests
+      : userId
+        ? post.requests.filter((request) => request.userId === userId)
+        : [];
+
+    return { ...post, requests };
   }),
 
   getAllByUserId: publicProcedure.input(z.string()).query(({ ctx, input }) =>

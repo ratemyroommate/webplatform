@@ -48,6 +48,14 @@
     "fillQuiz": "Kvíz kitöltése",
     "backToFeed": "Vissza a feedhez"
   },
+  "error": {
+    "title": "Hiba történt",
+    "description": "Váratlan hiba lépett fel. Kérjük, próbáld újra.",
+    "retry": "Újrapróbálkozás",
+    "home": "Főoldalra",
+    "notFoundTitle": "Az oldal nem található",
+    "notFoundDescription": "A keresett oldal nem létezik vagy áthelyezésre került."
+  },
   "layout": {
     "profile": "Profil",
     "quiz": "Kvíz",

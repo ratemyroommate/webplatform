@@ -1,4 +1,5 @@
 import { type Metadata } from "next";
+import { notFound } from "next/navigation";
 import { ArrowLeft, BedDouble, Phone, Shield, Star, User, Users } from "lucide-react";
 import { PostGallery } from "~/app/_components/PostGallery";
 import { PostDelete } from "~/app/_components/PostDelete";
@@ -67,7 +68,7 @@ export default async function Page({ params: { id, locale } }: PostPageProps) {
   const tAge = await getTranslations("enums.age");
   const tGender = await getTranslations("enums.gender");
 
-  if (!post) return t("notFound");
+  if (!post) notFound();
 
   const h1 = tMeta("post.titleWithPrice", {
     location: tLocation(post.location),

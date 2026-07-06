@@ -7,8 +7,8 @@ export const reviewRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        rating: z.number(),
-        comment: z.string().nullable(),
+        rating: z.number().int().min(1).max(5),
+        comment: z.string().max(500).nullable(),
         reviewedId: z.string(),
       })
     )
@@ -26,8 +26,8 @@ export const reviewRouter = createTRPCRouter({
   update: protectedProcedure
     .input(
       z.object({
-        rating: z.number(),
-        comment: z.string().nullable(),
+        rating: z.number().int().min(1).max(5),
+        comment: z.string().max(500).nullable(),
         reviewedId: z.string(),
       })
     )
