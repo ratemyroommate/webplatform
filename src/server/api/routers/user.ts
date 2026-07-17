@@ -30,8 +30,8 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        about: z.string().nullable(),
-        socialLink: z.string().min(1).nullable(),
+        about: z.string().max(1000).nullable(),
+        socialLink: z.string().min(1).max(2048).nullable(),
         phoneNumber: z
           .string()
           .regex(/^\+?[\d\s\-()]{6,20}$/)

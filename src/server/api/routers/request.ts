@@ -94,7 +94,7 @@ export const requestRouter = createTRPCRouter({
       });
     }),
   create: protectedProcedure
-    .input(z.object({ postId: z.number(), comment: z.string().nullable() }))
+    .input(z.object({ postId: z.number(), comment: z.string().max(500).nullable() }))
     .mutation(async ({ ctx, input }) => {
       const post = await ctx.db.post.findUniqueOrThrow({
         where: { id: input.postId },

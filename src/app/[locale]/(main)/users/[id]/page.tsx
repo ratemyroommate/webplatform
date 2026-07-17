@@ -1,4 +1,5 @@
 import { type Metadata } from "next";
+import { notFound } from "next/navigation";
 import { FileSearch, Phone, Star } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import Image from "next/image";
@@ -59,7 +60,7 @@ export default async function User({ params: { id, locale } }: UserPageProps) {
   const format = await getFormatter();
   const t = await getTranslations("profile");
 
-  if (!user) return t("userNotFound");
+  if (!user) notFound();
 
   const canEdit = id === session?.user.id;
   const canReview =
